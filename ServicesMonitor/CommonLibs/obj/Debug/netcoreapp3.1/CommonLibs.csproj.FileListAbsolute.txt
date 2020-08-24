@@ -1,0 +1,9 @@
+D:\Repo\LvDevOps\ServicesMonitor\CommonLibs\bin\Debug\netcoreapp3.1\CommonLibs.deps.json
+D:\Repo\LvDevOps\ServicesMonitor\CommonLibs\bin\Debug\netcoreapp3.1\CommonLibs.dll
+D:\Repo\LvDevOps\ServicesMonitor\CommonLibs\obj\Debug\netcoreapp3.1\CommonLibs.csprojAssemblyReference.cache
+D:\Repo\LvDevOps\ServicesMonitor\CommonLibs\obj\Debug\netcoreapp3.1\CommonLibs.AssemblyInfoInputs.cache
+D:\Repo\LvDevOps\ServicesMonitor\CommonLibs\obj\Debug\netcoreapp3.1\CommonLibs.AssemblyInfo.cs
+D:\Repo\LvDevOps\ServicesMonitor\CommonLibs\bin\Debug\netcoreapp3.1\CommonLibs.pdb
+D:\Repo\LvDevOps\ServicesMonitor\CommonLibs\obj\Debug\netcoreapp3.1\CommonLibs.csproj.CoreCompileInputs.cache
+D:\Repo\LvDevOps\ServicesMonitor\CommonLibs\obj\Debug\netcoreapp3.1\CommonLibs.dll
+D:\Repo\LvDevOps\ServicesMonitor\CommonLibs\obj\Debug\netcoreapp3.1\CommonLibs.pdb
