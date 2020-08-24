@@ -1,0 +1,11 @@
+﻿CREATE TABLE [dbo].[UsersLogin]
+(
+	[Id] INT NOT NULL, 
+    [UserName] VARCHAR(50) NOT NULL, 
+    [Password] VARCHAR(100) NOT NULL, 
+    [CreatedTime] DATETIMEOFFSET NOT NULL DEFAULT SYSDATETIMEOFFSET(), 
+    [UpdatedTime] DATETIMEOFFSET NULL, 
+    [LastLoginTime] DATETIMEOFFSET NULL,
+    CONSTRAINT PK_UsersLogin PRIMARY KEY CLUSTERED (Id),
+    INDEX IX_UserName NONCLUSTERED (UserName, Password)
+)
