@@ -1,0 +1,12 @@
+D:\Repo\LvDevOps\ServicesMonitor\DataAccess\bin\Release\netcoreapp3.1\DataAccess.deps.json
+D:\Repo\LvDevOps\ServicesMonitor\DataAccess\bin\Release\netcoreapp3.1\DataAccess.dll
+D:\Repo\LvDevOps\ServicesMonitor\DataAccess\bin\Release\netcoreapp3.1\DataAccess.pdb
+D:\Repo\LvDevOps\ServicesMonitor\DataAccess\bin\Release\netcoreapp3.1\CommonLibs.dll
+D:\Repo\LvDevOps\ServicesMonitor\DataAccess\bin\Release\netcoreapp3.1\CommonLibs.pdb
+D:\Repo\LvDevOps\ServicesMonitor\DataAccess\obj\Release\netcoreapp3.1\DataAccess.csprojAssemblyReference.cache
+D:\Repo\LvDevOps\ServicesMonitor\DataAccess\obj\Release\netcoreapp3.1\DataAccess.AssemblyInfoInputs.cache
+D:\Repo\LvDevOps\ServicesMonitor\DataAccess\obj\Release\netcoreapp3.1\DataAccess.AssemblyInfo.cs
+D:\Repo\LvDevOps\ServicesMonitor\DataAccess\obj\Release\netcoreapp3.1\DataAccess.csproj.CoreCompileInputs.cache
+D:\Repo\LvDevOps\ServicesMonitor\DataAccess\obj\Release\netcoreapp3.1\DataAccess.csproj.CopyComplete
+D:\Repo\LvDevOps\ServicesMonitor\DataAccess\obj\Release\netcoreapp3.1\DataAccess.dll
+D:\Repo\LvDevOps\ServicesMonitor\DataAccess\obj\Release\netcoreapp3.1\DataAccess.pdb

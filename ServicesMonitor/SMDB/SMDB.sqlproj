@@ -22,7 +22,8 @@
     <SqlServerVerification>False</SqlServerVerification>
     <IncludeCompositeObjects>True</IncludeCompositeObjects>
     <TargetDatabaseSet>True</TargetDatabaseSet>
-    <DacVersion>1.0.1.1</DacVersion>
+    <DacVersion>1.0.1.5</DacVersion>
+    <DacDescription>Add status to users table</DacDescription>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <OutputPath>bin\Release\</OutputPath>
@@ -58,17 +59,44 @@
   <ItemGroup>
     <Folder Include="Properties" />
     <Folder Include="dbo" />
-    <Folder Include="proc" />
+    <Folder Include="dbo\Tables" />
+    <Folder Include="dbo\Stored Procedures" />
   </ItemGroup>
   <ItemGroup>
-    <Build Include="dbo\Users.sql" />
-    <Build Include="dbo\UsersLogin.sql" />
-    <Build Include="dbo\Services.sql" />
-    <Build Include="dbo\Groups.sql" />
-    <Build Include="proc\usp_CreateUser.sql" />
-    <Build Include="proc\usp_CheckUserLogin.sql" />
+    <Build Include="dbo\Stored Procedures\usp_Groups_Add.sql" />
+    <Build Include="dbo\Stored Procedures\usp_Groups_Delete.sql" />
+    <Build Include="dbo\Stored Procedures\usp_Groups_Update.sql" />
+    <Build Include="dbo\Stored Procedures\usp_Services_Add.sql" />
+    <Build Include="dbo\Stored Procedures\usp_Users_Add.sql" />
+    <Build Include="dbo\Stored Procedures\usp_Users_Delete.sql" />
+    <Build Include="dbo\Stored Procedures\usp_Users_Get.sql" />
+    <Build Include="dbo\Stored Procedures\usp_Users_List.sql" />
+    <Build Include="dbo\Stored Procedures\usp_Users_Update.sql" />
+    <Build Include="dbo\Stored Procedures\usp_Users_UpdateStatus.sql" />
+    <Build Include="dbo\Stored Procedures\usp_UsersLogin_VerifyAuthentication.sql" />
+    <Build Include="dbo\Tables\Groups.sql" />
+    <Build Include="dbo\Tables\Services.sql" />
+    <Build Include="dbo\Tables\Users.sql" />
+    <Build Include="dbo\Stored Procedures\usp_Services_Update.sql" />
+    <Build Include="dbo\Stored Procedures\usp_Groups_Get.sql" />
+    <Build Include="dbo\Stored Procedures\usp_Groups_List.sql" />
+    <Build Include="dbo\Stored Procedures\usp_Services_Delete.sql" />
+    <Build Include="dbo\Stored Procedures\usp_Services_ListByGroupId.sql" />
+    <Build Include="dbo\Stored Procedures\usp_Services_Get.sql" />
+    <Build Include="dbo\Tables\ServicesLog.sql" />
+    <Build Include="dbo\Stored Procedures\usp_ServicesLog_Add.sql" />
+    <Build Include="dbo\Stored Procedures\usp_Services_UpdateStatus.sql" />
+    <Build Include="dbo\Stored Procedures\usp_Services_ListByEnable.sql" />
+    <Build Include="dbo\Stored Procedures\usp_Services_GetServiceSummary.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="SMDB.refactorlog" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="SMDB.publish.xml" />
+    <None Include="SMDB_1.publish.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Build Include="dbo\Tables\UsersLogin.sql" />
   </ItemGroup>
 </Project>

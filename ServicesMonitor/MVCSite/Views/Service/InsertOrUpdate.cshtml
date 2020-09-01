@@ -1,0 +1,98 @@
+﻿@model DataAccess.SMDB.Services
+
+<br />
+<h2 class="text-info">@(Model.Id!=0 ? "Edit" : "Create") Service</h2>
+<br />
+
+<div class="border container" style="padding:30px;">
+    <form method="post">
+        @if (Model.Id != 0)
+        {
+            <input type="hidden" asp-for="Id" />
+        }
+        <div class="text-danger" asp-validation-summary="ModelOnly"></div>
+
+        <div class="form-group row">
+            <div class="col-3">
+                <label asp-for="Name"></label>
+            </div>
+            <div class="col-6">
+                <input asp-for="Name" class="form-control" />
+            </div>
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+        <div class="form-group row">
+            <div class="col-3">
+                <label>Group</label>
+            </div>
+            <div class="col-6">
+                <select id="DDL_Load" asp-for="GroupId">
+                    <option selected="selected" value="0">Select group</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-3">
+                <label asp-for="Description"></label>
+            </div>
+            <div class="col-6">
+                <input asp-for="Description" class="form-control" />
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-3">
+                <label asp-for="Url"></label>
+            </div>
+            <div class="col-6">
+                <input asp-for="Url" class="form-control" />
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-3">
+                <label asp-for="Params"></label>
+            </div>
+            <div class="col-6">
+                <input asp-for="Params" class="form-control" />
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-3">
+                <label asp-for="ResponseCode"></label>
+            </div>
+            <div class="col-6">
+                <input asp-for="ResponseCode" class="form-control" />
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-3">
+                <label>Group</label>
+            </div>
+            <div class="col-6">
+                <select id="DDL_LoadEnable" asp-for="Enable">
+                    <option value="1">Active</option>
+                    <option value="0">In active</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-3 offset-3">
+                <button type="submit" class="btn btn-primary form-control">
+                    @(Model.Id != 0 ? "Update" : "Create")
+                </button>
+            </div>
+            <div class="col-3">
+                <a asp-action="Index" class="btn btn-success form-control">Back to List</a>
+            </div>
+        </div>
+    </form>
+</div>
+
+@section Scripts{
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        $(document).ready(function () {
+            loadGroup(@(Model.Id != 0 ? @Model.GroupId : 0));
+            $("#DDL_LoadEnable").val(@(Model.Enable));
+        });
+    </script>
+}

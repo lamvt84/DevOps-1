@@ -2,9 +2,9 @@ D:\Repo\LvDevOps\ServicesMonitor\SMDB\bin\Debug\SMDB.dacpac
 D:\Repo\LvDevOps\ServicesMonitor\SMDB\bin\Debug\SMDB.dll
 D:\Repo\LvDevOps\ServicesMonitor\SMDB\bin\Debug\SMDB.pdb
 D:\Repo\LvDevOps\ServicesMonitor\SMDB\obj\Debug\SMDB.sqlprojAssemblyReference.cache
+D:\Repo\LvDevOps\ServicesMonitor\SMDB\obj\Debug\SMDB.dll
+D:\Repo\LvDevOps\ServicesMonitor\SMDB\obj\Debug\SMDB.pdb
 D:\Repo\LvDevOps\ServicesMonitor\SMDB\obj\Debug\Model.xml
 D:\Repo\LvDevOps\ServicesMonitor\SMDB\obj\Debug\refactor.xml
 D:\Repo\LvDevOps\ServicesMonitor\SMDB\obj\Debug\postdeploy.sql
 D:\Repo\LvDevOps\ServicesMonitor\SMDB\obj\Debug\predeploy.sql
-D:\Repo\LvDevOps\ServicesMonitor\SMDB\obj\Debug\SMDB.dll
-D:\Repo\LvDevOps\ServicesMonitor\SMDB\obj\Debug\SMDB.pdb
