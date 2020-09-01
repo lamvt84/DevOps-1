@@ -50,12 +50,12 @@
 			</Property>
 			<Relationship Name="DefiningTable">
 				<Entry>
-					<References Name="[dbo].[Groups]" />
+					<References Name="[dbo].[ServicesLog]" />
 				</Entry>
 			</Relationship>
 			<Relationship Name="ForColumn">
 				<Entry>
-					<References Name="[dbo].[Groups].[CreatedTime]" />
+					<References Name="[dbo].[ServicesLog].[CreatedTime]" />
 				</Entry>
 			</Relationship>
 			<Annotation Type="SqlInlineConstraintAnnotation" Disambiguator="3" />
@@ -66,63 +66,15 @@
 			</Property>
 			<Relationship Name="DefiningTable">
 				<Entry>
-					<References Name="[dbo].[Services]" />
+					<References Name="[dbo].[Users]" />
 				</Entry>
 			</Relationship>
 			<Relationship Name="ForColumn">
 				<Entry>
-					<References Name="[dbo].[Services].[GroupId]" />
+					<References Name="[dbo].[Users].[Status]" />
 				</Entry>
 			</Relationship>
 			<Annotation Type="SqlInlineConstraintAnnotation" Disambiguator="4" />
-		</Element>
-		<Element Type="SqlDefaultConstraint">
-			<Property Name="DefaultExpressionScript">
-				<Value><![CDATA[SYSDATETIMEOFFSET()]]></Value>
-			</Property>
-			<Relationship Name="DefiningTable">
-				<Entry>
-					<References Name="[dbo].[Services]" />
-				</Entry>
-			</Relationship>
-			<Relationship Name="ForColumn">
-				<Entry>
-					<References Name="[dbo].[Services].[CreatedTime]" />
-				</Entry>
-			</Relationship>
-			<Annotation Type="SqlInlineConstraintAnnotation" Disambiguator="5" />
-		</Element>
-		<Element Type="SqlDefaultConstraint">
-			<Property Name="DefaultExpressionScript">
-				<Value><![CDATA[1]]></Value>
-			</Property>
-			<Relationship Name="DefiningTable">
-				<Entry>
-					<References Name="[dbo].[Services]" />
-				</Entry>
-			</Relationship>
-			<Relationship Name="ForColumn">
-				<Entry>
-					<References Name="[dbo].[Services].[Enable]" />
-				</Entry>
-			</Relationship>
-			<Annotation Type="SqlInlineConstraintAnnotation" Disambiguator="6" />
-		</Element>
-		<Element Type="SqlDefaultConstraint">
-			<Property Name="DefaultExpressionScript">
-				<Value><![CDATA[0]]></Value>
-			</Property>
-			<Relationship Name="DefiningTable">
-				<Entry>
-					<References Name="[dbo].[Services]" />
-				</Entry>
-			</Relationship>
-			<Relationship Name="ForColumn">
-				<Entry>
-					<References Name="[dbo].[Services].[Status]" />
-				</Entry>
-			</Relationship>
-			<Annotation Type="SqlInlineConstraintAnnotation" Disambiguator="7" />
 		</Element>
 		<Element Type="SqlDefaultConstraint">
 			<Property Name="DefaultExpressionScript">
@@ -138,7 +90,87 @@
 					<References Name="[dbo].[Users].[CreatedTime]" />
 				</Entry>
 			</Relationship>
+			<Annotation Type="SqlInlineConstraintAnnotation" Disambiguator="5" />
+		</Element>
+		<Element Type="SqlDefaultConstraint">
+			<Property Name="DefaultExpressionScript">
+				<Value><![CDATA[0]]></Value>
+			</Property>
+			<Relationship Name="DefiningTable">
+				<Entry>
+					<References Name="[dbo].[Services]" />
+				</Entry>
+			</Relationship>
+			<Relationship Name="ForColumn">
+				<Entry>
+					<References Name="[dbo].[Services].[GroupId]" />
+				</Entry>
+			</Relationship>
+			<Annotation Type="SqlInlineConstraintAnnotation" Disambiguator="6" />
+		</Element>
+		<Element Type="SqlDefaultConstraint">
+			<Property Name="DefaultExpressionScript">
+				<Value><![CDATA[SYSDATETIMEOFFSET()]]></Value>
+			</Property>
+			<Relationship Name="DefiningTable">
+				<Entry>
+					<References Name="[dbo].[Services]" />
+				</Entry>
+			</Relationship>
+			<Relationship Name="ForColumn">
+				<Entry>
+					<References Name="[dbo].[Services].[CreatedTime]" />
+				</Entry>
+			</Relationship>
+			<Annotation Type="SqlInlineConstraintAnnotation" Disambiguator="7" />
+		</Element>
+		<Element Type="SqlDefaultConstraint">
+			<Property Name="DefaultExpressionScript">
+				<Value><![CDATA[1]]></Value>
+			</Property>
+			<Relationship Name="DefiningTable">
+				<Entry>
+					<References Name="[dbo].[Services]" />
+				</Entry>
+			</Relationship>
+			<Relationship Name="ForColumn">
+				<Entry>
+					<References Name="[dbo].[Services].[Enable]" />
+				</Entry>
+			</Relationship>
 			<Annotation Type="SqlInlineConstraintAnnotation" Disambiguator="8" />
+		</Element>
+		<Element Type="SqlDefaultConstraint">
+			<Property Name="DefaultExpressionScript">
+				<Value><![CDATA[0]]></Value>
+			</Property>
+			<Relationship Name="DefiningTable">
+				<Entry>
+					<References Name="[dbo].[Services]" />
+				</Entry>
+			</Relationship>
+			<Relationship Name="ForColumn">
+				<Entry>
+					<References Name="[dbo].[Services].[Status]" />
+				</Entry>
+			</Relationship>
+			<Annotation Type="SqlInlineConstraintAnnotation" Disambiguator="9" />
+		</Element>
+		<Element Type="SqlDefaultConstraint">
+			<Property Name="DefaultExpressionScript">
+				<Value><![CDATA[SYSDATETIMEOFFSET()]]></Value>
+			</Property>
+			<Relationship Name="DefiningTable">
+				<Entry>
+					<References Name="[dbo].[Groups]" />
+				</Entry>
+			</Relationship>
+			<Relationship Name="ForColumn">
+				<Entry>
+					<References Name="[dbo].[Groups].[CreatedTime]" />
+				</Entry>
+			</Relationship>
+			<Annotation Type="SqlInlineConstraintAnnotation" Disambiguator="10" />
 		</Element>
 		<Element Type="SqlDefaultConstraint">
 			<Property Name="DefaultExpressionScript">
@@ -154,7 +186,7 @@
 					<References Name="[dbo].[UsersLogin].[CreatedTime]" />
 				</Entry>
 			</Relationship>
-			<Annotation Type="SqlInlineConstraintAnnotation" Disambiguator="9" />
+			<Annotation Type="SqlInlineConstraintAnnotation" Disambiguator="11" />
 		</Element>
 		<Element Type="SqlTable" Name="[dbo].[Groups]">
 			<Property Name="IsAnsiNullsOn" Value="True" />
@@ -223,7 +255,23 @@
 								</Element>
 							</Entry>
 						</Relationship>
-						<AttachedAnnotation Disambiguator="3" />
+						<AttachedAnnotation Disambiguator="10" />
+					</Element>
+				</Entry>
+				<Entry>
+					<Element Type="SqlSimpleColumn" Name="[dbo].[Groups].[UpdatedTime]">
+						<Relationship Name="TypeSpecifier">
+							<Entry>
+								<Element Type="SqlTypeSpecifier">
+									<Property Name="Scale" Value="7" />
+									<Relationship Name="Type">
+										<Entry>
+											<References ExternalSource="BuiltIns" Name="[datetimeoffset]" />
+										</Entry>
+									</Relationship>
+								</Element>
+							</Entry>
+						</Relationship>
 					</Element>
 				</Entry>
 			</Relationship>
@@ -232,7 +280,7 @@
 					<References ExternalSource="BuiltIns" Name="[dbo]" />
 				</Entry>
 			</Relationship>
-			<Annotation Type="SqlInlineConstraintAnnotation" Disambiguator="10" />
+			<Annotation Type="SqlInlineConstraintAnnotation" Disambiguator="12" />
 		</Element>
 		<Element Type="SqlPrimaryKeyConstraint" Name="[dbo].[PK_Services]">
 			<Relationship Name="ColumnSpecifications">
@@ -251,7 +299,7 @@
 					<References Name="[dbo].[Services]" />
 				</Entry>
 			</Relationship>
-			<Annotation Type="SqlInlineConstraintAnnotation" Disambiguator="11" />
+			<Annotation Type="SqlInlineConstraintAnnotation" Disambiguator="13" />
 		</Element>
 		<Element Type="SqlPrimaryKeyConstraint" Name="[dbo].[PK_ServicesGroup]">
 			<Relationship Name="ColumnSpecifications">
@@ -270,7 +318,26 @@
 					<References Name="[dbo].[Groups]" />
 				</Entry>
 			</Relationship>
-			<AttachedAnnotation Disambiguator="10" />
+			<AttachedAnnotation Disambiguator="12" />
+		</Element>
+		<Element Type="SqlPrimaryKeyConstraint" Name="[dbo].[PK_ServicesLog]">
+			<Relationship Name="ColumnSpecifications">
+				<Entry>
+					<Element Type="SqlIndexedColumnSpecification">
+						<Relationship Name="Column">
+							<Entry>
+								<References Name="[dbo].[ServicesLog].[Id]" />
+							</Entry>
+						</Relationship>
+					</Element>
+				</Entry>
+			</Relationship>
+			<Relationship Name="DefiningTable">
+				<Entry>
+					<References Name="[dbo].[ServicesLog]" />
+				</Entry>
+			</Relationship>
+			<Annotation Type="SqlInlineConstraintAnnotation" Disambiguator="14" />
 		</Element>
 		<Element Type="SqlPrimaryKeyConstraint" Name="[dbo].[PK_Users]">
 			<Relationship Name="ColumnSpecifications">
@@ -289,7 +356,7 @@
 					<References Name="[dbo].[Users]" />
 				</Entry>
 			</Relationship>
-			<Annotation Type="SqlInlineConstraintAnnotation" Disambiguator="12" />
+			<Annotation Type="SqlInlineConstraintAnnotation" Disambiguator="15" />
 		</Element>
 		<Element Type="SqlPrimaryKeyConstraint" Name="[dbo].[PK_UsersLogin]">
 			<Relationship Name="ColumnSpecifications">
@@ -308,7 +375,7 @@
 					<References Name="[dbo].[UsersLogin]" />
 				</Entry>
 			</Relationship>
-			<Annotation Type="SqlInlineConstraintAnnotation" Disambiguator="13" />
+			<Annotation Type="SqlInlineConstraintAnnotation" Disambiguator="16" />
 		</Element>
 		<Element Type="SqlTable" Name="[dbo].[Services]">
 			<Property Name="IsAnsiNullsOn" Value="True" />
@@ -344,7 +411,7 @@
 								</Element>
 							</Entry>
 						</Relationship>
-						<AttachedAnnotation Disambiguator="4" />
+						<AttachedAnnotation Disambiguator="6" />
 					</Element>
 				</Entry>
 				<Entry>
@@ -442,7 +509,7 @@
 								</Element>
 							</Entry>
 						</Relationship>
-						<AttachedAnnotation Disambiguator="5" />
+						<AttachedAnnotation Disambiguator="7" />
 					</Element>
 				</Entry>
 				<Entry>
@@ -475,7 +542,7 @@
 								</Element>
 							</Entry>
 						</Relationship>
-						<AttachedAnnotation Disambiguator="6" />
+						<AttachedAnnotation Disambiguator="8" />
 					</Element>
 				</Entry>
 				<Entry>
@@ -492,7 +559,7 @@
 								</Element>
 							</Entry>
 						</Relationship>
-						<AttachedAnnotation Disambiguator="7" />
+						<AttachedAnnotation Disambiguator="9" />
 					</Element>
 				</Entry>
 			</Relationship>
@@ -501,7 +568,118 @@
 					<References ExternalSource="BuiltIns" Name="[dbo]" />
 				</Entry>
 			</Relationship>
-			<AttachedAnnotation Disambiguator="11" />
+			<AttachedAnnotation Disambiguator="13" />
+		</Element>
+		<Element Type="SqlTable" Name="[dbo].[ServicesLog]">
+			<Property Name="IsAnsiNullsOn" Value="True" />
+			<Relationship Name="Columns">
+				<Entry>
+					<Element Type="SqlSimpleColumn" Name="[dbo].[ServicesLog].[Id]">
+						<Property Name="IsNullable" Value="False" />
+						<Property Name="IsIdentity" Value="True" />
+						<Relationship Name="TypeSpecifier">
+							<Entry>
+								<Element Type="SqlTypeSpecifier">
+									<Relationship Name="Type">
+										<Entry>
+											<References ExternalSource="BuiltIns" Name="[bigint]" />
+										</Entry>
+									</Relationship>
+								</Element>
+							</Entry>
+						</Relationship>
+					</Element>
+				</Entry>
+				<Entry>
+					<Element Type="SqlSimpleColumn" Name="[dbo].[ServicesLog].[JournalGuid]">
+						<Property Name="IsNullable" Value="False" />
+						<Relationship Name="TypeSpecifier">
+							<Entry>
+								<Element Type="SqlTypeSpecifier">
+									<Relationship Name="Type">
+										<Entry>
+											<References ExternalSource="BuiltIns" Name="[uniqueidentifier]" />
+										</Entry>
+									</Relationship>
+								</Element>
+							</Entry>
+						</Relationship>
+					</Element>
+				</Entry>
+				<Entry>
+					<Element Type="SqlSimpleColumn" Name="[dbo].[ServicesLog].[CreatedTime]">
+						<Property Name="IsNullable" Value="False" />
+						<Relationship Name="TypeSpecifier">
+							<Entry>
+								<Element Type="SqlTypeSpecifier">
+									<Property Name="Scale" Value="7" />
+									<Relationship Name="Type">
+										<Entry>
+											<References ExternalSource="BuiltIns" Name="[datetimeoffset]" />
+										</Entry>
+									</Relationship>
+								</Element>
+							</Entry>
+						</Relationship>
+						<AttachedAnnotation Disambiguator="3" />
+					</Element>
+				</Entry>
+				<Entry>
+					<Element Type="SqlSimpleColumn" Name="[dbo].[ServicesLog].[ServiceId]">
+						<Property Name="IsNullable" Value="False" />
+						<Relationship Name="TypeSpecifier">
+							<Entry>
+								<Element Type="SqlTypeSpecifier">
+									<Relationship Name="Type">
+										<Entry>
+											<References ExternalSource="BuiltIns" Name="[int]" />
+										</Entry>
+									</Relationship>
+								</Element>
+							</Entry>
+						</Relationship>
+					</Element>
+				</Entry>
+				<Entry>
+					<Element Type="SqlSimpleColumn" Name="[dbo].[ServicesLog].[ServiceUrl]">
+						<Property Name="IsNullable" Value="False" />
+						<Relationship Name="TypeSpecifier">
+							<Entry>
+								<Element Type="SqlTypeSpecifier">
+									<Property Name="Length" Value="200" />
+									<Relationship Name="Type">
+										<Entry>
+											<References ExternalSource="BuiltIns" Name="[varchar]" />
+										</Entry>
+									</Relationship>
+								</Element>
+							</Entry>
+						</Relationship>
+					</Element>
+				</Entry>
+				<Entry>
+					<Element Type="SqlSimpleColumn" Name="[dbo].[ServicesLog].[ServiceStatus]">
+						<Relationship Name="TypeSpecifier">
+							<Entry>
+								<Element Type="SqlTypeSpecifier">
+									<Property Name="Length" Value="100" />
+									<Relationship Name="Type">
+										<Entry>
+											<References ExternalSource="BuiltIns" Name="[varchar]" />
+										</Entry>
+									</Relationship>
+								</Element>
+							</Entry>
+						</Relationship>
+					</Element>
+				</Entry>
+			</Relationship>
+			<Relationship Name="Schema">
+				<Entry>
+					<References ExternalSource="BuiltIns" Name="[dbo]" />
+				</Entry>
+			</Relationship>
+			<AttachedAnnotation Disambiguator="14" />
 		</Element>
 		<Element Type="SqlTable" Name="[dbo].[Users]">
 			<Property Name="IsAnsiNullsOn" Value="True" />
@@ -575,6 +753,23 @@
 					</Element>
 				</Entry>
 				<Entry>
+					<Element Type="SqlSimpleColumn" Name="[dbo].[Users].[Status]">
+						<Property Name="IsNullable" Value="False" />
+						<Relationship Name="TypeSpecifier">
+							<Entry>
+								<Element Type="SqlTypeSpecifier">
+									<Relationship Name="Type">
+										<Entry>
+											<References ExternalSource="BuiltIns" Name="[tinyint]" />
+										</Entry>
+									</Relationship>
+								</Element>
+							</Entry>
+						</Relationship>
+						<AttachedAnnotation Disambiguator="4" />
+					</Element>
+				</Entry>
+				<Entry>
 					<Element Type="SqlSimpleColumn" Name="[dbo].[Users].[CreatedTime]">
 						<Property Name="IsNullable" Value="False" />
 						<Relationship Name="TypeSpecifier">
@@ -589,7 +784,7 @@
 								</Element>
 							</Entry>
 						</Relationship>
-						<AttachedAnnotation Disambiguator="8" />
+						<AttachedAnnotation Disambiguator="5" />
 					</Element>
 				</Entry>
 				<Entry>
@@ -614,8 +809,8 @@
 					<References ExternalSource="BuiltIns" Name="[dbo]" />
 				</Entry>
 			</Relationship>
-			<AttachedAnnotation Disambiguator="12" />
-			<Annotation Type="SqlInlineIndexAnnotation" Disambiguator="14" />
+			<AttachedAnnotation Disambiguator="15" />
+			<Annotation Type="SqlInlineIndexAnnotation" Disambiguator="17" />
 		</Element>
 		<Element Type="SqlIndex" Name="[dbo].[Users].[IX_Email]">
 			<Relationship Name="ColumnSpecifications">
@@ -634,7 +829,7 @@
 					<References Name="[dbo].[Users]" />
 				</Entry>
 			</Relationship>
-			<AttachedAnnotation Disambiguator="14" />
+			<AttachedAnnotation Disambiguator="17" />
 		</Element>
 		<Element Type="SqlTable" Name="[dbo].[UsersLogin]">
 			<Property Name="IsAnsiNullsOn" Value="True" />
@@ -704,7 +899,7 @@
 								</Element>
 							</Entry>
 						</Relationship>
-						<AttachedAnnotation Disambiguator="9" />
+						<AttachedAnnotation Disambiguator="11" />
 					</Element>
 				</Entry>
 				<Entry>
@@ -745,8 +940,8 @@
 					<References ExternalSource="BuiltIns" Name="[dbo]" />
 				</Entry>
 			</Relationship>
-			<AttachedAnnotation Disambiguator="13" />
-			<Annotation Type="SqlInlineIndexAnnotation" Disambiguator="15" />
+			<AttachedAnnotation Disambiguator="16" />
+			<Annotation Type="SqlInlineIndexAnnotation" Disambiguator="18" />
 		</Element>
 		<Element Type="SqlIndex" Name="[dbo].[UsersLogin].[IX_UserName]">
 			<Relationship Name="ColumnSpecifications">
@@ -774,60 +969,41 @@
 					<References Name="[dbo].[UsersLogin]" />
 				</Entry>
 			</Relationship>
-			<AttachedAnnotation Disambiguator="15" />
+			<AttachedAnnotation Disambiguator="18" />
 		</Element>
-		<Element Type="SqlProcedure" Name="[dbo].[usp_CheckUserLogin]">
+		<Element Type="SqlProcedure" Name="[dbo].[usp_Groups_Add]">
 			<Property Name="BodyScript">
 				<Value><![CDATA[
-	SET @ResponseCode = 0
-	SELECT @ResponseCode = Id
-	FROM dbo.UsersLogin
-	WHERE UserName = @UserName
-		AND Password = @Password]]></Value>
+     INSERT INTO [dbo].[Groups]
+     ([Name], 
+      [Description]
+     )
+     VALUES
+     (@Name, 
+      @Description
+     );]]></Value>
 			</Property>
 			<Property Name="IsAnsiNullsOn" Value="True" />
 			<Relationship Name="BodyDependencies">
 				<Entry>
-					<References Name="[dbo].[usp_CheckUserLogin].[@ResponseCode]" />
+					<References Name="[dbo].[Groups]" />
 				</Entry>
 				<Entry>
-					<References Name="[dbo].[UsersLogin]" />
+					<References Name="[dbo].[Groups].[Name]" />
 				</Entry>
 				<Entry>
-					<References Name="[dbo].[UsersLogin].[Id]" />
+					<References Name="[dbo].[Groups].[Description]" />
 				</Entry>
 				<Entry>
-					<References Name="[dbo].[UsersLogin].[UserName]" />
+					<References Name="[dbo].[usp_Groups_Add].[@Name]" />
 				</Entry>
 				<Entry>
-					<References Name="[dbo].[usp_CheckUserLogin].[@UserName]" />
-				</Entry>
-				<Entry>
-					<References Name="[dbo].[UsersLogin].[Password]" />
-				</Entry>
-				<Entry>
-					<References Name="[dbo].[usp_CheckUserLogin].[@Password]" />
+					<References Name="[dbo].[usp_Groups_Add].[@Description]" />
 				</Entry>
 			</Relationship>
 			<Relationship Name="Parameters">
 				<Entry>
-					<Element Type="SqlSubroutineParameter" Name="[dbo].[usp_CheckUserLogin].[@UserName]">
-						<Relationship Name="Type">
-							<Entry>
-								<Element Type="SqlTypeSpecifier">
-									<Property Name="Length" Value="50" />
-									<Relationship Name="Type">
-										<Entry>
-											<References ExternalSource="BuiltIns" Name="[varchar]" />
-										</Entry>
-									</Relationship>
-								</Element>
-							</Entry>
-						</Relationship>
-					</Element>
-				</Entry>
-				<Entry>
-					<Element Type="SqlSubroutineParameter" Name="[dbo].[usp_CheckUserLogin].[@Password]">
+					<Element Type="SqlSubroutineParameter" Name="[dbo].[usp_Groups_Add].[@Name]">
 						<Relationship Name="Type">
 							<Entry>
 								<Element Type="SqlTypeSpecifier">
@@ -843,8 +1019,67 @@
 					</Element>
 				</Entry>
 				<Entry>
-					<Element Type="SqlSubroutineParameter" Name="[dbo].[usp_CheckUserLogin].[@ResponseCode]">
-						<Property Name="IsOutput" Value="True" />
+					<Element Type="SqlSubroutineParameter" Name="[dbo].[usp_Groups_Add].[@Description]">
+						<Relationship Name="Type">
+							<Entry>
+								<Element Type="SqlTypeSpecifier">
+									<Property Name="Length" Value="500" />
+									<Relationship Name="Type">
+										<Entry>
+											<References ExternalSource="BuiltIns" Name="[varchar]" />
+										</Entry>
+									</Relationship>
+								</Element>
+							</Entry>
+						</Relationship>
+					</Element>
+				</Entry>
+			</Relationship>
+			<Relationship Name="Schema">
+				<Entry>
+					<References ExternalSource="BuiltIns" Name="[dbo]" />
+				</Entry>
+			</Relationship>
+			<Annotation Type="SysCommentsObjectAnnotation">
+				<Property Name="Length" Value="273" />
+				<Property Name="StartLine" Value="1" />
+				<Property Name="StartColumn" Value="1" />
+				<Property Name="HeaderContents" Value="CREATE PROCEDURE [dbo].[usp_Groups_Add] @Name        VARCHAR(100), &#xD;&#xA;                                        @Description VARCHAR(500)&#xD;&#xA;AS" />
+			</Annotation>
+		</Element>
+		<Element Type="SqlProcedure" Name="[dbo].[usp_Groups_Delete]">
+			<Property Name="BodyScript">
+				<Value><![CDATA[
+    BEGIN
+        UPDATE dbo.[Services]
+          SET 
+              GroupId = 0
+        WHERE GroupId = @Id;
+        DELETE FROM dbo.Groups
+        WHERE Id = @Id;
+    END;]]></Value>
+			</Property>
+			<Property Name="IsAnsiNullsOn" Value="True" />
+			<Relationship Name="BodyDependencies">
+				<Entry>
+					<References Name="[dbo].[Services]" />
+				</Entry>
+				<Entry>
+					<References Name="[dbo].[Services].[GroupId]" />
+				</Entry>
+				<Entry>
+					<References Name="[dbo].[usp_Groups_Delete].[@Id]" />
+				</Entry>
+				<Entry>
+					<References Name="[dbo].[Groups]" />
+				</Entry>
+				<Entry>
+					<References Name="[dbo].[Groups].[Id]" />
+				</Entry>
+			</Relationship>
+			<Relationship Name="Parameters">
+				<Entry>
+					<Element Type="SqlSubroutineParameter" Name="[dbo].[usp_Groups_Delete].[@Id]">
 						<Relationship Name="Type">
 							<Entry>
 								<Element Type="SqlTypeSpecifier">
@@ -865,40 +1100,1107 @@
 				</Entry>
 			</Relationship>
 			<Annotation Type="SysCommentsObjectAnnotation">
-				<Property Name="Length" Value="256" />
+				<Property Name="Length" Value="236" />
 				<Property Name="StartLine" Value="1" />
 				<Property Name="StartColumn" Value="1" />
-				<Property Name="HeaderContents" Value="CREATE PROCEDURE [dbo].[usp_CheckUserLogin]&#xD;&#xA;&#x9;@UserName VARCHAR(50),&#xD;&#xA;&#x9;@Password VARCHAR(100),&#xD;&#xA;&#x9;@ResponseCode INT OUTPUT&#xD;&#xA;AS" />
+				<Property Name="HeaderContents" Value="CREATE PROCEDURE [dbo].[usp_Groups_Delete] @Id INT&#xD;&#xA;AS" />
 			</Annotation>
 		</Element>
-		<Element Type="SqlProcedure" Name="[dbo].[usp_CreateUser]">
+		<Element Type="SqlProcedure" Name="[dbo].[usp_Groups_Get]">
 			<Property Name="BodyScript">
 				<Value><![CDATA[
-BEGIN
-	SET @ResponseCode = 1
-	IF EXISTS (SELECT 1 FROM dbo.Users WHERE Email = @Email)
-		BEGIN
-			SET @ResponseCode = -1 -- email existed
-			RETURN
-		END
-
-	IF EXISTS (SELECT 1 FROM dbo.UsersLogin WHERE UserName = @UserName)
-		BEGIN
-			SET @ResponseCode = -2 -- username existed
-			RETURN
-		END
-
-	INSERT dbo.Users(FirstName, LastName, Email) VALUES (@FirstName, @LastName, @Email)
-
-	SET @ResponseCode = SCOPE_IDENTITY()
-
-	INSERT dbo.UsersLogin(Id, UserName, Password) VALUES (@ResponseCode, @UserName, @Password)
-END]]></Value>
+	SELECT * FROM dbo.Groups WHERE Id = @Id]]></Value>
 			</Property>
 			<Property Name="IsAnsiNullsOn" Value="True" />
 			<Relationship Name="BodyDependencies">
 				<Entry>
-					<References Name="[dbo].[usp_CreateUser].[@ResponseCode]" />
+					<References Name="[dbo].[Groups]" />
+				</Entry>
+				<Entry>
+					<References Name="[dbo].[Groups].[Id]" />
+				</Entry>
+				<Entry>
+					<References Name="[dbo].[usp_Groups_Get].[@Id]" />
+				</Entry>
+			</Relationship>
+			<Relationship Name="Parameters">
+				<Entry>
+					<Element Type="SqlSubroutineParameter" Name="[dbo].[usp_Groups_Get].[@Id]">
+						<Relationship Name="Type">
+							<Entry>
+								<Element Type="SqlTypeSpecifier">
+									<Relationship Name="Type">
+										<Entry>
+											<References ExternalSource="BuiltIns" Name="[int]" />
+										</Entry>
+									</Relationship>
+								</Element>
+							</Entry>
+						</Relationship>
+					</Element>
+				</Entry>
+			</Relationship>
+			<Relationship Name="Schema">
+				<Entry>
+					<References ExternalSource="BuiltIns" Name="[dbo]" />
+				</Entry>
+			</Relationship>
+			<Annotation Type="SysCommentsObjectAnnotation">
+				<Property Name="Length" Value="95" />
+				<Property Name="StartLine" Value="1" />
+				<Property Name="StartColumn" Value="1" />
+				<Property Name="HeaderContents" Value="CREATE PROCEDURE [dbo].[usp_Groups_Get]&#xD;&#xA;&#x9;@Id INT&#xD;&#xA;AS" />
+			</Annotation>
+		</Element>
+		<Element Type="SqlProcedure" Name="[dbo].[usp_Groups_List]">
+			<Property Name="BodyScript">
+				<Value><![CDATA[
+     SELECT *
+     FROM dbo.Groups;]]></Value>
+			</Property>
+			<Property Name="IsAnsiNullsOn" Value="True" />
+			<Relationship Name="BodyDependencies">
+				<Entry>
+					<References Name="[dbo].[Groups]" />
+				</Entry>
+			</Relationship>
+			<Relationship Name="Schema">
+				<Entry>
+					<References ExternalSource="BuiltIns" Name="[dbo]" />
+				</Entry>
+			</Relationship>
+			<Annotation Type="SysCommentsObjectAnnotation">
+				<Property Name="Length" Value="82" />
+				<Property Name="StartLine" Value="1" />
+				<Property Name="StartColumn" Value="1" />
+				<Property Name="HeaderContents" Value="CREATE PROCEDURE [dbo].[usp_Groups_List]&#xD;&#xA;AS" />
+			</Annotation>
+		</Element>
+		<Element Type="SqlProcedure" Name="[dbo].[usp_Groups_Update]">
+			<Property Name="BodyScript">
+				<Value><![CDATA[
+     UPDATE dbo.Groups
+       SET 
+           Name = @Name, 
+           Description = @Description, 
+           UpdatedTime = SYSDATETIMEOFFSET()
+     WHERE Id = @Id;]]></Value>
+			</Property>
+			<Property Name="IsAnsiNullsOn" Value="True" />
+			<Relationship Name="BodyDependencies">
+				<Entry>
+					<References Name="[dbo].[Groups]" />
+				</Entry>
+				<Entry>
+					<References Name="[dbo].[Groups].[Name]" />
+				</Entry>
+				<Entry>
+					<References Name="[dbo].[usp_Groups_Update].[@Name]" />
+				</Entry>
+				<Entry>
+					<References Name="[dbo].[Groups].[Description]" />
+				</Entry>
+				<Entry>
+					<References Name="[dbo].[usp_Groups_Update].[@Description]" />
+				</Entry>
+				<Entry>
+					<References Name="[dbo].[Groups].[UpdatedTime]" />
+				</Entry>
+				<Entry>
+					<References Name="[dbo].[Groups].[Id]" />
+				</Entry>
+				<Entry>
+					<References Name="[dbo].[usp_Groups_Update].[@Id]" />
+				</Entry>
+			</Relationship>
+			<Relationship Name="Parameters">
+				<Entry>
+					<Element Type="SqlSubroutineParameter" Name="[dbo].[usp_Groups_Update].[@Id]">
+						<Relationship Name="Type">
+							<Entry>
+								<Element Type="SqlTypeSpecifier">
+									<Relationship Name="Type">
+										<Entry>
+											<References ExternalSource="BuiltIns" Name="[int]" />
+										</Entry>
+									</Relationship>
+								</Element>
+							</Entry>
+						</Relationship>
+					</Element>
+				</Entry>
+				<Entry>
+					<Element Type="SqlSubroutineParameter" Name="[dbo].[usp_Groups_Update].[@Name]">
+						<Relationship Name="Type">
+							<Entry>
+								<Element Type="SqlTypeSpecifier">
+									<Property Name="Length" Value="100" />
+									<Relationship Name="Type">
+										<Entry>
+											<References ExternalSource="BuiltIns" Name="[varchar]" />
+										</Entry>
+									</Relationship>
+								</Element>
+							</Entry>
+						</Relationship>
+					</Element>
+				</Entry>
+				<Entry>
+					<Element Type="SqlSubroutineParameter" Name="[dbo].[usp_Groups_Update].[@Description]">
+						<Relationship Name="Type">
+							<Entry>
+								<Element Type="SqlTypeSpecifier">
+									<Property Name="Length" Value="500" />
+									<Relationship Name="Type">
+										<Entry>
+											<References ExternalSource="BuiltIns" Name="[varchar]" />
+										</Entry>
+									</Relationship>
+								</Element>
+							</Entry>
+						</Relationship>
+					</Element>
+				</Entry>
+			</Relationship>
+			<Relationship Name="Schema">
+				<Entry>
+					<References ExternalSource="BuiltIns" Name="[dbo]" />
+				</Entry>
+			</Relationship>
+			<Annotation Type="SysCommentsObjectAnnotation">
+				<Property Name="Length" Value="380" />
+				<Property Name="StartLine" Value="1" />
+				<Property Name="StartColumn" Value="1" />
+				<Property Name="HeaderContents" Value="CREATE PROCEDURE [dbo].[usp_Groups_Update] @Id          INT, &#xD;&#xA;                                           @Name        VARCHAR(100), &#xD;&#xA;                                           @Description VARCHAR(500)&#xD;&#xA;AS" />
+			</Annotation>
+		</Element>
+		<Element Type="SqlProcedure" Name="[dbo].[usp_Services_Add]">
+			<Property Name="BodyScript">
+				<Value><![CDATA[
+     INSERT INTO [dbo].[Services]
+     ([GroupId], 
+      [Name], 
+      [Description], 
+      [Url], 
+      [Params], 
+      [ResponseCode], 
+      [Enable], 
+      [Status]
+     )
+     VALUES
+     (@GroupId, 
+      @Name, 
+      @Description, 
+      @Url, 
+      @Params, 
+      @ResponseCode, 
+      @Enable, 
+      @Status
+     );]]></Value>
+			</Property>
+			<Property Name="IsAnsiNullsOn" Value="True" />
+			<Relationship Name="BodyDependencies">
+				<Entry>
+					<References Name="[dbo].[Services]" />
+				</Entry>
+				<Entry>
+					<References Name="[dbo].[Services].[GroupId]" />
+				</Entry>
+				<Entry>
+					<References Name="[dbo].[Services].[Name]" />
+				</Entry>
+				<Entry>
+					<References Name="[dbo].[Services].[Description]" />
+				</Entry>
+				<Entry>
+					<References Name="[dbo].[Services].[Url]" />
+				</Entry>
+				<Entry>
+					<References Name="[dbo].[Services].[Params]" />
+				</Entry>
+				<Entry>
+					<References Name="[dbo].[Services].[ResponseCode]" />
+				</Entry>
+				<Entry>
+					<References Name="[dbo].[Services].[Enable]" />
+				</Entry>
+				<Entry>
+					<References Name="[dbo].[Services].[Status]" />
+				</Entry>
+				<Entry>
+					<References Name="[dbo].[usp_Services_Add].[@GroupId]" />
+				</Entry>
+				<Entry>
+					<References Name="[dbo].[usp_Services_Add].[@Name]" />
+				</Entry>
+				<Entry>
+					<References Name="[dbo].[usp_Services_Add].[@Description]" />
+				</Entry>
+				<Entry>
+					<References Name="[dbo].[usp_Services_Add].[@Url]" />
+				</Entry>
+				<Entry>
+					<References Name="[dbo].[usp_Services_Add].[@Params]" />
+				</Entry>
+				<Entry>
+					<References Name="[dbo].[usp_Services_Add].[@ResponseCode]" />
+				</Entry>
+				<Entry>
+					<References Name="[dbo].[usp_Services_Add].[@Enable]" />
+				</Entry>
+				<Entry>
+					<References Name="[dbo].[usp_Services_Add].[@Status]" />
+				</Entry>
+			</Relationship>
+			<Relationship Name="Parameters">
+				<Entry>
+					<Element Type="SqlSubroutineParameter" Name="[dbo].[usp_Services_Add].[@GroupId]">
+						<Relationship Name="Type">
+							<Entry>
+								<Element Type="SqlTypeSpecifier">
+									<Relationship Name="Type">
+										<Entry>
+											<References ExternalSource="BuiltIns" Name="[int]" />
+										</Entry>
+									</Relationship>
+								</Element>
+							</Entry>
+						</Relationship>
+					</Element>
+				</Entry>
+				<Entry>
+					<Element Type="SqlSubroutineParameter" Name="[dbo].[usp_Services_Add].[@Name]">
+						<Relationship Name="Type">
+							<Entry>
+								<Element Type="SqlTypeSpecifier">
+									<Property Name="Length" Value="100" />
+									<Relationship Name="Type">
+										<Entry>
+											<References ExternalSource="BuiltIns" Name="[varchar]" />
+										</Entry>
+									</Relationship>
+								</Element>
+							</Entry>
+						</Relationship>
+					</Element>
+				</Entry>
+				<Entry>
+					<Element Type="SqlSubroutineParameter" Name="[dbo].[usp_Services_Add].[@Description]">
+						<Relationship Name="Type">
+							<Entry>
+								<Element Type="SqlTypeSpecifier">
+									<Property Name="Length" Value="500" />
+									<Relationship Name="Type">
+										<Entry>
+											<References ExternalSource="BuiltIns" Name="[varchar]" />
+										</Entry>
+									</Relationship>
+								</Element>
+							</Entry>
+						</Relationship>
+					</Element>
+				</Entry>
+				<Entry>
+					<Element Type="SqlSubroutineParameter" Name="[dbo].[usp_Services_Add].[@Url]">
+						<Relationship Name="Type">
+							<Entry>
+								<Element Type="SqlTypeSpecifier">
+									<Property Name="Length" Value="500" />
+									<Relationship Name="Type">
+										<Entry>
+											<References ExternalSource="BuiltIns" Name="[varchar]" />
+										</Entry>
+									</Relationship>
+								</Element>
+							</Entry>
+						</Relationship>
+					</Element>
+				</Entry>
+				<Entry>
+					<Element Type="SqlSubroutineParameter" Name="[dbo].[usp_Services_Add].[@Params]">
+						<Relationship Name="Type">
+							<Entry>
+								<Element Type="SqlTypeSpecifier">
+									<Property Name="Length" Value="500" />
+									<Relationship Name="Type">
+										<Entry>
+											<References ExternalSource="BuiltIns" Name="[varchar]" />
+										</Entry>
+									</Relationship>
+								</Element>
+							</Entry>
+						</Relationship>
+					</Element>
+				</Entry>
+				<Entry>
+					<Element Type="SqlSubroutineParameter" Name="[dbo].[usp_Services_Add].[@ResponseCode]">
+						<Relationship Name="Type">
+							<Entry>
+								<Element Type="SqlTypeSpecifier">
+									<Property Name="Length" Value="100" />
+									<Relationship Name="Type">
+										<Entry>
+											<References ExternalSource="BuiltIns" Name="[varchar]" />
+										</Entry>
+									</Relationship>
+								</Element>
+							</Entry>
+						</Relationship>
+					</Element>
+				</Entry>
+				<Entry>
+					<Element Type="SqlSubroutineParameter" Name="[dbo].[usp_Services_Add].[@Enable]">
+						<Relationship Name="Type">
+							<Entry>
+								<Element Type="SqlTypeSpecifier">
+									<Relationship Name="Type">
+										<Entry>
+											<References ExternalSource="BuiltIns" Name="[tinyint]" />
+										</Entry>
+									</Relationship>
+								</Element>
+							</Entry>
+						</Relationship>
+					</Element>
+				</Entry>
+				<Entry>
+					<Element Type="SqlSubroutineParameter" Name="[dbo].[usp_Services_Add].[@Status]">
+						<Relationship Name="Type">
+							<Entry>
+								<Element Type="SqlTypeSpecifier">
+									<Relationship Name="Type">
+										<Entry>
+											<References ExternalSource="BuiltIns" Name="[tinyint]" />
+										</Entry>
+									</Relationship>
+								</Element>
+							</Entry>
+						</Relationship>
+					</Element>
+				</Entry>
+			</Relationship>
+			<Relationship Name="Schema">
+				<Entry>
+					<References ExternalSource="BuiltIns" Name="[dbo]" />
+				</Entry>
+			</Relationship>
+			<Annotation Type="SysCommentsObjectAnnotation">
+				<Property Name="Length" Value="912" />
+				<Property Name="StartLine" Value="1" />
+				<Property Name="StartColumn" Value="1" />
+				<Property Name="HeaderContents" Value="CREATE PROCEDURE [dbo].[usp_Services_Add] @GroupId      INT, &#xD;&#xA;                                          @Name         VARCHAR(100), &#xD;&#xA;                                          @Description  VARCHAR(500), &#xD;&#xA;                                          @Url          VARCHAR(500), &#xD;&#xA;                                          @Params       VARCHAR(500), &#xD;&#xA;                                          @ResponseCode VARCHAR(100), &#xD;&#xA;                                          @Enable       TINYINT, &#xD;&#xA;                                          @Status       TINYINT&#xD;&#xA;AS" />
+			</Annotation>
+		</Element>
+		<Element Type="SqlProcedure" Name="[dbo].[usp_Services_Delete]">
+			<Property Name="BodyScript">
+				<Value><![CDATA[
+    BEGIN
+        DELETE FROM dbo.[Services]
+        WHERE Id = @Id;
+    END;]]></Value>
+			</Property>
+			<Property Name="IsAnsiNullsOn" Value="True" />
+			<Relationship Name="BodyDependencies">
+				<Entry>
+					<References Name="[dbo].[Services]" />
+				</Entry>
+				<Entry>
+					<References Name="[dbo].[Services].[Id]" />
+				</Entry>
+				<Entry>
+					<References Name="[dbo].[usp_Services_Delete].[@Id]" />
+				</Entry>
+			</Relationship>
+			<Relationship Name="Parameters">
+				<Entry>
+					<Element Type="SqlSubroutineParameter" Name="[dbo].[usp_Services_Delete].[@Id]">
+						<Relationship Name="Type">
+							<Entry>
+								<Element Type="SqlTypeSpecifier">
+									<Relationship Name="Type">
+										<Entry>
+											<References ExternalSource="BuiltIns" Name="[int]" />
+										</Entry>
+									</Relationship>
+								</Element>
+							</Entry>
+						</Relationship>
+					</Element>
+				</Entry>
+			</Relationship>
+			<Relationship Name="Schema">
+				<Entry>
+					<References ExternalSource="BuiltIns" Name="[dbo]" />
+				</Entry>
+			</Relationship>
+			<Annotation Type="SysCommentsObjectAnnotation">
+				<Property Name="CreateOffset" Value="2" />
+				<Property Name="Length" Value="136" />
+				<Property Name="StartLine" Value="1" />
+				<Property Name="StartColumn" Value="1" />
+				<Property Name="HeaderContents" Value="&#xD;&#xA;CREATE PROCEDURE dbo.usp_Services_Delete @Id INT&#xD;&#xA;AS" />
+			</Annotation>
+		</Element>
+		<Element Type="SqlProcedure" Name="[dbo].[usp_Services_Get]">
+			<Property Name="BodyScript">
+				<Value><![CDATA[
+    BEGIN
+        SELECT * FROM dbo.[Services] WHERE Id = @Id
+    END;]]></Value>
+			</Property>
+			<Property Name="IsAnsiNullsOn" Value="True" />
+			<Relationship Name="BodyDependencies">
+				<Entry>
+					<References Name="[dbo].[Services]" />
+				</Entry>
+				<Entry>
+					<References Name="[dbo].[Services].[Id]" />
+				</Entry>
+				<Entry>
+					<References Name="[dbo].[usp_Services_Get].[@Id]" />
+				</Entry>
+			</Relationship>
+			<Relationship Name="Parameters">
+				<Entry>
+					<Element Type="SqlSubroutineParameter" Name="[dbo].[usp_Services_Get].[@Id]">
+						<Relationship Name="Type">
+							<Entry>
+								<Element Type="SqlTypeSpecifier">
+									<Relationship Name="Type">
+										<Entry>
+											<References ExternalSource="BuiltIns" Name="[int]" />
+										</Entry>
+									</Relationship>
+								</Element>
+							</Entry>
+						</Relationship>
+					</Element>
+				</Entry>
+			</Relationship>
+			<Relationship Name="Schema">
+				<Entry>
+					<References ExternalSource="BuiltIns" Name="[dbo]" />
+				</Entry>
+			</Relationship>
+			<Annotation Type="SysCommentsObjectAnnotation">
+				<Property Name="CreateOffset" Value="2" />
+				<Property Name="Length" Value="125" />
+				<Property Name="StartLine" Value="1" />
+				<Property Name="StartColumn" Value="1" />
+				<Property Name="HeaderContents" Value="&#xD;&#xA;CREATE PROCEDURE dbo.usp_Services_Get @Id INT&#xD;&#xA;AS" />
+			</Annotation>
+		</Element>
+		<Element Type="SqlProcedure" Name="[dbo].[usp_Services_GetServiceSummary]">
+			<Property Name="BodyScript">
+				<Value><![CDATA[
+    BEGIN        
+        SELECT COUNT(*) AS TotalService, SUM(CASE WHEN Status = 0 THEN 1 ELSE 0 END) AS ErrorService
+        FROM dbo.[Services]
+        WHERE Enable = 1;
+    END;]]></Value>
+			</Property>
+			<Property Name="IsAnsiNullsOn" Value="True" />
+			<Relationship Name="BodyDependencies">
+				<Entry>
+					<References Name="[dbo].[Services]" />
+				</Entry>
+				<Entry>
+					<References Name="[dbo].[Services].[Status]" />
+				</Entry>
+				<Entry>
+					<References Name="[dbo].[Services].[Enable]" />
+				</Entry>
+			</Relationship>
+			<Relationship Name="Schema">
+				<Entry>
+					<References ExternalSource="BuiltIns" Name="[dbo]" />
+				</Entry>
+			</Relationship>
+			<Annotation Type="SysCommentsObjectAnnotation">
+				<Property Name="Length" Value="243" />
+				<Property Name="StartLine" Value="1" />
+				<Property Name="StartColumn" Value="1" />
+				<Property Name="HeaderContents" Value="CREATE PROCEDURE dbo.usp_Services_GetServiceSummary &#xD;&#xA;AS" />
+			</Annotation>
+		</Element>
+		<Element Type="SqlProcedure" Name="[dbo].[usp_Services_ListByEnable]">
+			<Property Name="BodyScript">
+				<Value><![CDATA[
+    BEGIN        
+        SELECT *
+        FROM dbo.[Services]
+        WHERE [Enable] = @Enable
+    END;]]></Value>
+			</Property>
+			<Property Name="IsAnsiNullsOn" Value="True" />
+			<Relationship Name="BodyDependencies">
+				<Entry>
+					<References Name="[dbo].[Services]" />
+				</Entry>
+				<Entry>
+					<References Name="[dbo].[Services].[Enable]" />
+				</Entry>
+				<Entry>
+					<References Name="[dbo].[usp_Services_ListByEnable].[@Enable]" />
+				</Entry>
+			</Relationship>
+			<Relationship Name="Parameters">
+				<Entry>
+					<Element Type="SqlSubroutineParameter" Name="[dbo].[usp_Services_ListByEnable].[@Enable]">
+						<Relationship Name="Type">
+							<Entry>
+								<Element Type="SqlTypeSpecifier">
+									<Relationship Name="Type">
+										<Entry>
+											<References ExternalSource="BuiltIns" Name="[tinyint]" />
+										</Entry>
+									</Relationship>
+								</Element>
+							</Entry>
+						</Relationship>
+					</Element>
+				</Entry>
+			</Relationship>
+			<Relationship Name="Schema">
+				<Entry>
+					<References ExternalSource="BuiltIns" Name="[dbo]" />
+				</Entry>
+			</Relationship>
+			<Annotation Type="SysCommentsObjectAnnotation">
+				<Property Name="Length" Value="176" />
+				<Property Name="StartLine" Value="1" />
+				<Property Name="StartColumn" Value="1" />
+				<Property Name="HeaderContents" Value="CREATE PROCEDURE dbo.usp_Services_ListByEnable @Enable TINYINT&#xD;&#xA;AS" />
+			</Annotation>
+		</Element>
+		<Element Type="SqlProcedure" Name="[dbo].[usp_Services_ListByGroupId]">
+			<Property Name="BodyScript">
+				<Value><![CDATA[
+    BEGIN
+        IF (@GroupId > 0)
+            SELECT *
+            FROM dbo.[Services]
+            WHERE GroupId = @GroupId;
+        ELSE
+            SELECT *
+            FROM dbo.[Services];
+    END;]]></Value>
+			</Property>
+			<Property Name="IsAnsiNullsOn" Value="True" />
+			<Relationship Name="BodyDependencies">
+				<Entry>
+					<References Name="[dbo].[usp_Services_ListByGroupId].[@GroupId]" />
+				</Entry>
+				<Entry>
+					<References Name="[dbo].[Services]" />
+				</Entry>
+				<Entry>
+					<References Name="[dbo].[Services].[GroupId]" />
+				</Entry>
+			</Relationship>
+			<Relationship Name="Parameters">
+				<Entry>
+					<Element Type="SqlSubroutineParameter" Name="[dbo].[usp_Services_ListByGroupId].[@GroupId]">
+						<Relationship Name="Type">
+							<Entry>
+								<Element Type="SqlTypeSpecifier">
+									<Relationship Name="Type">
+										<Entry>
+											<References ExternalSource="BuiltIns" Name="[int]" />
+										</Entry>
+									</Relationship>
+								</Element>
+							</Entry>
+						</Relationship>
+					</Element>
+				</Entry>
+			</Relationship>
+			<Relationship Name="Schema">
+				<Entry>
+					<References ExternalSource="BuiltIns" Name="[dbo]" />
+				</Entry>
+			</Relationship>
+			<Annotation Type="SysCommentsObjectAnnotation">
+				<Property Name="Length" Value="280" />
+				<Property Name="StartLine" Value="1" />
+				<Property Name="StartColumn" Value="1" />
+				<Property Name="HeaderContents" Value="CREATE PROCEDURE [dbo].[usp_Services_ListByGroupId] @GroupId INT&#xD;&#xA;AS" />
+			</Annotation>
+		</Element>
+		<Element Type="SqlProcedure" Name="[dbo].[usp_Services_Update]">
+			<Property Name="BodyScript">
+				<Value><![CDATA[
+    BEGIN
+        UPDATE dbo.Services
+          SET 
+              GroupId = @GroupId, 
+              Name = @Name, 
+              Description = @Description, 
+              Url = @Url, 
+              Params = @Params, 
+              ResponseCode = @ResponseCode, 
+              UpdatedTime = SYSDATETIMEOFFSET(), 
+              Enable = @Enable, 
+              Status = @Status
+        WHERE Id = @Id;
+    END;]]></Value>
+			</Property>
+			<Property Name="IsAnsiNullsOn" Value="True" />
+			<Relationship Name="BodyDependencies">
+				<Entry>
+					<References Name="[dbo].[Services]" />
+				</Entry>
+				<Entry>
+					<References Name="[dbo].[Services].[GroupId]" />
+				</Entry>
+				<Entry>
+					<References Name="[dbo].[usp_Services_Update].[@GroupId]" />
+				</Entry>
+				<Entry>
+					<References Name="[dbo].[Services].[Name]" />
+				</Entry>
+				<Entry>
+					<References Name="[dbo].[usp_Services_Update].[@Name]" />
+				</Entry>
+				<Entry>
+					<References Name="[dbo].[Services].[Description]" />
+				</Entry>
+				<Entry>
+					<References Name="[dbo].[usp_Services_Update].[@Description]" />
+				</Entry>
+				<Entry>
+					<References Name="[dbo].[Services].[Url]" />
+				</Entry>
+				<Entry>
+					<References Name="[dbo].[usp_Services_Update].[@Url]" />
+				</Entry>
+				<Entry>
+					<References Name="[dbo].[Services].[Params]" />
+				</Entry>
+				<Entry>
+					<References Name="[dbo].[usp_Services_Update].[@Params]" />
+				</Entry>
+				<Entry>
+					<References Name="[dbo].[Services].[ResponseCode]" />
+				</Entry>
+				<Entry>
+					<References Name="[dbo].[usp_Services_Update].[@ResponseCode]" />
+				</Entry>
+				<Entry>
+					<References Name="[dbo].[Services].[UpdatedTime]" />
+				</Entry>
+				<Entry>
+					<References Name="[dbo].[Services].[Enable]" />
+				</Entry>
+				<Entry>
+					<References Name="[dbo].[usp_Services_Update].[@Enable]" />
+				</Entry>
+				<Entry>
+					<References Name="[dbo].[Services].[Status]" />
+				</Entry>
+				<Entry>
+					<References Name="[dbo].[usp_Services_Update].[@Status]" />
+				</Entry>
+				<Entry>
+					<References Name="[dbo].[Services].[Id]" />
+				</Entry>
+				<Entry>
+					<References Name="[dbo].[usp_Services_Update].[@Id]" />
+				</Entry>
+			</Relationship>
+			<Relationship Name="Parameters">
+				<Entry>
+					<Element Type="SqlSubroutineParameter" Name="[dbo].[usp_Services_Update].[@Id]">
+						<Relationship Name="Type">
+							<Entry>
+								<Element Type="SqlTypeSpecifier">
+									<Relationship Name="Type">
+										<Entry>
+											<References ExternalSource="BuiltIns" Name="[int]" />
+										</Entry>
+									</Relationship>
+								</Element>
+							</Entry>
+						</Relationship>
+					</Element>
+				</Entry>
+				<Entry>
+					<Element Type="SqlSubroutineParameter" Name="[dbo].[usp_Services_Update].[@GroupId]">
+						<Relationship Name="Type">
+							<Entry>
+								<Element Type="SqlTypeSpecifier">
+									<Relationship Name="Type">
+										<Entry>
+											<References ExternalSource="BuiltIns" Name="[int]" />
+										</Entry>
+									</Relationship>
+								</Element>
+							</Entry>
+						</Relationship>
+					</Element>
+				</Entry>
+				<Entry>
+					<Element Type="SqlSubroutineParameter" Name="[dbo].[usp_Services_Update].[@Name]">
+						<Relationship Name="Type">
+							<Entry>
+								<Element Type="SqlTypeSpecifier">
+									<Property Name="Length" Value="100" />
+									<Relationship Name="Type">
+										<Entry>
+											<References ExternalSource="BuiltIns" Name="[varchar]" />
+										</Entry>
+									</Relationship>
+								</Element>
+							</Entry>
+						</Relationship>
+					</Element>
+				</Entry>
+				<Entry>
+					<Element Type="SqlSubroutineParameter" Name="[dbo].[usp_Services_Update].[@Description]">
+						<Relationship Name="Type">
+							<Entry>
+								<Element Type="SqlTypeSpecifier">
+									<Property Name="Length" Value="500" />
+									<Relationship Name="Type">
+										<Entry>
+											<References ExternalSource="BuiltIns" Name="[varchar]" />
+										</Entry>
+									</Relationship>
+								</Element>
+							</Entry>
+						</Relationship>
+					</Element>
+				</Entry>
+				<Entry>
+					<Element Type="SqlSubroutineParameter" Name="[dbo].[usp_Services_Update].[@Url]">
+						<Relationship Name="Type">
+							<Entry>
+								<Element Type="SqlTypeSpecifier">
+									<Property Name="Length" Value="500" />
+									<Relationship Name="Type">
+										<Entry>
+											<References ExternalSource="BuiltIns" Name="[varchar]" />
+										</Entry>
+									</Relationship>
+								</Element>
+							</Entry>
+						</Relationship>
+					</Element>
+				</Entry>
+				<Entry>
+					<Element Type="SqlSubroutineParameter" Name="[dbo].[usp_Services_Update].[@Params]">
+						<Relationship Name="Type">
+							<Entry>
+								<Element Type="SqlTypeSpecifier">
+									<Property Name="Length" Value="500" />
+									<Relationship Name="Type">
+										<Entry>
+											<References ExternalSource="BuiltIns" Name="[varchar]" />
+										</Entry>
+									</Relationship>
+								</Element>
+							</Entry>
+						</Relationship>
+					</Element>
+				</Entry>
+				<Entry>
+					<Element Type="SqlSubroutineParameter" Name="[dbo].[usp_Services_Update].[@ResponseCode]">
+						<Relationship Name="Type">
+							<Entry>
+								<Element Type="SqlTypeSpecifier">
+									<Property Name="Length" Value="100" />
+									<Relationship Name="Type">
+										<Entry>
+											<References ExternalSource="BuiltIns" Name="[varchar]" />
+										</Entry>
+									</Relationship>
+								</Element>
+							</Entry>
+						</Relationship>
+					</Element>
+				</Entry>
+				<Entry>
+					<Element Type="SqlSubroutineParameter" Name="[dbo].[usp_Services_Update].[@Enable]">
+						<Relationship Name="Type">
+							<Entry>
+								<Element Type="SqlTypeSpecifier">
+									<Relationship Name="Type">
+										<Entry>
+											<References ExternalSource="BuiltIns" Name="[tinyint]" />
+										</Entry>
+									</Relationship>
+								</Element>
+							</Entry>
+						</Relationship>
+					</Element>
+				</Entry>
+				<Entry>
+					<Element Type="SqlSubroutineParameter" Name="[dbo].[usp_Services_Update].[@Status]">
+						<Relationship Name="Type">
+							<Entry>
+								<Element Type="SqlTypeSpecifier">
+									<Relationship Name="Type">
+										<Entry>
+											<References ExternalSource="BuiltIns" Name="[tinyint]" />
+										</Entry>
+									</Relationship>
+								</Element>
+							</Entry>
+						</Relationship>
+					</Element>
+				</Entry>
+			</Relationship>
+			<Relationship Name="Schema">
+				<Entry>
+					<References ExternalSource="BuiltIns" Name="[dbo]" />
+				</Entry>
+			</Relationship>
+			<Annotation Type="SysCommentsObjectAnnotation">
+				<Property Name="CreateOffset" Value="2" />
+				<Property Name="Length" Value="1039" />
+				<Property Name="StartLine" Value="1" />
+				<Property Name="StartColumn" Value="1" />
+				<Property Name="HeaderContents" Value="&#xD;&#xA;CREATE PROCEDURE dbo.usp_Services_Update @Id           INT, &#xD;&#xA;                                         @GroupId      INT, &#xD;&#xA;                                         @Name         VARCHAR(100), &#xD;&#xA;                                         @Description  VARCHAR(500), &#xD;&#xA;                                         @Url          VARCHAR(500), &#xD;&#xA;                                         @Params       VARCHAR(500), &#xD;&#xA;                                         @ResponseCode VARCHAR(100), &#xD;&#xA;                                         @Enable       TINYINT, &#xD;&#xA;                                         @Status       TINYINT&#xD;&#xA;AS" />
+			</Annotation>
+		</Element>
+		<Element Type="SqlProcedure" Name="[dbo].[usp_Services_UpdateStatus]">
+			<Property Name="BodyScript">
+				<Value><![CDATA[
+	UPDATE dbo.Services
+	SET 
+		Status = @Status,
+		UpdatedTime = SYSDATETIMEOFFSET()
+	WHERE Id = @Id]]></Value>
+			</Property>
+			<Property Name="IsAnsiNullsOn" Value="True" />
+			<Relationship Name="BodyDependencies">
+				<Entry>
+					<References Name="[dbo].[Services]" />
+				</Entry>
+				<Entry>
+					<References Name="[dbo].[Services].[Status]" />
+				</Entry>
+				<Entry>
+					<References Name="[dbo].[usp_Services_UpdateStatus].[@Status]" />
+				</Entry>
+				<Entry>
+					<References Name="[dbo].[Services].[UpdatedTime]" />
+				</Entry>
+				<Entry>
+					<References Name="[dbo].[Services].[Id]" />
+				</Entry>
+				<Entry>
+					<References Name="[dbo].[usp_Services_UpdateStatus].[@Id]" />
+				</Entry>
+			</Relationship>
+			<Relationship Name="Parameters">
+				<Entry>
+					<Element Type="SqlSubroutineParameter" Name="[dbo].[usp_Services_UpdateStatus].[@Id]">
+						<Relationship Name="Type">
+							<Entry>
+								<Element Type="SqlTypeSpecifier">
+									<Relationship Name="Type">
+										<Entry>
+											<References ExternalSource="BuiltIns" Name="[int]" />
+										</Entry>
+									</Relationship>
+								</Element>
+							</Entry>
+						</Relationship>
+					</Element>
+				</Entry>
+				<Entry>
+					<Element Type="SqlSubroutineParameter" Name="[dbo].[usp_Services_UpdateStatus].[@Status]">
+						<Relationship Name="Type">
+							<Entry>
+								<Element Type="SqlTypeSpecifier">
+									<Relationship Name="Type">
+										<Entry>
+											<References ExternalSource="BuiltIns" Name="[tinyint]" />
+										</Entry>
+									</Relationship>
+								</Element>
+							</Entry>
+						</Relationship>
+					</Element>
+				</Entry>
+			</Relationship>
+			<Relationship Name="Schema">
+				<Entry>
+					<References ExternalSource="BuiltIns" Name="[dbo]" />
+				</Entry>
+			</Relationship>
+			<Annotation Type="SysCommentsObjectAnnotation">
+				<Property Name="Length" Value="187" />
+				<Property Name="StartLine" Value="1" />
+				<Property Name="StartColumn" Value="1" />
+				<Property Name="HeaderContents" Value="CREATE PROCEDURE [dbo].[usp_Services_UpdateStatus]&#xD;&#xA;&#x9;@Id int,&#xD;&#xA;&#x9;@Status tinyint&#xD;&#xA;AS" />
+			</Annotation>
+		</Element>
+		<Element Type="SqlProcedure" Name="[dbo].[usp_ServicesLog_Add]">
+			<Property Name="BodyScript">
+				<Value><![CDATA[
+	INSERT dbo.ServicesLog (JournalGuid, ServiceId, ServiceUrl, ServiceStatus)
+	VALUES (@JournalGuid, @ServiceId, @ServiceUrl, @ServiceStatus)]]></Value>
+			</Property>
+			<Property Name="IsAnsiNullsOn" Value="True" />
+			<Relationship Name="BodyDependencies">
+				<Entry>
+					<References Name="[dbo].[ServicesLog]" />
+				</Entry>
+				<Entry>
+					<References Name="[dbo].[ServicesLog].[JournalGuid]" />
+				</Entry>
+				<Entry>
+					<References Name="[dbo].[ServicesLog].[ServiceId]" />
+				</Entry>
+				<Entry>
+					<References Name="[dbo].[ServicesLog].[ServiceUrl]" />
+				</Entry>
+				<Entry>
+					<References Name="[dbo].[ServicesLog].[ServiceStatus]" />
+				</Entry>
+				<Entry>
+					<References Name="[dbo].[usp_ServicesLog_Add].[@JournalGuid]" />
+				</Entry>
+				<Entry>
+					<References Name="[dbo].[usp_ServicesLog_Add].[@ServiceId]" />
+				</Entry>
+				<Entry>
+					<References Name="[dbo].[usp_ServicesLog_Add].[@ServiceUrl]" />
+				</Entry>
+				<Entry>
+					<References Name="[dbo].[usp_ServicesLog_Add].[@ServiceStatus]" />
+				</Entry>
+			</Relationship>
+			<Relationship Name="Parameters">
+				<Entry>
+					<Element Type="SqlSubroutineParameter" Name="[dbo].[usp_ServicesLog_Add].[@JournalGuid]">
+						<Relationship Name="Type">
+							<Entry>
+								<Element Type="SqlTypeSpecifier">
+									<Relationship Name="Type">
+										<Entry>
+											<References ExternalSource="BuiltIns" Name="[uniqueidentifier]" />
+										</Entry>
+									</Relationship>
+								</Element>
+							</Entry>
+						</Relationship>
+					</Element>
+				</Entry>
+				<Entry>
+					<Element Type="SqlSubroutineParameter" Name="[dbo].[usp_ServicesLog_Add].[@ServiceId]">
+						<Relationship Name="Type">
+							<Entry>
+								<Element Type="SqlTypeSpecifier">
+									<Relationship Name="Type">
+										<Entry>
+											<References ExternalSource="BuiltIns" Name="[int]" />
+										</Entry>
+									</Relationship>
+								</Element>
+							</Entry>
+						</Relationship>
+					</Element>
+				</Entry>
+				<Entry>
+					<Element Type="SqlSubroutineParameter" Name="[dbo].[usp_ServicesLog_Add].[@ServiceUrl]">
+						<Relationship Name="Type">
+							<Entry>
+								<Element Type="SqlTypeSpecifier">
+									<Property Name="Length" Value="200" />
+									<Relationship Name="Type">
+										<Entry>
+											<References ExternalSource="BuiltIns" Name="[varchar]" />
+										</Entry>
+									</Relationship>
+								</Element>
+							</Entry>
+						</Relationship>
+					</Element>
+				</Entry>
+				<Entry>
+					<Element Type="SqlSubroutineParameter" Name="[dbo].[usp_ServicesLog_Add].[@ServiceStatus]">
+						<Relationship Name="Type">
+							<Entry>
+								<Element Type="SqlTypeSpecifier">
+									<Property Name="Length" Value="100" />
+									<Relationship Name="Type">
+										<Entry>
+											<References ExternalSource="BuiltIns" Name="[varchar]" />
+										</Entry>
+									</Relationship>
+								</Element>
+							</Entry>
+						</Relationship>
+					</Element>
+				</Entry>
+			</Relationship>
+			<Relationship Name="Schema">
+				<Entry>
+					<References ExternalSource="BuiltIns" Name="[dbo]" />
+				</Entry>
+			</Relationship>
+			<Annotation Type="SysCommentsObjectAnnotation">
+				<Property Name="Length" Value="299" />
+				<Property Name="StartLine" Value="1" />
+				<Property Name="StartColumn" Value="1" />
+				<Property Name="HeaderContents" Value="CREATE PROCEDURE [dbo].[usp_ServicesLog_Add]&#xD;&#xA;&#x9;@JournalGuid uniqueidentifier,&#xD;&#xA;&#x9;@ServiceId int,&#xD;&#xA;&#x9;@ServiceUrl varchar(200),&#xD;&#xA;&#x9;@ServiceStatus varchar(100)&#xD;&#xA;AS" />
+			</Annotation>
+		</Element>
+		<Element Type="SqlProcedure" Name="[dbo].[usp_Users_Add]">
+			<Property Name="BodyScript">
+				<Value><![CDATA[
+    BEGIN
+        SET @ResponseCode = 1;
+        IF EXISTS
+        (
+            SELECT 1
+            FROM dbo.Users
+            WHERE Email = @Email
+        )
+            BEGIN
+                SET @ResponseCode = -1; -- email existed
+                RETURN;
+            END;
+        IF EXISTS
+        (
+            SELECT 1
+            FROM dbo.UsersLogin
+            WHERE UserName = @UserName
+        )
+            BEGIN
+                SET @ResponseCode = -2; -- username existed
+                RETURN;
+            END;
+        INSERT INTO dbo.Users
+        (FirstName, 
+         LastName, 
+         Email
+        )
+        VALUES
+        (@FirstName, 
+         @LastName, 
+         @Email
+        );
+        SET @ResponseCode = SCOPE_IDENTITY();
+        INSERT INTO dbo.UsersLogin
+        (Id, 
+         UserName, 
+         Password
+        )
+        VALUES
+        (@ResponseCode, 
+         @UserName, 
+         @Password
+        );
+    END;]]></Value>
+			</Property>
+			<Property Name="IsAnsiNullsOn" Value="True" />
+			<Relationship Name="BodyDependencies">
+				<Entry>
+					<References Name="[dbo].[usp_Users_Add].[@ResponseCode]" />
 				</Entry>
 				<Entry>
 					<References Name="[dbo].[Users]" />
@@ -907,7 +2209,7 @@ END]]></Value>
 					<References Name="[dbo].[Users].[Email]" />
 				</Entry>
 				<Entry>
-					<References Name="[dbo].[usp_CreateUser].[@Email]" />
+					<References Name="[dbo].[usp_Users_Add].[@Email]" />
 				</Entry>
 				<Entry>
 					<References Name="[dbo].[UsersLogin]" />
@@ -916,7 +2218,7 @@ END]]></Value>
 					<References Name="[dbo].[UsersLogin].[UserName]" />
 				</Entry>
 				<Entry>
-					<References Name="[dbo].[usp_CreateUser].[@UserName]" />
+					<References Name="[dbo].[usp_Users_Add].[@UserName]" />
 				</Entry>
 				<Entry>
 					<References Name="[dbo].[Users].[FirstName]" />
@@ -928,10 +2230,10 @@ END]]></Value>
 					<References Name="[dbo].[Users].[Email]" />
 				</Entry>
 				<Entry>
-					<References Name="[dbo].[usp_CreateUser].[@FirstName]" />
+					<References Name="[dbo].[usp_Users_Add].[@FirstName]" />
 				</Entry>
 				<Entry>
-					<References Name="[dbo].[usp_CreateUser].[@LastName]" />
+					<References Name="[dbo].[usp_Users_Add].[@LastName]" />
 				</Entry>
 				<Entry>
 					<References Name="[dbo].[UsersLogin].[Id]" />
@@ -943,12 +2245,12 @@ END]]></Value>
 					<References Name="[dbo].[UsersLogin].[Password]" />
 				</Entry>
 				<Entry>
-					<References Name="[dbo].[usp_CreateUser].[@Password]" />
+					<References Name="[dbo].[usp_Users_Add].[@Password]" />
 				</Entry>
 			</Relationship>
 			<Relationship Name="Parameters">
 				<Entry>
-					<Element Type="SqlSubroutineParameter" Name="[dbo].[usp_CreateUser].[@FirstName]">
+					<Element Type="SqlSubroutineParameter" Name="[dbo].[usp_Users_Add].[@FirstName]">
 						<Relationship Name="Type">
 							<Entry>
 								<Element Type="SqlTypeSpecifier">
@@ -964,7 +2266,7 @@ END]]></Value>
 					</Element>
 				</Entry>
 				<Entry>
-					<Element Type="SqlSubroutineParameter" Name="[dbo].[usp_CreateUser].[@LastName]">
+					<Element Type="SqlSubroutineParameter" Name="[dbo].[usp_Users_Add].[@LastName]">
 						<Relationship Name="Type">
 							<Entry>
 								<Element Type="SqlTypeSpecifier">
@@ -980,7 +2282,7 @@ END]]></Value>
 					</Element>
 				</Entry>
 				<Entry>
-					<Element Type="SqlSubroutineParameter" Name="[dbo].[usp_CreateUser].[@Email]">
+					<Element Type="SqlSubroutineParameter" Name="[dbo].[usp_Users_Add].[@Email]">
 						<Relationship Name="Type">
 							<Entry>
 								<Element Type="SqlTypeSpecifier">
@@ -996,7 +2298,7 @@ END]]></Value>
 					</Element>
 				</Entry>
 				<Entry>
-					<Element Type="SqlSubroutineParameter" Name="[dbo].[usp_CreateUser].[@UserName]">
+					<Element Type="SqlSubroutineParameter" Name="[dbo].[usp_Users_Add].[@UserName]">
 						<Relationship Name="Type">
 							<Entry>
 								<Element Type="SqlTypeSpecifier">
@@ -1012,7 +2314,7 @@ END]]></Value>
 					</Element>
 				</Entry>
 				<Entry>
-					<Element Type="SqlSubroutineParameter" Name="[dbo].[usp_CreateUser].[@Password]">
+					<Element Type="SqlSubroutineParameter" Name="[dbo].[usp_Users_Add].[@Password]">
 						<Relationship Name="Type">
 							<Entry>
 								<Element Type="SqlTypeSpecifier">
@@ -1028,7 +2330,7 @@ END]]></Value>
 					</Element>
 				</Entry>
 				<Entry>
-					<Element Type="SqlSubroutineParameter" Name="[dbo].[usp_CreateUser].[@ResponseCode]">
+					<Element Type="SqlSubroutineParameter" Name="[dbo].[usp_Users_Add].[@ResponseCode]">
 						<Property Name="IsOutput" Value="True" />
 						<Relationship Name="Type">
 							<Entry>
@@ -1050,10 +2352,615 @@ END]]></Value>
 				</Entry>
 			</Relationship>
 			<Annotation Type="SysCommentsObjectAnnotation">
-				<Property Name="Length" Value="731" />
+				<Property Name="Length" Value="1402" />
 				<Property Name="StartLine" Value="1" />
 				<Property Name="StartColumn" Value="1" />
-				<Property Name="HeaderContents" Value="CREATE PROCEDURE [dbo].[usp_CreateUser]&#xD;&#xA;&#x9;@FirstName VARCHAR(50),&#xD;&#xA;&#x9;@LastName VARCHAR(50),&#xD;&#xA;&#x9;@Email VARCHAR(100),&#xD;&#xA;&#x9;@UserName VARCHAR(50),&#xD;&#xA;&#x9;@Password VARCHAR(100),&#xD;&#xA;&#x9;@ResponseCode INT OUTPUT&#xD;&#xA;AS" />
+				<Property Name="HeaderContents" Value="CREATE PROCEDURE [dbo].[usp_Users_Add] @FirstName    VARCHAR(50), &#xD;&#xA;                                       @LastName     VARCHAR(50), &#xD;&#xA;                                       @Email        VARCHAR(100), &#xD;&#xA;                                       @UserName     VARCHAR(50), &#xD;&#xA;                                       @Password     VARCHAR(100), &#xD;&#xA;                                       @ResponseCode INT OUTPUT&#xD;&#xA;AS" />
+			</Annotation>
+		</Element>
+		<Element Type="SqlProcedure" Name="[dbo].[usp_Users_Delete]">
+			<Property Name="BodyScript">
+				<Value><![CDATA[
+    BEGIN
+        DELETE FROM dbo.UsersLogin
+        WHERE Id = @Id;
+        DELETE FROM dbo.Users
+        WHERE Id = @Id;
+    END;]]></Value>
+			</Property>
+			<Property Name="IsAnsiNullsOn" Value="True" />
+			<Relationship Name="BodyDependencies">
+				<Entry>
+					<References Name="[dbo].[UsersLogin]" />
+				</Entry>
+				<Entry>
+					<References Name="[dbo].[UsersLogin].[Id]" />
+				</Entry>
+				<Entry>
+					<References Name="[dbo].[usp_Users_Delete].[@Id]" />
+				</Entry>
+				<Entry>
+					<References Name="[dbo].[Users]" />
+				</Entry>
+				<Entry>
+					<References Name="[dbo].[Users].[Id]" />
+				</Entry>
+			</Relationship>
+			<Relationship Name="Parameters">
+				<Entry>
+					<Element Type="SqlSubroutineParameter" Name="[dbo].[usp_Users_Delete].[@Id]">
+						<Relationship Name="Type">
+							<Entry>
+								<Element Type="SqlTypeSpecifier">
+									<Relationship Name="Type">
+										<Entry>
+											<References ExternalSource="BuiltIns" Name="[int]" />
+										</Entry>
+									</Relationship>
+								</Element>
+							</Entry>
+						</Relationship>
+					</Element>
+				</Entry>
+			</Relationship>
+			<Relationship Name="Schema">
+				<Entry>
+					<References ExternalSource="BuiltIns" Name="[dbo]" />
+				</Entry>
+			</Relationship>
+			<Annotation Type="SysCommentsObjectAnnotation">
+				<Property Name="Length" Value="191" />
+				<Property Name="StartLine" Value="1" />
+				<Property Name="StartColumn" Value="1" />
+				<Property Name="HeaderContents" Value="CREATE PROCEDURE [dbo].[usp_Users_Delete] @Id INT&#xD;&#xA;AS" />
+			</Annotation>
+		</Element>
+		<Element Type="SqlProcedure" Name="[dbo].[usp_Users_Get]">
+			<Property Name="BodyScript">
+				<Value><![CDATA[
+     SELECT u.Id, 
+            u.FirstName, 
+            u.LastName, 
+            u.Email, 
+            ul.UserName, 
+            ul.Password, 
+            u.STATUS, 
+            u.CreatedTime, 
+            u.UpdatedTime
+     FROM dbo.Users u
+          LEFT JOIN dbo.UsersLogin ul ON u.Id = ul.Id
+     WHERE u.Id = @Id;]]></Value>
+			</Property>
+			<Property Name="IsAnsiNullsOn" Value="True" />
+			<Relationship Name="BodyDependencies">
+				<Entry>
+					<References Name="[dbo].[Users]" />
+				</Entry>
+				<Entry>
+					<References Name="[dbo].[UsersLogin]" />
+				</Entry>
+				<Entry>
+					<References Name="[dbo].[Users].[Id]" />
+				</Entry>
+				<Entry>
+					<References Name="[dbo].[UsersLogin].[Id]" />
+				</Entry>
+				<Entry>
+					<References Name="[dbo].[Users].[FirstName]" />
+				</Entry>
+				<Entry>
+					<References Name="[dbo].[Users].[LastName]" />
+				</Entry>
+				<Entry>
+					<References Name="[dbo].[Users].[Email]" />
+				</Entry>
+				<Entry>
+					<References Name="[dbo].[UsersLogin].[UserName]" />
+				</Entry>
+				<Entry>
+					<References Name="[dbo].[UsersLogin].[Password]" />
+				</Entry>
+				<Entry>
+					<References Name="[dbo].[Users].[Status]" />
+				</Entry>
+				<Entry>
+					<References Name="[dbo].[Users].[CreatedTime]" />
+				</Entry>
+				<Entry>
+					<References Name="[dbo].[Users].[UpdatedTime]" />
+				</Entry>
+				<Entry>
+					<References Name="[dbo].[usp_Users_Get].[@Id]" />
+				</Entry>
+			</Relationship>
+			<Relationship Name="Parameters">
+				<Entry>
+					<Element Type="SqlSubroutineParameter" Name="[dbo].[usp_Users_Get].[@Id]">
+						<Relationship Name="Type">
+							<Entry>
+								<Element Type="SqlTypeSpecifier">
+									<Relationship Name="Type">
+										<Entry>
+											<References ExternalSource="BuiltIns" Name="[int]" />
+										</Entry>
+									</Relationship>
+								</Element>
+							</Entry>
+						</Relationship>
+					</Element>
+				</Entry>
+			</Relationship>
+			<Relationship Name="Schema">
+				<Entry>
+					<References ExternalSource="BuiltIns" Name="[dbo]" />
+				</Entry>
+			</Relationship>
+			<Annotation Type="SysCommentsObjectAnnotation">
+				<Property Name="Length" Value="382" />
+				<Property Name="StartLine" Value="1" />
+				<Property Name="StartColumn" Value="1" />
+				<Property Name="HeaderContents" Value="CREATE PROCEDURE [dbo].[usp_Users_Get] @Id INT&#xD;&#xA;AS" />
+			</Annotation>
+		</Element>
+		<Element Type="SqlProcedure" Name="[dbo].[usp_Users_List]">
+			<Property Name="BodyScript">
+				<Value><![CDATA[
+     SELECT u.Id, 
+            u.FirstName, 
+            u.LastName, 
+            u.Email, 
+            ul.UserName, 
+            ul.Password, 
+            u.STATUS, 
+            u.CreatedTime, 
+            u.UpdatedTime
+     FROM dbo.Users u
+          LEFT JOIN dbo.UsersLogin ul ON u.Id = ul.Id;]]></Value>
+			</Property>
+			<Property Name="IsAnsiNullsOn" Value="True" />
+			<Relationship Name="BodyDependencies">
+				<Entry>
+					<References Name="[dbo].[Users]" />
+				</Entry>
+				<Entry>
+					<References Name="[dbo].[UsersLogin]" />
+				</Entry>
+				<Entry>
+					<References Name="[dbo].[Users].[Id]" />
+				</Entry>
+				<Entry>
+					<References Name="[dbo].[UsersLogin].[Id]" />
+				</Entry>
+				<Entry>
+					<References Name="[dbo].[Users].[FirstName]" />
+				</Entry>
+				<Entry>
+					<References Name="[dbo].[Users].[LastName]" />
+				</Entry>
+				<Entry>
+					<References Name="[dbo].[Users].[Email]" />
+				</Entry>
+				<Entry>
+					<References Name="[dbo].[UsersLogin].[UserName]" />
+				</Entry>
+				<Entry>
+					<References Name="[dbo].[UsersLogin].[Password]" />
+				</Entry>
+				<Entry>
+					<References Name="[dbo].[Users].[Status]" />
+				</Entry>
+				<Entry>
+					<References Name="[dbo].[Users].[CreatedTime]" />
+				</Entry>
+				<Entry>
+					<References Name="[dbo].[Users].[UpdatedTime]" />
+				</Entry>
+			</Relationship>
+			<Relationship Name="Schema">
+				<Entry>
+					<References ExternalSource="BuiltIns" Name="[dbo]" />
+				</Entry>
+			</Relationship>
+			<Annotation Type="SysCommentsObjectAnnotation">
+				<Property Name="Length" Value="352" />
+				<Property Name="StartLine" Value="1" />
+				<Property Name="StartColumn" Value="1" />
+				<Property Name="HeaderContents" Value="CREATE PROCEDURE [dbo].[usp_Users_List]&#xD;&#xA;AS" />
+			</Annotation>
+		</Element>
+		<Element Type="SqlProcedure" Name="[dbo].[usp_Users_Update]">
+			<Property Name="BodyScript">
+				<Value><![CDATA[
+    BEGIN
+        SET @ResponseCode = 1;
+        IF EXISTS
+        (
+            SELECT 1
+            FROM dbo.Users
+            WHERE Email = @Email
+                  AND Id <> @Id
+        )
+            BEGIN
+                SET @ResponseCode = -1; -- email existed
+                RETURN;
+            END;
+        IF EXISTS
+        (
+            SELECT 1
+            FROM dbo.UsersLogin
+            WHERE UserName = @UserName
+                  AND Id <> @Id
+        )
+            BEGIN
+                SET @ResponseCode = -2; -- username existed
+                RETURN;
+            END;
+        UPDATE dbo.Users
+          SET 
+              FirstName = @FirstName, 
+              LastName = @LastName, 
+              Email = @Email, 
+              UpdatedTime = SYSDATETIMEOFFSET()
+        WHERE Id = @Id;
+        UPDATE dbo.UsersLogin
+          SET 
+              UserName = @UserName, 
+              Password = (CASE
+                              WHEN LEN(@Password) > 0
+                              THEN @Password
+                              ELSE Password
+                          END), 
+              UpdatedTime = SYSDATETIMEOFFSET()
+        WHERE Id = @Id;
+    END;]]></Value>
+			</Property>
+			<Property Name="IsAnsiNullsOn" Value="True" />
+			<Relationship Name="BodyDependencies">
+				<Entry>
+					<References Name="[dbo].[usp_Users_Update].[@ResponseCode]" />
+				</Entry>
+				<Entry>
+					<References Name="[dbo].[Users]" />
+				</Entry>
+				<Entry>
+					<References Name="[dbo].[Users].[Email]" />
+				</Entry>
+				<Entry>
+					<References Name="[dbo].[usp_Users_Update].[@Email]" />
+				</Entry>
+				<Entry>
+					<References Name="[dbo].[Users].[Id]" />
+				</Entry>
+				<Entry>
+					<References Name="[dbo].[usp_Users_Update].[@Id]" />
+				</Entry>
+				<Entry>
+					<References Name="[dbo].[UsersLogin]" />
+				</Entry>
+				<Entry>
+					<References Name="[dbo].[UsersLogin].[UserName]" />
+				</Entry>
+				<Entry>
+					<References Name="[dbo].[usp_Users_Update].[@UserName]" />
+				</Entry>
+				<Entry>
+					<References Name="[dbo].[UsersLogin].[Id]" />
+				</Entry>
+				<Entry>
+					<References Name="[dbo].[Users].[FirstName]" />
+				</Entry>
+				<Entry>
+					<References Name="[dbo].[usp_Users_Update].[@FirstName]" />
+				</Entry>
+				<Entry>
+					<References Name="[dbo].[Users].[LastName]" />
+				</Entry>
+				<Entry>
+					<References Name="[dbo].[usp_Users_Update].[@LastName]" />
+				</Entry>
+				<Entry>
+					<References Name="[dbo].[Users].[Email]" />
+				</Entry>
+				<Entry>
+					<References Name="[dbo].[Users].[UpdatedTime]" />
+				</Entry>
+				<Entry>
+					<References Name="[dbo].[Users].[Id]" />
+				</Entry>
+				<Entry>
+					<References Name="[dbo].[UsersLogin].[UserName]" />
+				</Entry>
+				<Entry>
+					<References Name="[dbo].[UsersLogin].[Password]" />
+				</Entry>
+				<Entry>
+					<References Name="[dbo].[usp_Users_Update].[@Password]" />
+				</Entry>
+				<Entry>
+					<References Name="[dbo].[UsersLogin].[UpdatedTime]" />
+				</Entry>
+				<Entry>
+					<References Name="[dbo].[UsersLogin].[Id]" />
+				</Entry>
+			</Relationship>
+			<Relationship Name="Parameters">
+				<Entry>
+					<Element Type="SqlSubroutineParameter" Name="[dbo].[usp_Users_Update].[@Id]">
+						<Relationship Name="Type">
+							<Entry>
+								<Element Type="SqlTypeSpecifier">
+									<Relationship Name="Type">
+										<Entry>
+											<References ExternalSource="BuiltIns" Name="[int]" />
+										</Entry>
+									</Relationship>
+								</Element>
+							</Entry>
+						</Relationship>
+					</Element>
+				</Entry>
+				<Entry>
+					<Element Type="SqlSubroutineParameter" Name="[dbo].[usp_Users_Update].[@FirstName]">
+						<Relationship Name="Type">
+							<Entry>
+								<Element Type="SqlTypeSpecifier">
+									<Property Name="Length" Value="50" />
+									<Relationship Name="Type">
+										<Entry>
+											<References ExternalSource="BuiltIns" Name="[varchar]" />
+										</Entry>
+									</Relationship>
+								</Element>
+							</Entry>
+						</Relationship>
+					</Element>
+				</Entry>
+				<Entry>
+					<Element Type="SqlSubroutineParameter" Name="[dbo].[usp_Users_Update].[@LastName]">
+						<Relationship Name="Type">
+							<Entry>
+								<Element Type="SqlTypeSpecifier">
+									<Property Name="Length" Value="50" />
+									<Relationship Name="Type">
+										<Entry>
+											<References ExternalSource="BuiltIns" Name="[varchar]" />
+										</Entry>
+									</Relationship>
+								</Element>
+							</Entry>
+						</Relationship>
+					</Element>
+				</Entry>
+				<Entry>
+					<Element Type="SqlSubroutineParameter" Name="[dbo].[usp_Users_Update].[@Email]">
+						<Relationship Name="Type">
+							<Entry>
+								<Element Type="SqlTypeSpecifier">
+									<Property Name="Length" Value="100" />
+									<Relationship Name="Type">
+										<Entry>
+											<References ExternalSource="BuiltIns" Name="[varchar]" />
+										</Entry>
+									</Relationship>
+								</Element>
+							</Entry>
+						</Relationship>
+					</Element>
+				</Entry>
+				<Entry>
+					<Element Type="SqlSubroutineParameter" Name="[dbo].[usp_Users_Update].[@UserName]">
+						<Relationship Name="Type">
+							<Entry>
+								<Element Type="SqlTypeSpecifier">
+									<Property Name="Length" Value="50" />
+									<Relationship Name="Type">
+										<Entry>
+											<References ExternalSource="BuiltIns" Name="[varchar]" />
+										</Entry>
+									</Relationship>
+								</Element>
+							</Entry>
+						</Relationship>
+					</Element>
+				</Entry>
+				<Entry>
+					<Element Type="SqlSubroutineParameter" Name="[dbo].[usp_Users_Update].[@Password]">
+						<Relationship Name="Type">
+							<Entry>
+								<Element Type="SqlTypeSpecifier">
+									<Property Name="Length" Value="100" />
+									<Relationship Name="Type">
+										<Entry>
+											<References ExternalSource="BuiltIns" Name="[varchar]" />
+										</Entry>
+									</Relationship>
+								</Element>
+							</Entry>
+						</Relationship>
+					</Element>
+				</Entry>
+				<Entry>
+					<Element Type="SqlSubroutineParameter" Name="[dbo].[usp_Users_Update].[@ResponseCode]">
+						<Property Name="IsOutput" Value="True" />
+						<Relationship Name="Type">
+							<Entry>
+								<Element Type="SqlTypeSpecifier">
+									<Relationship Name="Type">
+										<Entry>
+											<References ExternalSource="BuiltIns" Name="[int]" />
+										</Entry>
+									</Relationship>
+								</Element>
+							</Entry>
+						</Relationship>
+					</Element>
+				</Entry>
+			</Relationship>
+			<Relationship Name="Schema">
+				<Entry>
+					<References ExternalSource="BuiltIns" Name="[dbo]" />
+				</Entry>
+			</Relationship>
+			<Annotation Type="SysCommentsObjectAnnotation">
+				<Property Name="Length" Value="1710" />
+				<Property Name="StartLine" Value="1" />
+				<Property Name="StartColumn" Value="1" />
+				<Property Name="HeaderContents" Value="CREATE PROCEDURE [dbo].[usp_Users_Update] @Id           INT, &#xD;&#xA;                                          @FirstName    VARCHAR(50), &#xD;&#xA;                                          @LastName     VARCHAR(50), &#xD;&#xA;                                          @Email        VARCHAR(100), &#xD;&#xA;                                          @UserName     VARCHAR(50), &#xD;&#xA;                                          @Password     VARCHAR(100), &#xD;&#xA;                                          @ResponseCode INT OUTPUT&#xD;&#xA;AS" />
+			</Annotation>
+		</Element>
+		<Element Type="SqlProcedure" Name="[dbo].[usp_Users_UpdateStatus]">
+			<Property Name="BodyScript">
+				<Value><![CDATA[
+     UPDATE dbo.Users
+       SET 
+           STATUS = CASE
+                        WHEN STATUS = 0
+                        THEN 1
+                        ELSE 0
+                    END, 
+           UpdatedTime = SYSDATETIMEOFFSET()
+     WHERE Id = @Id;]]></Value>
+			</Property>
+			<Property Name="IsAnsiNullsOn" Value="True" />
+			<Relationship Name="BodyDependencies">
+				<Entry>
+					<References Name="[dbo].[Users]" />
+				</Entry>
+				<Entry>
+					<References Name="[dbo].[Users].[Status]" />
+				</Entry>
+				<Entry>
+					<References Name="[dbo].[Users].[UpdatedTime]" />
+				</Entry>
+				<Entry>
+					<References Name="[dbo].[Users].[Id]" />
+				</Entry>
+				<Entry>
+					<References Name="[dbo].[usp_Users_UpdateStatus].[@Id]" />
+				</Entry>
+			</Relationship>
+			<Relationship Name="Parameters">
+				<Entry>
+					<Element Type="SqlSubroutineParameter" Name="[dbo].[usp_Users_UpdateStatus].[@Id]">
+						<Relationship Name="Type">
+							<Entry>
+								<Element Type="SqlTypeSpecifier">
+									<Relationship Name="Type">
+										<Entry>
+											<References ExternalSource="BuiltIns" Name="[int]" />
+										</Entry>
+									</Relationship>
+								</Element>
+							</Entry>
+						</Relationship>
+					</Element>
+				</Entry>
+			</Relationship>
+			<Relationship Name="Schema">
+				<Entry>
+					<References ExternalSource="BuiltIns" Name="[dbo]" />
+				</Entry>
+			</Relationship>
+			<Annotation Type="SysCommentsObjectAnnotation">
+				<Property Name="Length" Value="321" />
+				<Property Name="StartLine" Value="1" />
+				<Property Name="StartColumn" Value="1" />
+				<Property Name="HeaderContents" Value="CREATE PROCEDURE [dbo].[usp_Users_UpdateStatus] @Id INT&#xD;&#xA;AS" />
+			</Annotation>
+		</Element>
+		<Element Type="SqlProcedure" Name="[dbo].[usp_UsersLogin_VerifyAuthentication]">
+			<Property Name="BodyScript">
+				<Value><![CDATA[
+     SET @ResponseCode = 0;
+     SELECT @ResponseCode = Id
+     FROM dbo.UsersLogin
+     WHERE UserName = @UserName
+           AND Password = @Password;]]></Value>
+			</Property>
+			<Property Name="IsAnsiNullsOn" Value="True" />
+			<Relationship Name="BodyDependencies">
+				<Entry>
+					<References Name="[dbo].[usp_UsersLogin_VerifyAuthentication].[@ResponseCode]" />
+				</Entry>
+				<Entry>
+					<References Name="[dbo].[UsersLogin]" />
+				</Entry>
+				<Entry>
+					<References Name="[dbo].[UsersLogin].[Id]" />
+				</Entry>
+				<Entry>
+					<References Name="[dbo].[UsersLogin].[UserName]" />
+				</Entry>
+				<Entry>
+					<References Name="[dbo].[usp_UsersLogin_VerifyAuthentication].[@UserName]" />
+				</Entry>
+				<Entry>
+					<References Name="[dbo].[UsersLogin].[Password]" />
+				</Entry>
+				<Entry>
+					<References Name="[dbo].[usp_UsersLogin_VerifyAuthentication].[@Password]" />
+				</Entry>
+			</Relationship>
+			<Relationship Name="Parameters">
+				<Entry>
+					<Element Type="SqlSubroutineParameter" Name="[dbo].[usp_UsersLogin_VerifyAuthentication].[@UserName]">
+						<Relationship Name="Type">
+							<Entry>
+								<Element Type="SqlTypeSpecifier">
+									<Property Name="Length" Value="50" />
+									<Relationship Name="Type">
+										<Entry>
+											<References ExternalSource="BuiltIns" Name="[varchar]" />
+										</Entry>
+									</Relationship>
+								</Element>
+							</Entry>
+						</Relationship>
+					</Element>
+				</Entry>
+				<Entry>
+					<Element Type="SqlSubroutineParameter" Name="[dbo].[usp_UsersLogin_VerifyAuthentication].[@Password]">
+						<Relationship Name="Type">
+							<Entry>
+								<Element Type="SqlTypeSpecifier">
+									<Property Name="Length" Value="100" />
+									<Relationship Name="Type">
+										<Entry>
+											<References ExternalSource="BuiltIns" Name="[varchar]" />
+										</Entry>
+									</Relationship>
+								</Element>
+							</Entry>
+						</Relationship>
+					</Element>
+				</Entry>
+				<Entry>
+					<Element Type="SqlSubroutineParameter" Name="[dbo].[usp_UsersLogin_VerifyAuthentication].[@ResponseCode]">
+						<Property Name="IsOutput" Value="True" />
+						<Relationship Name="Type">
+							<Entry>
+								<Element Type="SqlTypeSpecifier">
+									<Relationship Name="Type">
+										<Entry>
+											<References ExternalSource="BuiltIns" Name="[int]" />
+										</Entry>
+									</Relationship>
+								</Element>
+							</Entry>
+						</Relationship>
+					</Element>
+				</Entry>
+			</Relationship>
+			<Relationship Name="Schema">
+				<Entry>
+					<References ExternalSource="BuiltIns" Name="[dbo]" />
+				</Entry>
+			</Relationship>
+			<Annotation Type="SysCommentsObjectAnnotation">
+				<Property Name="Length" Value="428" />
+				<Property Name="StartLine" Value="1" />
+				<Property Name="StartColumn" Value="1" />
+				<Property Name="HeaderContents" Value="CREATE PROCEDURE [dbo].[usp_UsersLogin_VerifyAuthentication] @UserName     VARCHAR(50), &#xD;&#xA;                                                             @Password     VARCHAR(100), &#xD;&#xA;                                                             @ResponseCode INT OUTPUT&#xD;&#xA;AS" />
 			</Annotation>
 		</Element>
 	</Model>
