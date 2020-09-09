@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using MVCSite.Libs;
 
 namespace MVCSite
 {
@@ -25,6 +26,7 @@ namespace MVCSite
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
+            services.Configure<ExtendSettings>(Configuration.GetSection(nameof(ExtendSettings)));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

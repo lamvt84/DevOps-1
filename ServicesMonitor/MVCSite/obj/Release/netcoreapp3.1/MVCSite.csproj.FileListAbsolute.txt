@@ -142,3 +142,4 @@ D:\Repo\LvDevOps\ServicesMonitor\MVCSite\obj\Release\netcoreapp3.1\staticwebasse
 D:\Repo\LvDevOps\ServicesMonitor\MVCSite\obj\Release\netcoreapp3.1\MVCSite.dll
 D:\Repo\LvDevOps\ServicesMonitor\MVCSite\obj\Release\netcoreapp3.1\MVCSite.pdb
 D:\Repo\LvDevOps\ServicesMonitor\MVCSite\obj\Release\netcoreapp3.1\MVCSite.genruntimeconfig.cache
+D:\Repo\LvDevOps\ServicesMonitor\MVCSite\obj\Release\netcoreapp3.1\Razor\Views\Test\Index.cshtml.g.cs

@@ -1727,6 +1727,59 @@
 				<Property Name="HeaderContents" Value="CREATE PROCEDURE [dbo].[usp_Services_ListByGroupId] @GroupId INT&#xD;&#xA;AS" />
 			</Annotation>
 		</Element>
+		<Element Type="SqlProcedure" Name="[dbo].[usp_Services_ListByStatus]">
+			<Property Name="BodyScript">
+				<Value><![CDATA[
+    BEGIN        
+        SELECT *
+        FROM dbo.[Services]
+        WHERE [Status] = @Status
+    END;]]></Value>
+			</Property>
+			<Property Name="IsAnsiNullsOn" Value="True" />
+			<Relationship Name="BodyDependencies">
+				<Entry>
+					<References Name="[dbo].[Services]" />
+				</Entry>
+				<Entry>
+					<References Name="[dbo].[Services].[Status]" />
+				</Entry>
+				<Entry>
+					<References Name="[dbo].[usp_Services_ListByStatus].[@Status]" />
+				</Entry>
+			</Relationship>
+			<Relationship Name="Parameters">
+				<Entry>
+					<Element Type="SqlSubroutineParameter" Name="[dbo].[usp_Services_ListByStatus].[@Status]">
+						<Property Name="DefaultExpressionScript">
+							<Value><![CDATA[1]]></Value>
+						</Property>
+						<Relationship Name="Type">
+							<Entry>
+								<Element Type="SqlTypeSpecifier">
+									<Relationship Name="Type">
+										<Entry>
+											<References ExternalSource="BuiltIns" Name="[tinyint]" />
+										</Entry>
+									</Relationship>
+								</Element>
+							</Entry>
+						</Relationship>
+					</Element>
+				</Entry>
+			</Relationship>
+			<Relationship Name="Schema">
+				<Entry>
+					<References ExternalSource="BuiltIns" Name="[dbo]" />
+				</Entry>
+			</Relationship>
+			<Annotation Type="SysCommentsObjectAnnotation">
+				<Property Name="Length" Value="180" />
+				<Property Name="StartLine" Value="1" />
+				<Property Name="StartColumn" Value="1" />
+				<Property Name="HeaderContents" Value="CREATE PROCEDURE dbo.usp_Services_ListByStatus @Status TINYINT = 1&#xD;&#xA;AS" />
+			</Annotation>
+		</Element>
 		<Element Type="SqlProcedure" Name="[dbo].[usp_Services_Update]">
 			<Property Name="BodyScript">
 				<Value><![CDATA[
