@@ -4,9 +4,13 @@
 
 Edit TaskTemplate.xml
 
-Look for <Actions Context="Author">
-
-Modify the <argument> values with physical path of "CallApiHealthCheck" file
+- Look for <Actions Context="Author">
+  - Modify the <argument> values with physical path of "CallApiHealthCheck" file
+- Look for <StartBoundary>
+  - Modify value to next runnable time
+  - Example:
+    - Current time: 2020-09-09 15:28:00
+    - Modified value: 2020-09-09 15:30:00 or 2020-09-09 15:35:00
 
 ## Step 2
 
