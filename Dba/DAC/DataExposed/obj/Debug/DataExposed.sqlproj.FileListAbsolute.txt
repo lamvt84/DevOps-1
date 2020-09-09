@@ -1,0 +1,5 @@
+D:\Repo\SQLLearning\DAC\DataExposed\bin\Debug\DataExposed.dacpac
+D:\Repo\SQLLearning\DAC\DataExposed\bin\Debug\DataExposed.dll
+D:\Repo\SQLLearning\DAC\DataExposed\bin\Debug\DataExposed.pdb
+D:\Repo\SQLLearning\DAC\DataExposed\obj\Debug\DataExposed.dll
+D:\Repo\SQLLearning\DAC\DataExposed\obj\Debug\DataExposed.pdb

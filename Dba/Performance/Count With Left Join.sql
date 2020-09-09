@@ -1,0 +1,18 @@
+DROP TABLE IF EXISTS #User;
+CREATE TABLE #User(
+    ID INT NOT NULL
+);
+
+DROP TABLE IF EXISTS #Post;
+CREATE TABLE #Post(
+    ID INT NOT NULL,
+    UserId INT
+);
+
+INSERT INTO #User(ID) VALUES (33)
+
+INSERT INTO #Post(ID, UserId)
+VALUES (39, 33), (161, 33), (633, 33)
+
+SELECT COUNT(*) FROM #User u
+LEFT JOIN #Post p ON p.UserId = u.ID
