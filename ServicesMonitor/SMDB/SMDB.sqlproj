@@ -88,6 +88,7 @@
     <Build Include="dbo\Stored Procedures\usp_Services_UpdateStatus.sql" />
     <Build Include="dbo\Stored Procedures\usp_Services_ListByEnable.sql" />
     <Build Include="dbo\Stored Procedures\usp_Services_GetServiceSummary.sql" />
+    <Build Include="dbo\Stored Procedures\usp_Services_ListByStatus.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="SMDB.refactorlog" />

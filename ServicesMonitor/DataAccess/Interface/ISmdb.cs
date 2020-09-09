@@ -35,6 +35,7 @@ namespace DataAccess.Interface
         Task<Services> Get(int id);
         Task<int> UpdateStatus(Services service);
         Task<DataTable> GetServiceSummary();
+        Task<List<Services>> ListByStatus(int status);
     }
 
     public interface IServicesLog

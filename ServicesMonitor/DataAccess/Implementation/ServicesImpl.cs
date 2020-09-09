@@ -89,7 +89,23 @@ namespace DataAccess.Implementation
                 throw ex;
             }
         }
-
+        public async Task<List<Services>> ListByStatus(int status)
+        {
+            try
+            {
+                var spName = "dbo.usp_Services_ListByStatus";
+                var parameterValues = new object[1];
+                parameterValues[0] = status;
+                var thisTask = Task.Run(() => SqlHelper.ExecuteDatasetAsync(_connString, spName, parameterValues));
+                var result = await thisTask;
+                
+                return result.Tables[0].ToList<Services>();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
         public async Task<List<Services>> ListByGroupId(int groupId)
         {
             try
