@@ -1,0 +1,15 @@
+C:\Users\test\Downloads\CustomSSISComponent\CustomSSISComponent\CustomSSISComponent\bin\Debug\CustomSSISComponent.dll.config
+C:\Users\test\Downloads\CustomSSISComponent\CustomSSISComponent\CustomSSISComponent\bin\Debug\CustomSSISComponent.dll
+C:\Users\test\Downloads\CustomSSISComponent\CustomSSISComponent\CustomSSISComponent\bin\Debug\CustomSSISComponent.pdb
+C:\Users\test\Downloads\CustomSSISComponent\CustomSSISComponent\CustomSSISComponent\obj\Debug\CustomSSISComponent.dll
+C:\Users\test\Downloads\CustomSSISComponent\CustomSSISComponent\CustomSSISComponent\obj\Debug\CustomSSISComponent.pdb
+E:\Repos\LvRepo\SSIS\CustomSSISComponent\bin\Debug\CustomSSISComponent.dll.config
+E:\Repos\LvRepo\SSIS\CustomSSISComponent\bin\Debug\CustomSSISComponent.dll
+E:\Repos\LvRepo\SSIS\CustomSSISComponent\bin\Debug\CustomSSISComponent.pdb
+E:\Repos\LvRepo\SSIS\CustomSSISComponent\bin\Debug\Microsoft.SqlServer.ManagedDTS.dll
+E:\Repos\LvRepo\SSIS\CustomSSISComponent\bin\Debug\Microsoft.SQLServer.PipelineHost.dll
+E:\Repos\LvRepo\SSIS\CustomSSISComponent\obj\Debug\CustomSSISComponent.csprojAssemblyReference.cache
+E:\Repos\LvRepo\SSIS\CustomSSISComponent\obj\Debug\CustomSSISComponent.csproj.CoreCompileInputs.cache
+E:\Repos\LvRepo\SSIS\CustomSSISComponent\obj\Debug\CustomSSISComponent.csproj.CopyComplete
+E:\Repos\LvRepo\SSIS\CustomSSISComponent\obj\Debug\CustomSSISComponent.dll
+E:\Repos\LvRepo\SSIS\CustomSSISComponent\obj\Debug\CustomSSISComponent.pdb
