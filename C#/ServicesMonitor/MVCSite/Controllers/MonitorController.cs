@@ -19,7 +19,7 @@ namespace MVCSite.Controllers
     {
         private string ConnectionString { get; }
         private ExtendSettings Settings { get; }
-        public MonitorController(IOptions<ExtendSettings> settings = null, IConfiguration configuration = null)
+        public MonitorController(IOptions<ExtendSettings> settings = null)
         {
             if (settings != null) Settings = settings.Value;
             ConnectionString = Startup.ConnectionString;
@@ -61,7 +61,7 @@ namespace MVCSite.Controllers
                 var response = await client.PostAsync(new Uri(Settings.SendEmailUrl), stringContent);
                 var result = await response.Content.ReadAsStringAsync();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 throw;
             }
@@ -69,7 +69,7 @@ namespace MVCSite.Controllers
 
         private async Task<int> CallHealthCheckApi(Services service, System.Guid jGuid)
         {
-            var returnCode = 0;
+            int returnCode;
             using var client = new HttpClient();
             try
             {

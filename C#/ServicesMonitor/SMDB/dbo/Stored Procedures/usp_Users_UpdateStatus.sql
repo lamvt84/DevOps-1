@@ -2,8 +2,8 @@
 AS
      UPDATE dbo.Users
        SET 
-           STATUS = CASE
-                        WHEN STATUS = 0
+           Status = CASE
+                        WHEN Status = 0
                         THEN 1
                         ELSE 0
                     END, 

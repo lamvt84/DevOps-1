@@ -1,10 +1,16 @@
 ﻿var dataTable;
 
 $(document).ready(function () {
-    loadDataTable();
     loadGroup(0);
+    loadDataTable();
     loadSummary();
+    updateData();
 });
+
+function updateData() {
+    setInterval(loadDataTable, 60000);
+    setInterval(loadSummary, 60000);
+}
 
 $('#DDL_Load').on('change', function () {
     loadDataTable();
