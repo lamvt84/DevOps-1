@@ -17,12 +17,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataAccess", "DataAccess\Da
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MVCSite", "MVCSite\MVCSite.csproj", "{2215E18F-E7D5-4BD6-BA74-3A0E37D31145}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TaskSchedule", "TaskSchedule", "{AF6E35DD-A59D-44BB-A9D6-5F0630DE868A}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TaskSchedule", "TaskSchedule", "{B7C80993-BC68-4AA1-BE7C-A1DEDD8392E2}"
 	ProjectSection(SolutionItems) = preProject
-		CallApiHealthCheck.ps1 = CallApiHealthCheck.ps1
-		CreateTask.ps1 = CreateTask.ps1
-		guide.md = guide.md
-		TaskTemplate.xml = TaskTemplate.xml
+		TaskSchedule\CallApiHealthCheck.ps1 = TaskSchedule\CallApiHealthCheck.ps1
+		TaskSchedule\CreateTask.ps1 = TaskSchedule\CreateTask.ps1
+		TaskSchedule\guide.md = TaskSchedule\guide.md
+		TaskSchedule\TaskTemplate.xml = TaskSchedule\TaskTemplate.xml
 	EndProjectSection
 EndProject
 Global
