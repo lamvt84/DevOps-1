@@ -1,9 +1,11 @@
 # ENTRY POINT MAIN()
 Param(
-    [Parameter(Mandatory = $true)]
-    $Type = ""
+    [Parameter(Position = 1, Mandatory = $True, HelpMessage = "Backup Type: F - Full, D - Differential, L - Log", ValueFromPipeline = $true)]
+    [ValidateSet("F", "D", "L")]
+    [string]$Type
 )
 
-. "\SqlBackupLibs.ps1"
+$rootPath = (Split-Path $MyInvocation.MyCommand.Path)
+. "$rootPath\Libs.ps1"
 
-Start-BackupProcess -Type $Type
+Initialize-BackupProcess $Type

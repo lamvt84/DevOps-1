@@ -98,25 +98,25 @@ function Update-IISWebsiteStatus {
     
 }
 
-function Open-Script-Services{
-    Param([int]$srv,[int]$sv,[string]$a)
+function Open-Script-Services {
+    Param([int]$srv, [int]$sv, [string]$a)
 
     $jsonPath = "$rootPath\List.json";
     $initServiceScript = "$rootPath\InitServices.ps1";
 
     $jsonData = Get-Content -Raw -Path $jsonPath | ConvertFrom-Json
 
-    if ($srv -eq 0){       
-        if ($sv -eq 0){
-            ForEach ($serv in $jsonData){
-                ForEach ($item in $serv.services){
+    if ($srv -eq 0) {       
+        if ($sv -eq 0) {
+            ForEach ($serv in $jsonData) {
+                ForEach ($item in $serv.services) {
                     & ($initServiceScript) $serv.name $item.name $a
                 }
             }
         }
         else {
-            ForEach ($serv in $jsonData){
-                ForEach ($item in $serv.services){
+            ForEach ($serv in $jsonData) {
+                ForEach ($item in $serv.services) {
                     if ($sv -eq $item.id) {
                         & ($initServiceScript) $serv.name $item.name $a
                         break
@@ -126,10 +126,10 @@ function Open-Script-Services{
         }                
     }
     else {        
-        if ($sv -eq 0){
-            ForEach ($serv in $jsonData){
+        if ($sv -eq 0) {
+            ForEach ($serv in $jsonData) {
                 if ($srv -eq $serv.id) {
-                    ForEach ($item in $serv.services){
+                    ForEach ($item in $serv.services) {
                         & ($initServiceScript) $serv.name $item.name $a
                     }
                     break
@@ -137,13 +137,13 @@ function Open-Script-Services{
             }
         }
         else {
-            ForEach ($serv in $jsonData){
-                if ($srv -eq $serv.id) {                  
-                    ForEach ($item in $serv.services) {                        
-                        if ($sv -eq $item.id) {                            
+            ForEach ($serv in $jsonData) {				
+                if ($srv -eq $serv.id) {
+                    ForEach ($item in $serv.services) {
+                        if ($sv -eq $item.id) {
                             & ($initServiceScript) $serv.name $item.name $a
-                        }
-                        break
+                            break
+                        }                        
                     }                        
                 }
             }
@@ -151,9 +151,9 @@ function Open-Script-Services{
     }    
 }
 
-function Open-Script-IIS{
-    Param([int]$srv,[int]$w,[string]$a)
-
+function Open-Script-IIS {
+    Param([int]$srv, [int]$w, [string]$a)
+	
     $jsonPath = "$rootPath\List.json";    
     $initIISScript = "$rootPath\InitIIS.ps1";
 
@@ -161,15 +161,15 @@ function Open-Script-IIS{
     
     if ($srv -eq 0) { 
         if ($w -eq 0) {
-            ForEach ($serv in $jsonData){
-                ForEach ($item in $serv.iis){
+            ForEach ($serv in $jsonData) {
+                ForEach ($item in $serv.iis) {					
                     & ($initIISScript) $serv.name $item.name $a
                 }
             }
         }
         else {
-            ForEach ($serv in $jsonData){
-                ForEach ($item in $serv.services){
+            ForEach ($serv in $jsonData) {
+                ForEach ($item in $serv.iis) {
                     if ($w -eq $item.id) {
                         & ($initIISScript) $serv.name $item.name $a
                         break
@@ -178,21 +178,21 @@ function Open-Script-IIS{
             }
         }
     }
-    else { 
-        if ($w -eq 0){
-            ForEach ($serv in $jsonData){
+    else { 		
+        if ($w -eq 0) {
+            ForEach ($serv in $jsonData) {
                 if ($srv -eq $serv.id) {
-                    ForEach ($item in $serv.iis){
-                        & ($initIISScript) $serv.name $item.name $a                        
+                    ForEach ($item in $serv.iis) {
+                        & ($initIISScript) $serv.name $item.name $a
                     }
                     break
                 }
             }
         }
         else {
-            ForEach ($serv in $jsonData){
-                if ($srv -eq $serv.id) {
-                    ForEach ($item in $serv.services){
+            ForEach ($serv in $jsonData) {				
+                if ($srv -eq $serv.id) {				
+                    ForEach ($item in $serv.iis) {						
                         if ($w -eq $item.id) {
                             & ($initIISScript) $serv.name $item.name $a
                             break

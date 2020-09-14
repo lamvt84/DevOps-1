@@ -358,5 +358,69 @@
                 "name" : "MobiWallet.CMSAdmin"
             }
         ]
+    },
+    {
+        "id" : 10,
+        "name" : "mbfhn-sale01.paymobi.internal",
+        "services" : [
+			{ 
+                "id" : 1,
+                "name" : "MBF.SaleServices.InputPolicies"
+            },
+            { 
+                "id" : 2,
+                "name" : "MBF.SaleServices.OutputPolicies"
+            },
+            { 
+                "id" : 3,
+                "name" : "MBF.SaleServices.PartnerOrders"
+            },
+            { 
+                "id" : 4,
+                "name" : "MBF.SaleServices.SaleOrders"
+            },
+            { 
+                "id" : 5,
+                "name" : "MBF.SaleServices.SaleProducts"
+            }
+        ],
+        "iis" : [
+            { 
+                "id" : 1,
+                "name" : "SaleProductApi"
+            }
+        ]
+    },
+    {
+        "id" : 11,
+        "name" : "mbfhn-sale02.paymobi.internal",
+        "services" : [
+			{ 
+                "id" : 1,
+                "name" : "MBF.SaleServices.InputPolicies"
+            },
+            { 
+                "id" : 2,
+                "name" : "MBF.SaleServices.OutputPolicies"
+            },
+            { 
+                "id" : 3,
+                "name" : "MBF.SaleServices.PartnerOrders"
+            },
+            { 
+                "id" : 4,
+                "name" : "MBF.SaleServices.SaleOrders"
+            },
+            { 
+                "id" : 5,
+                "name" : "MBF.SaleServices.SaleProducts"
+            }
+        ],
+        "iis" : [
+            { 
+                "id" : 1,
+                "name" : "SaleProductApi"
+            }
+        ]
     }
 ]
