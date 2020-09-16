@@ -89,6 +89,10 @@
     <Build Include="dbo\Stored Procedures\usp_Services_ListByEnable.sql" />
     <Build Include="dbo\Stored Procedures\usp_Services_GetServiceSummary.sql" />
     <Build Include="dbo\Stored Procedures\usp_Services_ListByStatus.sql" />
+    <Build Include="dbo\Tables\EmailConfig.sql" />
+    <Build Include="dbo\Tables\AlertConfig.sql" />
+    <Build Include="dbo\Tables\SmsConfig.sql" />
+    <Build Include="dbo\Tables\AlertMapping.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="SMDB.refactorlog" />

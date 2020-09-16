@@ -1,5 +1,3 @@
-using System;
-
 namespace MVCSite.Models
 {
     public class ErrorViewModel

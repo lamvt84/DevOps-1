@@ -9,7 +9,7 @@ function convertDatetimeOffset(data) {
         year = dt.getFullYear(),
         hours = dt.getHours(),
         minutes = dt.getMinutes(),
-        seconds = dt.getSeconds()
+        seconds = dt.getSeconds();
 
     //04/12/2018 8:53:42
     return (year + '/' + month + '/' + day + ' ' + hours + ':' + minutes + ':' + seconds);
@@ -51,7 +51,7 @@ function loadGroup(id) {
                 function (i, item) {
                     var opt = new Option(item.name, item.id);
                     $("#DDL_Load").append(opt);
-                    if (id == item.id) opt.setAttribute("selected", "selected");
+                    if (id === item.id) opt.setAttribute("selected", "selected");
                 });
         },
         error: function (data) {

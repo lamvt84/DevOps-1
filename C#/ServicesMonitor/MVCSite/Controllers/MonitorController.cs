@@ -2,13 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 using CommonLibs;
 using DataAccess.Implementation;
 using DataAccess.SMDB;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using MVCSite.Libs;
 using Newtonsoft.Json;
@@ -30,7 +28,7 @@ namespace MVCSite.Controllers
             return View();
         }
 
-        private async Task SendAlertEmail(System.Guid jGuid)
+        private async Task SendAlertEmail(Guid jGuid)
         {
             var serviceList = await new ServicesImpl(ConnectionString).ListByStatus(0);
             var serviceErrorList = "";
@@ -46,7 +44,7 @@ namespace MVCSite.Controllers
                 {
                     SenderName = "",
                     ToMail = Settings.ToEmailList,
-                    CCMail = "",
+                    CCMail = Settings.CcEmailList,
                     Subject = Settings.EmailSubject,
                     Message = Settings.EmailBody.Replace("{check_id}", jGuid.ToString())
                         .Replace("{service_list}", serviceErrorList),
@@ -54,12 +52,12 @@ namespace MVCSite.Controllers
                     ServiceID = 0,
                     smsEMailID = 0,
                     langID = 0,
-                    DataSign = Encryption.Md5Hash($"{Settings.ToEmailList}--{Settings.SecureKey}").ToLower()
+                    DataSign = Encryption.Md5Hash($"{Settings.ToEmailList}-{Settings.CcEmailList}-{Settings.SecureKey}").ToLower()
                 };
 
                 using var stringContent = new StringContent(JsonConvert.SerializeObject(emailSettings), System.Text.Encoding.UTF8, "application/json");
                 var response = await client.PostAsync(new Uri(Settings.SendEmailUrl), stringContent);
-                var result = await response.Content.ReadAsStringAsync();
+                await response.Content.ReadAsStringAsync();
             }
             catch (Exception)
             {
@@ -67,7 +65,7 @@ namespace MVCSite.Controllers
             }
         }
 
-        private async Task<int> CallHealthCheckApi(Services service, System.Guid jGuid)
+        private async Task<int> CallHealthCheckApi(Services service, Guid jGuid)
         {
             int returnCode;
             using var client = new HttpClient();
@@ -77,7 +75,7 @@ namespace MVCSite.Controllers
                 var response = await client.GetAsync(new Uri(service.Url));
                 response.EnsureSuccessStatusCode();
 
-                var stringResult = await response.Content.ReadAsStringAsync();
+                await response.Content.ReadAsStringAsync();
                 await new ServicesLogImpl(ConnectionString).Add(new ServicesLog()
                 {
                     JournalGuid = jGuid,

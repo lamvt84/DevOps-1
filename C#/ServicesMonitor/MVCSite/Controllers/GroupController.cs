@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using DataAccess.Implementation;
 using DataAccess.SMDB;
 using Microsoft.AspNetCore.Mvc;
@@ -10,7 +7,7 @@ namespace MVCSite.Controllers
 {
     public class GroupController : Controller
     {
-        [BindProperty]
+        [BindProperty] 
         public Groups Group { get; set; }
         public IActionResult Index()
         {
@@ -23,7 +20,7 @@ namespace MVCSite.Controllers
             {
                 return View(Group);
             }
-            Group = (new GroupsImpl(Startup.ConnectionString).Get(id ?? default(int))).Result;
+            Group = new GroupsImpl(Startup.ConnectionString).Get(id ?? default(int)).Result;
             if (Group == null)
             {
                 return NotFound();

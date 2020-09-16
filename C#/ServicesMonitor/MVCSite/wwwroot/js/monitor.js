@@ -30,7 +30,7 @@ function loadDataTable() {
             "datatype": "json"
         },
         "createdRow": function (row, data, dataIndex) {
-            if (data.status == 0) {
+            if (data.status === 0) {
                 $(row).addClass("red");
             }
         },
@@ -41,7 +41,7 @@ function loadDataTable() {
                 "data": "status",
                 "className": "text-center",
                 "render": function (data) {
-                    if (data == 1) return "OK";
+                    if (data === 1) return "OK";
                     else return "ERROR";
                 }
             },

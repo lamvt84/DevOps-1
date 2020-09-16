@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using DataAccess.Implementation;
 using DataAccess.SMDB;
 using Microsoft.AspNetCore.Mvc;
@@ -10,7 +7,8 @@ namespace MVCSite.Controllers
 {
     public class ServiceController : Controller
     {
-        [BindProperty] public Services Service { get; set; }
+        [BindProperty] 
+        public Services Service { get; set; }
 
         public IActionResult Index()
         {

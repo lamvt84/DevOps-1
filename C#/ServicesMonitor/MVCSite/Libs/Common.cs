@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace MVCSite.Libs
 {
@@ -11,6 +8,7 @@ namespace MVCSite.Libs
     {
         public string SendEmailUrl { get; set; }
         public string ToEmailList { get; set; }
+        public string CcEmailList { get; set; }
         public string SecureKey { get; set; }
         public string EmailSubject { get; set; }
         public string EmailBody { get; set; }

@@ -91,7 +91,7 @@
     <partial name="_ValidationScriptsPartial" />
     <script>
         $(document).ready(function () {
-            loadGroup(@(Model.Id != 0 ? @Model.GroupId : 0));
+            loadGroup(@(Model.Id != 0 ? Model.GroupId : 0));
             $("#DDL_LoadEnable").val(@(Model.Enable));
         });
     </script>

@@ -1,0 +1,10 @@
+﻿CREATE TABLE [dbo].[AlertConfig]
+(
+	[Id] INT NOT NULL IDENTITY(1,1),
+    [Name] NVARCHAR(100),    
+    [IsPause] BIT NULL DEFAULT 0, 
+    [PausePeriod] INT NULL DEFAULT 0,
+    [CreatedTime] DATETIMEOFFSET NULL DEFAULT SYSDATETIMEOFFSET(), 
+    [UpdatedTime] DATETIMEOFFSET NULL, 
+    CONSTRAINT PK_AlertConfig PRIMARY KEY CLUSTERED (Id)
+)

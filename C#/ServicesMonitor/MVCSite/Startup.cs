@@ -1,10 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -19,7 +14,7 @@ namespace MVCSite
             Configuration = configuration;
         }
 
-        public IConfiguration Configuration { get; }
+        private IConfiguration Configuration { get; }
         public static string ConnectionString { get; private set; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
@@ -50,7 +45,7 @@ namespace MVCSite
             app.UseAuthorization();
 
             ConnectionString = Configuration.GetConnectionString("DefaultConnection");
-            
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(

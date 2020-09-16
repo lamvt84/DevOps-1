@@ -1,4 +1,18 @@
 ﻿CREATE TABLE [dbo].[EmailConfig]
 (
-	[Id] INT NOT NULL PRIMARY KEY
+	[Id] INT NOT NULL IDENTITY(1,1),
+	[SenderEmail] VARCHAR(50) NULL DEFAULT '', 
+    [ToMail] VARCHAR(50) NULL, 
+    [CCMail] VARCHAR(500) NULL, 
+    [Subject] NVARCHAR(250) NULL, 
+    [Message] NVARCHAR(MAX) NULL, 
+    [IsResend] BIT NULL DEFAULT 0, 
+    [ServiceId] INT NULL DEFAULT 0, 
+    [SmsEmail] INT NULL DEFAULT 0, 
+    [LangId] INT NULL DEFAULT 0,
+    [DataSign] VARCHAR(100) NULL,
+    [IsEnable] BIT DEFAULT 1,
+    [CreatedTime] DATETIMEOFFSET NULL DEFAULT SYSDATETIMEOFFSET(),
+    [UpdatedTime] DATETIMEOFFSET NULL,
+    CONSTRAINT PK_EmailConfig PRIMARY KEY CLUSTERED (Id)
 )

@@ -28,4 +28,32 @@
     <Property Name="ParentElementType" Value="SqlTable" />
     <Property Name="NewName" Value="JournalGuid" />
   </Operation>
+  <Operation Name="Rename Refactor" Key="bed99166-f7ca-4987-af8a-47c81267f8e5" ChangeDateTime="09/16/2020 03:39:04">
+    <Property Name="ElementName" Value="[dbo].[EmailConfig].[To]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[EmailConfig]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="SenderEmail" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="e2e768ec-5ba8-452b-b5d4-bed6b05d024b" ChangeDateTime="09/16/2020 04:06:14">
+    <Property Name="ElementName" Value="[dbo].[AlertMapping].[Id]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[AlertMapping]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="AlertConfigId" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="7efddbfa-f2d5-4c0b-bfc8-1404d86d011a" ChangeDateTime="09/16/2020 04:06:44">
+    <Property Name="ElementName" Value="[dbo].[AlertMapping].[EmailConfigId]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[AlertMapping]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="MappingId" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="fdaebba5-69bc-46d5-a169-bbc65e9289fd" ChangeDateTime="09/16/2020 04:06:50">
+    <Property Name="ElementName" Value="[dbo].[AlertMapping].[Sms]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[AlertMapping]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="MappingType" />
+  </Operation>
 </Operations>
