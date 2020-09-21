@@ -18,11 +18,12 @@ $('#DDL_Load').on('change', function () {
 
 function loadDataTable() {
     var selectedId = $("#DDL_Load").val();
-    var url = "/Monitor/GetServiceMonitorList?id=" + selectedId;
+    var url = "/api/GetServiceMonitorList?id=" + selectedId;
     if ($.fn.dataTable.isDataTable('#DT_load')) {
         dataTable = $('#DT_load').DataTable();
         dataTable.destroy();
     }
+
     dataTable = $('#DT_load').DataTable({
         "ajax": {
             "url": url,
@@ -35,10 +36,11 @@ function loadDataTable() {
             }
         },
         "columns": [
-            { "data": "name" },
-            { "data": "url" },
+            { "data": "Id", "className": "text-center" },
+            { "data": "Name" },
+            { "data": "Url" },
             {
-                "data": "status",
+                "data": "Status",
                 "className": "text-center",
                 "render": function (data) {
                     if (data === 1) return "OK";
@@ -46,7 +48,7 @@ function loadDataTable() {
                 }
             },
             {
-                "data": "updatedTime",
+                "data": "UpdatedTime",
                 "render": function (data) {
                     return convertDatetimeOffset(data);
                 }
@@ -57,8 +59,8 @@ function loadDataTable() {
         },
         "width": "100%",
         "paging": false,
-        "ordering": false,
-        "info": false
+        "ordering": true,
+        "info": true
     });
 }
 
@@ -66,7 +68,7 @@ function loadSummary() {
     $.ajax({
         type: 'GET',
         dataType: 'json',
-        url: '/Monitor/GetServiceSummary',
+        url: '/api/GetServiceSummary',
         success: function (response) {
             $("#totalServiceCount").text(response[0].TotalService);
             $("#errorServiceCount").text(response[0].ErrorService);

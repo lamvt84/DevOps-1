@@ -1,0 +1,30 @@
+﻿<div class="col-6">
+    <p><h2 class="text-dark">User Configuration</h2></p>
+</div>
+<div class="col-2">
+    <p>
+        <a asp-action="UserInsertOrUpdate" asp-controller="Config" class="btn btn-dark form-control text-white">
+            Add User
+        </a>
+    </p>
+</div>
+<div>
+    <div class="col-12 border p-3" >
+        <table id="DT_load" class="table table-striped table-bordered" style="width:100%">
+            <thead>
+            <tr>
+                <th>Username</th>
+                <th>FirstName</th>
+                <th>LastName</th>
+                <th>Email</th>
+                <th>CreatedTime</th>
+                <th>Action</th>
+            </tr>
+            </thead>
+        </table>
+    </div>
+</div> 
+
+@section Scripts{ 
+    <script src="~/js/usersettings.js"></script>
+}

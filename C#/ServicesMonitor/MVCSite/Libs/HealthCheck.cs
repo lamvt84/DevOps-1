@@ -6,29 +6,21 @@ using System.Threading.Tasks;
 using CommonLibs;
 using DataAccess.Implementation;
 using DataAccess.SMDB;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
-using MVCSite.Libs;
 using Newtonsoft.Json;
 
-namespace MVCSite.Controllers
+namespace MVCSite.Libs
 {
-    public class MonitorController : Controller
+    public partial class HealthCheck
     {
         private string ConnectionString { get; }
         private ExtendSettings Settings { get; }
-        public MonitorController(IOptions<ExtendSettings> settings = null)
+        public HealthCheck(IOptions<ExtendSettings> settings = null)
         {
             if (settings != null) Settings = settings.Value;
             ConnectionString = Startup.ConnectionString;
         }
-        public IActionResult Index()
-        {
-            Task.Run(async () => await CollectHealthCheck());
-            return View();
-        }
-
-        private async Task SendAlertEmail(Guid jGuid)
+        public async Task SendAlertEmail(Guid jGuid)
         {
             var serviceList = await new ServicesImpl(ConnectionString).ListByStatus(0);
             var serviceErrorList = "";
@@ -36,7 +28,7 @@ namespace MVCSite.Controllers
             {
                 serviceErrorList += $"- {item.Name}<br />";
             }
-            
+
             using var client = new HttpClient();
             try
             {
@@ -65,7 +57,7 @@ namespace MVCSite.Controllers
             }
         }
 
-        private async Task<int> CallHealthCheckApi(Services service, Guid jGuid)
+        public async Task<int> CallHealthCheckApi(Services service, Guid jGuid)
         {
             int returnCode;
             using var client = new HttpClient();
@@ -109,77 +101,5 @@ namespace MVCSite.Controllers
 
             return returnCode;
         }
-
-        #region API Calls
-
-        [HttpGet]
-        public async Task CollectHealthCheck()
-        {
-            var errorCount = 0;
-            var serviceList = await new ServicesImpl(ConnectionString).ListByEnable(1);
-            var journalGuid = Guid.NewGuid();
-            var tasks = new List<Task<int>>();
-
-            await new ServicesLogImpl(ConnectionString).Add(new ServicesLog()
-            {
-                JournalGuid = journalGuid,
-                ServiceId = 0,
-                ServiceUrl = "",
-                ServiceStatus = "START"
-            });
-
-            foreach (var item in serviceList)
-            {
-                tasks.Add(CallHealthCheckApi(item, journalGuid));
-               
-                if (tasks.Count == 20)
-                {
-                    int[] resultsAll = await Task.WhenAll(tasks);
-                    foreach (var r in resultsAll)
-                    {
-                        if (r == 0) errorCount += 1;
-                    }
-                    tasks.Clear();
-                }
-            }
-
-            if (tasks.Any())
-            {
-                int[] resultsAll = await Task.WhenAll(tasks);
-                foreach (var r in resultsAll)
-                {
-                    if (r == 0) errorCount += 1;
-                }
-                tasks.Clear();
-            }
-
-            await new ServicesLogImpl(ConnectionString).Add(new ServicesLog()
-            {
-                JournalGuid = journalGuid,
-                ServiceId = 0,
-                ServiceUrl = "",
-                ServiceStatus = "END"
-            });
-
-            if (errorCount > 0) await SendAlertEmail(journalGuid);
-        }
-
-        [HttpGet]
-        public async Task<string> GetServiceSummary()
-        {
-            var data = await new ServicesImpl(ConnectionString).GetServiceSummary();
-            var rData = JsonConvert.SerializeObject(data);
-            return rData;
-        }
-        [HttpGet]
-        public async Task<ActionResult> GetServiceMonitorList(int? id)
-        {
-            var groupId = id ?? 0;
-            var data = await new ServicesImpl(ConnectionString)
-                .ListByGroupId(groupId);
-            return Json(new { data = data.Where(x => x.Enable == 1) });
-        }
-
-        #endregion
     }
 }

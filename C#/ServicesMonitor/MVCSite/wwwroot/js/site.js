@@ -45,7 +45,7 @@ function loadGroup(id) {
     $.ajax({
         type: 'GET',
         dataType: 'json',
-        url: '/Group/GetList',
+        url: '/api_group/GetList',
         success: function (response) {
             $.each(response.data,
                 function (i, item) {

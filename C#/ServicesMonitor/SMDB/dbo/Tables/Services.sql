@@ -3,7 +3,7 @@
 	Id INT NOT NULL IDENTITY(1,1),
 	GroupId INT NOT NULL DEFAULT 0,
 	Name VARCHAR(100),
-	Description VARCHAR(250),
+	Description NVARCHAR(250),
 	Url VARCHAR(500),
 	Params VARCHAR(500),
 	ResponseCode VARCHAR(100),
