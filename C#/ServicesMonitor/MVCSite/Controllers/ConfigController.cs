@@ -1,23 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection.Metadata;
+﻿using System.Dynamic;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using DataAccess.Implementation;
 using DataAccess.SMDB;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
-using MVCSite.Libs;
+using MVCSite.Models;
+
 
 namespace MVCSite.Controllers
 {
     public class ConfigController : Controller
     {
         private string ConnectionString { get; }
-        private ExtendSettings Settings { get; }
-        public ConfigController(IOptions<ExtendSettings> settings = null)
+        private ExtendSettings ExtendSettings { get; }
+        public ConfigController(IOptionsSnapshot<ExtendSettings> settings = null)
         {
-            if (settings != null) Settings = settings.Value;
+            if (settings != null) ExtendSettings = settings.Value;
             ConnectionString = Startup.ConnectionString;
         }
         public new IActionResult User()
@@ -31,7 +30,7 @@ namespace MVCSite.Controllers
             {
                 return View(mUsers);
             }
-            mUsers = (new UsersImpl(Startup.ConnectionString).Get(id ?? default(int))).Result;
+            mUsers = (new UsersImpl(ConnectionString).Get(id ?? default(int))).Result;
             if (mUsers == null)
             {
                 return NotFound();
@@ -50,7 +49,7 @@ namespace MVCSite.Controllers
                 return View(mService);
             }
 
-            mService = (new ServicesImpl(Startup.ConnectionString).Get(id ?? default(int))).Result;
+            mService = (new ServicesImpl(ConnectionString).Get(id ?? default(int))).Result;
             if (mService == null)
             {
                 return NotFound();
@@ -69,7 +68,7 @@ namespace MVCSite.Controllers
             {
                 return View(mGroups);
             }
-            mGroups = new GroupsImpl(Startup.ConnectionString).Get(id ?? default(int)).Result;
+            mGroups = new GroupsImpl(ConnectionString).Get(id ?? default(int)).Result;
             if (mGroups == null)
             {
                 return NotFound();
@@ -79,6 +78,34 @@ namespace MVCSite.Controllers
         public IActionResult Alert()
         {
             return View();
+        }
+        public IActionResult SmsInsertOrUpdate(int? id)
+        {
+            SmsConfig smsConfig = new SmsConfig();
+            if (id == null)
+            {
+                return View(smsConfig);
+            }
+            smsConfig = new SmsConfigImpl(ConnectionString).Get(id ?? default(int)).Result;
+            if (smsConfig == null)
+            {
+                return NotFound();
+            }
+            return View(smsConfig);
+        }
+        public IActionResult EmailInsertOrUpdate(int? id)
+        {
+            EmailConfig emailConfig = new EmailConfig();
+            if (id == null)
+            {
+                return NotFound();
+            }
+            emailConfig = new EmailConfigImpl(ConnectionString).Get(id ?? default(int)).Result;
+            if (emailConfig == null)
+            {
+                return NotFound();
+            }
+            return View(emailConfig);
         }
 
 
@@ -126,17 +153,67 @@ namespace MVCSite.Controllers
                 if (mService.Id == 0)
                 {
                     //create
-                    await new ServicesImpl(Startup.ConnectionString).Add(mService);
+                    await new ServicesImpl(ConnectionString).Add(mService);
                 }
                 else
                 {
-                    await new ServicesImpl(Startup.ConnectionString).Update(mService);
+                    await new ServicesImpl(ConnectionString).Update(mService);
                 }
 
                 return RedirectToAction("Service");
             }
 
             return View(mService);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EmailInsertOrUpdate(EmailConfig emailConfig)
+        {
+            if (ModelState.IsValid)
+            {
+                emailConfig.DataSign = Encryption
+                    .Md5Hash($"{emailConfig.ToMail}-{emailConfig.CCMail}-{ExtendSettings.SecureKey}").ToLower();
+                if (emailConfig.Id == 0)
+                {
+                    //create
+                    // await new ServicesImpl(ConnectionString).Add(emailConfig);
+                    return RedirectToAction("Alert");
+                }
+                else
+                {
+                    await new EmailConfigImpl(ConnectionString).Update(emailConfig);
+                }
+
+                return RedirectToAction("Alert");
+            }
+
+            return View(emailConfig);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> SmsInsertOrUpdate(SmsConfig smsConfig)
+        {
+            if (ModelState.IsValid)
+            {
+                smsConfig.DataSign = Encryption
+                    .Md5Hash($"{smsConfig.AccountName}-{smsConfig.Mobile}-{smsConfig.Message}-{ExtendSettings.SecureKey}").ToLower();
+                smsConfig.AlertConfigId = 1;
+                if (smsConfig.Id == 0)
+                {
+                    //create
+                    await new SmsConfigImpl(ConnectionString).Add(smsConfig);
+                }
+                else
+                {
+                    await new SmsConfigImpl(ConnectionString).Update(smsConfig);
+                }
+
+                return RedirectToAction("Alert");
+            }
+
+            return View(smsConfig);
         }
         #endregion
     }

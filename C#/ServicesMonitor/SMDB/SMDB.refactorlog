@@ -56,4 +56,25 @@
     <Property Name="ParentElementType" Value="SqlTable" />
     <Property Name="NewName" Value="MappingType" />
   </Operation>
+  <Operation Name="Rename Refactor" Key="f880c3f7-fa29-4b1f-9824-c612c62e80b7" ChangeDateTime="09/22/2020 07:56:00">
+    <Property Name="ElementName" Value="[dbo].[AlertConfig].[IsPause]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[AlertConfig]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="PauseStatus" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="41194eb0-5261-4ea8-b179-a08c9592b78e" ChangeDateTime="09/23/2020 10:16:19">
+    <Property Name="ElementName" Value="[dbo].[EmailConfig].[SenderEmail]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[EmailConfig]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="SenderName" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="3c738ef7-9bbd-4407-a443-2fe9e744a5cb" ChangeDateTime="09/24/2020 07:14:00">
+    <Property Name="ElementName" Value="[dbo].[EmailConfig].[SmsEmail]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[EmailConfig]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="SmsEmailId" />
+  </Operation>
 </Operations>

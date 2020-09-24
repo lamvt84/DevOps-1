@@ -18,6 +18,18 @@ namespace CommonLibs
         public string DataSign { get; set; }
     }
 
+    public class SmsRequest
+    {
+        public string AccountName { get; set; }
+        public string Mobile { get; set; }
+        public string Message { get; set; }
+        public bool IsResend { get; set; }
+        public int ServiceID { get; set; }
+        public int smsEMailID { get; set; }
+        public int langID { get; set; }
+        public string DataSign { get; set; }
+    }
+
     public class BasicResponse
     {
         public string Result { get; set; }

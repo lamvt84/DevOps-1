@@ -25,7 +25,7 @@ function Delete(url) {
     }).then((willDelete) => {
         if (willDelete) {
             $.ajax({
-                type: "DELETE",
+                type: "POST",
                 url: url,
                 success: function (data) {
                     if (data.success) {

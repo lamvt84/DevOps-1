@@ -36,7 +36,7 @@ function loadDataTable() {
                             Delete
                         </a>
                         </div>`;
-                }, "width": "40%"
+                }
             }
         ],
         "language": {

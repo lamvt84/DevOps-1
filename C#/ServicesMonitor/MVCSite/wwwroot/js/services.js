@@ -3,13 +3,10 @@
 $(document).ready(function () {
     loadGroup(0);
     loadDataTable();
-    loadSummary();
-    updateData();
 });
 
 function updateData() {
     setInterval(loadDataTable, 60000);
-    setInterval(loadSummary, 60000);
 }
 
 $('#DDL_Load').on('change', function () {
@@ -18,7 +15,7 @@ $('#DDL_Load').on('change', function () {
 
 function loadDataTable() {
     var selectedId = $("#DDL_Load").val();
-    var url = "/api/GetServiceMonitorList?id=" + selectedId;
+    var url = "/api_service/GetServiceListByGroup?id=" + selectedId;
     if ($.fn.dataTable.isDataTable('#DT_load')) {
         dataTable = $('#DT_load').DataTable();
         dataTable.destroy();

@@ -42,4 +42,29 @@ namespace DataAccess.Interface
     {
         Task<int> Add(ServicesLog service);
     }
+
+    public interface IAlertConfig
+    {
+        Task<int> UpdateWarningStatus(AlertConfig alertConfig);
+        Task<AlertConfig> Get(int id);
+    }
+
+    public interface IEmailConfig
+    {
+        Task<EmailConfig> Get(int id);
+        Task<List<EmailConfig>> ListByAlertConfigId(int alertConfigId);
+        Task<int> Update(EmailConfig emailConfig);
+        Task<int> Delete(int id);
+        Task<int> UpdateStatus(int id);
+    }
+
+    public interface ISmsConfig
+    {
+        Task<SmsConfig> Get(int id);
+        Task<List<SmsConfig>> ListByAlertConfigId(int alertConfigId);
+        Task<int> Update(SmsConfig smsConfig);
+        Task<int> Add(SmsConfig smsConfig);
+        Task<int> Delete(int id);
+        Task<int> UpdateStatus(int id);
+    }
 }

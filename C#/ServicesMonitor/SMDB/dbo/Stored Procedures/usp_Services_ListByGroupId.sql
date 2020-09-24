@@ -2,10 +2,12 @@
 AS
     BEGIN
         IF (@GroupId > 0)
-            SELECT *
-            FROM dbo.[Services]
+            SELECT s.*, g.Name GroupName
+            FROM dbo.[Services] s
+                JOIN dbo.Groups g ON s.GroupId = g.Id
             WHERE GroupId = @GroupId;
         ELSE
-            SELECT *
-            FROM dbo.[Services];
+            SELECT s.*, g.Name GroupName
+            FROM dbo.[Services] s
+                JOIN dbo.Groups g ON s.GroupId = g.Id;
     END;

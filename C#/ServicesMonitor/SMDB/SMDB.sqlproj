@@ -62,6 +62,7 @@
     <Folder Include="dbo\Tables" />
     <Folder Include="dbo\Stored Procedures" />
     <Folder Include="Security" />
+    <Folder Include="Scripts" />
   </ItemGroup>
   <ItemGroup>
     <Build Include="dbo\Stored Procedures\usp_Groups_Add.sql" />
@@ -93,9 +94,22 @@
     <Build Include="dbo\Tables\EmailConfig.sql" />
     <Build Include="dbo\Tables\AlertConfig.sql" />
     <Build Include="dbo\Tables\SmsConfig.sql" />
-    <Build Include="dbo\Tables\AlertMapping.sql" />
     <Build Include="Security\Users.sql" />
     <Build Include="Security\Logins.sql" />
+    <PostDeploy Include="Scripts\InitConfig.sql" />
+    <Build Include="dbo\Stored Procedures\usp_AlertConfig_UpdateWarningStatus.sql" />
+    <Build Include="dbo\Stored Procedures\usp_AlertConfig_Get.sql" />
+    <Build Include="dbo\Stored Procedures\usp_EmailConfig_Get.sql" />
+    <Build Include="dbo\Stored Procedures\usp_EmailConfig_ListByAlertConfigId.sql" />
+    <Build Include="dbo\Stored Procedures\usp_EmailConfig_Update.sql" />
+    <Build Include="dbo\Stored Procedures\usp_SmsConfig_Update.sql" />
+    <Build Include="dbo\Stored Procedures\usp_SmsConfig_Get.sql" />
+    <Build Include="dbo\Stored Procedures\usp_SmsConfig_ListByAlertConfigId.sql" />
+    <Build Include="dbo\Stored Procedures\usp_SmsConfig_Add.sql" />
+    <Build Include="dbo\Stored Procedures\usp_EmailConfig_UpdateStatus.sql" />
+    <Build Include="dbo\Stored Procedures\usp_SmsConfig_UpdateStatus.sql" />
+    <Build Include="dbo\Stored Procedures\usp_SmsConfig_Delete.sql" />
+    <Build Include="dbo\Stored Procedures\usp_EmailConfig_Delete.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="SMDB.refactorlog" />

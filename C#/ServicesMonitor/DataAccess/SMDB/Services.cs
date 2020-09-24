@@ -8,14 +8,13 @@ namespace DataAccess.SMDB
         [Key]
         public int Id { get; set; }
         public int GroupId { get; set; }
-        [Required]
+        public string GroupName { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
-        [Required]
         public string Url { get; set; }
-        [Required]
+        
         public string Params { get; set; }
-        [Required]
+        
         public string ResponseCode { get; set; }
         public DateTimeOffset CreatedTime { get; set; }
         public DateTimeOffset UpdatedTime { get; set; }

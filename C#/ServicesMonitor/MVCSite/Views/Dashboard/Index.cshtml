@@ -1,0 +1,60 @@
+﻿<div class="col-6">
+    <h1 class="text-dark">DASHBOARD</h1>
+</div>
+<hr />
+
+<div class="col-5">
+    <p>
+        ALERT STATUS: <label id="lblServiceStatus"></label>
+    </p>
+</div>
+<div class="col-2">
+    <p>
+        <a href="#" class="btn form-control text-white" id="updateAlertStatus" onclick="updateWarningStatus('/api_alert/UpdateWarningStatus?id=1')">
+        </a>
+    </p>
+</div>
+<div class="p-3">
+    <p>
+        Service Summary
+    </p>
+    <div class="form-group row">
+        <div class="col-3">
+            <label>Total</label>
+        </div>
+        <div class="col-3">
+            <label id="totalServiceCount"></label>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-3">
+            <label>ERROR</label>
+        </div>
+        <div class="col-3">
+            <label id="errorServiceCount"></label>
+        </div>
+    </div>
+</div>
+<hr/>
+<div class="col-5">
+    <p>
+        <h2>ERROR LIST</h2>
+    </p>
+</div>
+<div class="p-3">
+    <table id="DT_load" class="table table-striped table-bordered w-100">
+        <thead>
+            <tr>
+                <th class="text-center">#</th>
+                <th class="text-center">Name</th>
+                <th class="text-center">Group Name</th>
+                <th class="text-center">Url</th>
+                <th class="text-center">UpdatedTime</th>
+            </tr>
+        </thead>
+    </table>
+</div>
+
+@section Scripts{
+    <script src="~/js/dashboard.js"></script>
+}
