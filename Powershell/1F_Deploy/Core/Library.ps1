@@ -51,8 +51,10 @@ function Update-IISWebsiteStatus {
     Param([string]$server,[string]$site,[string]$a)
 
     $WaitForIt = ""
-    $block = {Get-WebsiteState $args[0]}
-    $iis = Invoke-Command -ComputerName $server -ScriptBlock $block -ArgumentList @($site)
+    $iis = Invoke-Command -ComputerName $server -ScriptBlock {
+        Import-Module WebAdministration
+        Get-WebsiteState $using:site
+    }
 
     Write-Host ""
     Write-Host "===================================================="
@@ -64,38 +66,45 @@ function Update-IISWebsiteStatus {
         'Stopped' {
             if ($a -eq "START") {
                 Write-host "STARTING ..."
-                $WaitForIt = "Started"
-                $block = {Start-WebSite $args[0]};
-                Invoke-Command -ComputerName $server -ScriptBlock $block -ArgumentList @($site)
+                $WaitForIt = "Started"               
+                Invoke-Command -ComputerName $server -ScriptBlock {
+                    Import-Module WebAdministration
+                    Start-WebSite $using:site
+                }
             }
         }
         'Started' {
             if ($a -eq "STOP") {
                 Write-host "STOPPING ..."
                 $WaitForIt = "Stopped"
-                $block = {Stop-WebSite $args[0]};
-                Invoke-Command -ComputerName $server -ScriptBlock $block -ArgumentList @($site)
+                Invoke-Command -ComputerName $server -ScriptBlock {
+                    Import-Module WebAdministration
+                    Stop-WebSite $using:site
+                }
             }
         }
         Default {
             Write-host "$site is $($iis.value).  Taking no action."}
     }
-    $block = {Get-WebsiteState $args[0]}
-    $iis = Invoke-Command -ComputerName $server -ScriptBlock $block -ArgumentList @($site)
+    $iis = Invoke-Command -ComputerName $server -ScriptBlock {
+        Import-Module WebAdministration
+        Get-WebsiteState $using:site
+    }
 
     if ($WaitForIt -ne "") {
-        start-sleep -s 2
+        start-sleep -s 5
 
-        $block = {Get-WebsiteState $args[0]}
-        $iis = Invoke-Command -ComputerName $server -ScriptBlock $block -ArgumentList @($site)
+        $iis = Invoke-Command -ComputerName $server -ScriptBlock {
+            Import-Module WebAdministration
+            Get-WebsiteState $using:site
+        }
         
         if ($iis.value -eq $WaitForIt) { $Result = 'SUCCESS' }
         else { $Result = 'FAILED' }
         Write-host "$Result"
     }
     Write-Host "===================================================="
-    Write-Host ""
-    
+    Write-Host ""    
 }
 
 function Open-Script-Services {

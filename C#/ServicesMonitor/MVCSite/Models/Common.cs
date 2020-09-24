@@ -2,16 +2,13 @@
 using System.Security.Cryptography;
 using System.Text;
 
-namespace MVCSite.Libs
+namespace MVCSite.Models
 {
     public class ExtendSettings
     {
-        public string SendEmailUrl { get; set; }
-        public string ToEmailList { get; set; }
-        public string CcEmailList { get; set; }
         public string SecureKey { get; set; }
-        public string EmailSubject { get; set; }
-        public string EmailBody { get; set; }
+        public string SendMailUrl { get; set; }
+        public string SendSmsUrl { get; set; }
     }
 
     public static class Encryption

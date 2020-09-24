@@ -41,12 +41,12 @@
         <div class="vertical-nav bg-dark" id="sidebar">
             <div class="py-4 px-3 mb-4 bg-light">
                 @*<div class="media d-flex align-items-center">
-            <img src="images/no-avatar.png" alt="..." width="65" class="mr-3 rounded-circle img-thumbnail shadow-sm">
-            <div class="media-body">
-                <h4 class="m-0">Jason Doe</h4>
-                <p class="font-weight-light text-muted mb-0">Web developer</p>
-            </div>
-        </div>*@
+                <img src="images/no-avatar.png" alt="..." width="65" class="mr-3 rounded-circle img-thumbnail shadow-sm">
+                <div class="media-body">
+                    <h4 class="m-0">Jason Doe</h4>
+                    <p class="font-weight-light text-muted mb-0">Web developer</p>
+                </div>
+            </div>*@
                 <a class="navbar-brand text-dark font-weight-bold text-uppercase" asp-area="" asp-controller="Monitor" asp-action="Index"><h4 class="m-0">1Fintech</h4></a>
             </div>
 
@@ -54,7 +54,7 @@
 
             <ul class="nav flex-column bg-dark mb-0">
                 <li class="nav-item">
-                    <a href="#" class="nav-link text-white font-italic bg-dark font-weight-bold" style="background-color: #1d2124 !important">
+                    <a asp-controller="Dashboard" asp-action="Index" class="nav-link text-white font-italic bg-dark font-weight-bold" style="background-color: #1d2124 !important">
                         <i class="fa fa-pie-chart mr-3 fa-fw"></i>
                         Dashboard
                     </a>
@@ -96,13 +96,13 @@
                     </div>
                 </li>
             </ul>
-
         </div>
         <!-- End vertical navbar -->
+        
         <main role="main" class="pb-3">
-            <div class="page-content p-5" id="content">
-            <!-- Toggle button -->
-                <button id="sidebarCollapse" type="button" class="btn btn-light bg-white rounded-pill shadow-sm px-4 mb-4"><i class="fa fa-bars mr-2"></i><small class="text-uppercase font-weight-bold">Toggle</small></button>    
+            <div class="page-content p-3" id="content">
+                <button id="sidebarCollapse" type="button" class="btn btn-light bg-white rounded-pill shadow-sm px-4 mb-4"><i class="fa fa-bars mr-2"></i><small class="text-uppercase font-weight-bold">Toggle</small></button>
+                <!-- Toggle button -->
                 @RenderBody()
             </div>
         </main>

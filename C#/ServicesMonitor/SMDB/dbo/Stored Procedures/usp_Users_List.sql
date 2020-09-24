@@ -6,7 +6,7 @@ AS
             u.Email, 
             ul.UserName, 
             ul.Password, 
-            u.[status], 
+            u.[Status], 
             u.CreatedTime, 
             u.UpdatedTime
      FROM dbo.Users u
