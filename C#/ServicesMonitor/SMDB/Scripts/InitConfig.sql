@@ -41,3 +41,9 @@ BEGIN
         VALUES (1,'Service Alert Config', 0, 0, SYSDATETIMEOFFSET(), NULL)
     SET IDENTITY_INSERT dbo.AlertConfig OFF
 END
+
+TRUNCATE TABLE dbo.GroupType
+
+INSERT dbo.GroupType
+VALUES (1,N'HealthCheck Api',N'Check via health check function'),
+       (2,N'Powershell Check',N'Check via powershell script with IP and Port')

@@ -47,7 +47,6 @@ function Test-Port {
     }
 
     Return $true
-
 }
 
 Test-Port $ipaddress $port

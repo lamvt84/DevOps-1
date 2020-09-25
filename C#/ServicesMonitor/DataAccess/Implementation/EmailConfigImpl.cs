@@ -25,8 +25,7 @@ namespace DataAccess.Implementation
             try
             {
                 var spName = "dbo.usp_EmailConfig_Get";
-                var parameterValues = new object[1];
-                parameterValues[0] = id;
+                var parameterValues = new object[1] {id};
                 var thisTask = Task.Run(() => SqlHelper.ExecuteDatasetAsync(_connString, spName, parameterValues));
                 var result = await thisTask;
 
@@ -43,8 +42,7 @@ namespace DataAccess.Implementation
             try
             {
                 var spName = "dbo.usp_EmailConfig_ListByAlertConfigId";
-                var parameterValues = new object[1];
-                parameterValues[0] = alertConfigId;
+                var parameterValues = new object[1] { alertConfigId };
                 var thisTask = Task.Run(() => SqlHelper.ExecuteDatasetAsync(_connString, spName, parameterValues));
                 var result = await thisTask;
 
@@ -60,14 +58,17 @@ namespace DataAccess.Implementation
             try
             {
                 var spName = "dbo.usp_EmailConfig_Update";
-                var parameterValues = new object[7];
-                parameterValues[0] = emailConfig.Id;
-                parameterValues[1] = emailConfig.SenderName;
-                parameterValues[2] = emailConfig.ToMail;
-                parameterValues[3] = emailConfig.CCMail;
-                parameterValues[4] = emailConfig.Subject;
-                parameterValues[5] = emailConfig.Message;
-                parameterValues[6] = emailConfig.DataSign;
+                var parameterValues = new object[7]
+                {
+                    emailConfig.Id,
+                    emailConfig.SenderName,
+                    emailConfig.ToMail,
+                    emailConfig.CCMail,
+                    emailConfig.Subject,
+                    emailConfig.Message,
+                    emailConfig.DataSign
+            };
+                
                 var thisTask = Task.Run(() => SqlHelper.ExecuteNonQueryAsync(_connString, spName, parameterValues));
                 var result = await thisTask;
                 return result;
@@ -88,9 +89,12 @@ namespace DataAccess.Implementation
                     Direction = ParameterDirection.Output
                 };
 
-                var parameterValues = new object[2];
-                parameterValues[0] = id;
-                parameterValues[1] = outputParameter;
+                var parameterValues = new object[2]
+                {
+                    id,
+                    outputParameter
+                };
+               
                 var thisTask = Task.Run(() => SqlHelper.ExecuteNonQueryAsync(_connString, spName, parameterValues));
                 var result = await thisTask;
                 return (int)outputParameter.Value;
@@ -106,8 +110,7 @@ namespace DataAccess.Implementation
             try
             {
                 var spName = "dbo.usp_EmailConfig_Delete";
-                var parameterValues = new object[1];
-                parameterValues[0] = id;
+                var parameterValues = new object[1] {id};
                 var thisTask = Task.Run(() => SqlHelper.ExecuteNonQueryAsync(_connString, spName, parameterValues));
                 var result = await thisTask;
                 return result;

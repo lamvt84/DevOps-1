@@ -1,37 +1,45 @@
-﻿@model DataAccess.SMDB.Groups
+﻿@model GroupViewModel
 
 <br />
-<h2 class="text-info">@(Model.Id!=0 ? "Edit" : "Create") Group</h2>
+<h2 class="text-info">@(Model.Groups.Id!=0 ? "Edit" : "Create") Group</h2>
 <br />
 
 <div class="border container" style="padding:30px;">
     <form method="post">
-        @if (Model.Id != 0)
+        @if (Model.Groups.Id != 0)
         {
-            <input type="hidden" asp-for="Id" />
+            <input type="hidden" asp-for="Groups.Id" />
         }
-        <div class="text-danger" asp-validation-summary="ModelOnly"></div>
         <div class="form-group row">
             <div class="col-3">
-                <label asp-for="Name"></label>
+                <label asp-for="Groups.GroupTypeId"></label>
             </div>
             <div class="col-6">
-                <input asp-for="Name" class="form-control" />
+                <select asp-for="Groups.GroupTypeId" asp-items="@(new SelectList(Model.GroupType,"Id","Name"))" style="width: 200px; text-align: center">
+                    <option>== Choose ==</option>
+                </select>
             </div>
-            <span asp-validation-for="Name" class="text-danger"></span>
         </div>
         <div class="form-group row">
             <div class="col-3">
-                <label asp-for="Description"></label>
+                <label asp-for="Groups.Name"></label>
             </div>
             <div class="col-6">
-                <input asp-for="Description" class="form-control" />
+                <input asp-for="Groups.Name" class="form-control" />
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-3">
+                <label asp-for="Groups.Description"></label>
+            </div>
+            <div class="col-6">
+                <input asp-for="Groups.Description" class="form-control" />
             </div>
         </div>
         <div class="form-group row">
             <div class="col-3 offset-3">
                 <button type="submit" class="btn btn-primary form-control">
-                    @(Model.Id != 0 ? "Update" : "Create")
+                    @(Model.Groups.Id != 0 ? "Update" : "Create")
                 </button>
             </div>
             <div class="col-3">

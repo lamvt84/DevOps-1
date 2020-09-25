@@ -26,16 +26,24 @@ namespace DataAccess.Implementation
             try
             {
                 var spName = "dbo.usp_Users_Add";
+                var outputParameter = new SqlParameter("@ResponseCode", SqlDbType.Int)
+                {
+                    Direction = ParameterDirection.Output
+                };
 
-                var parameterValues = new object[6];
-                parameterValues[0] = user.FirstName;
-                parameterValues[1] = user.LastName;
-                parameterValues[2] = user.Email;
-                parameterValues[3] = user.UserName;
-                parameterValues[4] = user.Password;
+                var parameterValues = new object[6]
+                {
+                    user.FirstName,
+                    user.LastName,
+                    user.Email,
+                    user.UserName,
+                    user.Password,
+                    outputParameter
+                };
+                
                 var thisTask = Task.Run(() => SqlHelper.ExecuteNonQueryAsync(_connString, spName, parameterValues));
                 var result = await thisTask;
-                return result;
+                return (int)outputParameter.Value;
             }
             catch (Exception ex)
             {
@@ -47,17 +55,24 @@ namespace DataAccess.Implementation
             try
             {
                 var spName = "dbo.usp_Users_Update";
+                var outputParameter = new SqlParameter("@ResponseCode", SqlDbType.Int)
+                {
+                    Direction = ParameterDirection.Output
+                };
 
-                var parameterValues = new object[7];
-                parameterValues[0] = user.Id;
-                parameterValues[1] = user.FirstName;
-                parameterValues[2] = user.LastName;
-                parameterValues[3] = user.Email;
-                parameterValues[4] = user.UserName;
-                parameterValues[5] = user.Password;
+                var parameterValues = new object[7]
+                {
+                    user.Id,
+                    user.FirstName,
+                    user.LastName,
+                    user.Email,
+                    user.UserName,
+                    user.Password,
+                    outputParameter
+                };
                 var thisTask = Task.Run(() => SqlHelper.ExecuteNonQueryAsync(_connString, spName, parameterValues));
                 var result = await thisTask;
-                return result;
+                return (int)outputParameter.Value;
             }
             catch (Exception ex)
             {
@@ -70,12 +85,20 @@ namespace DataAccess.Implementation
             try
             {
                 var spName = "dbo.usp_UsersLogin_VerifyAuthentication";
+                var outputParameter = new SqlParameter("@ResponseCode", SqlDbType.Int)
+                {
+                    Direction = ParameterDirection.Output
+                };
 
-                var parameterValues = new object[3];
-                parameterValues[0] = user.UserName;
-                parameterValues[1] = user.Password;
+                var parameterValues = new object[3]
+                {
+                    user.UserName,
+                    user.Password,
+                    outputParameter
+                };
+                
                 SqlHelper.ExecuteNonQuery(_connString, spName, parameterValues);
-                return (int)parameterValues[3];
+                return (int)outputParameter.Value;
             }
             catch (Exception ex)
             {
@@ -103,8 +126,7 @@ namespace DataAccess.Implementation
             try
             {
                 var spName = "dbo.usp_Users_Get";
-                var parameterValues = new object[1];
-                parameterValues[0] = id;
+                var parameterValues = new object[1] {id};
                 var thisTask = Task.Run(() => SqlHelper.ExecuteDatasetAsync(_connString, spName, parameterValues));
                 var result = await thisTask;
 
@@ -120,8 +142,7 @@ namespace DataAccess.Implementation
             try
             {
                 var spName = "dbo.usp_Users_UpdateStatus";
-                var parameterValues = new object[1];
-                parameterValues[0] = id;
+                var parameterValues = new object[1] {id};
                 var thisTask = Task.Run(() => SqlHelper.ExecuteNonQueryAsync(_connString, spName, parameterValues));
                 var result = await thisTask;
                 return result;
@@ -136,8 +157,7 @@ namespace DataAccess.Implementation
             try
             {
                 var spName = "dbo.usp_Users_Delete";
-                var parameterValues = new object[1];
-                parameterValues[0] = id;
+                var parameterValues = new object[1] {id};
                 var thisTask = Task.Run(() => SqlHelper.ExecuteNonQueryAsync(_connString, spName, parameterValues));
                 var result = await thisTask;
                 return result;

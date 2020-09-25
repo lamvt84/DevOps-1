@@ -67,4 +67,13 @@ namespace DataAccess.Interface
         Task<int> Delete(int id);
         Task<int> UpdateStatus(int id);
     }
+
+    public interface IGroupType
+    {
+        Task<List<GroupType>> List();
+    }
+    public interface IAlertLog
+    {
+        Task<int> Add(AlertLog alertLog);
+    }
 }

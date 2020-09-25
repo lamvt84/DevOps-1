@@ -24,10 +24,12 @@ namespace DataAccess.Implementation
             {
                 var spName = "dbo.usp_AlertConfig_UpdateWarningStatus";
 
-                var parameterValues = new object[3];
-                parameterValues[0] = alertConfig.Id;
-                parameterValues[1] = alertConfig.PauseStatus;
-                parameterValues[2] = alertConfig.PausePeriod;
+                var parameterValues = new object[3]
+                {
+                    alertConfig.Id,
+                    alertConfig.PauseStatus,
+                    alertConfig.PausePeriod
+                };
 
                 var thisTask = Task.Run(() => SqlHelper.ExecuteNonQueryAsync(_connString, spName, parameterValues));
                 var result = await thisTask;
@@ -43,8 +45,7 @@ namespace DataAccess.Implementation
             try
             {
                 var spName = "dbo.usp_AlertConfig_Get";
-                var parameterValues = new object[1];
-                parameterValues[0] = id;
+                var parameterValues = new object[1] {id};
                 var thisTask = Task.Run(() => SqlHelper.ExecuteDatasetAsync(_connString, spName, parameterValues));
                 var result = await thisTask;
 
