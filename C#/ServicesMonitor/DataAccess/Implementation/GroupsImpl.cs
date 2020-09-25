@@ -27,9 +27,12 @@ namespace DataAccess.Implementation
             {
                 var spName = "dbo.usp_Groups_Add";
 
-                var parameterValues = new object[2];
-                parameterValues[0] = group.Name;
-                parameterValues[1] = group.Description;
+                var parameterValues = new object[3]
+                {
+                    group.GroupTypeId,
+                    group.Name,
+                    group.Description
+                };
                
                 var thisTask = Task.Run(() => SqlHelper.ExecuteNonQueryAsync(_connString, spName, parameterValues));
                 var result = await thisTask;
@@ -46,10 +49,13 @@ namespace DataAccess.Implementation
             {
                 var spName = "dbo.usp_Groups_Update";
 
-                var parameterValues = new object[3];
-                parameterValues[0] = group.Id;
-                parameterValues[1] = group.Name;
-                parameterValues[2] = group.Description;
+                var parameterValues = new object[4]
+                {
+                    group.Id, 
+                    group.GroupTypeId, 
+                    group.Name, 
+                    group.Description
+                };
            
                 var thisTask = Task.Run(() => SqlHelper.ExecuteNonQueryAsync(_connString, spName, parameterValues));
                 var result = await thisTask;
@@ -81,8 +87,7 @@ namespace DataAccess.Implementation
             try
             {
                 var spName = "dbo.usp_Groups_Get";
-                var parameterValues = new object[1];
-                parameterValues[0] = id;
+                var parameterValues = new object[1] {id};
                 var thisTask = Task.Run(() => SqlHelper.ExecuteDatasetAsync(_connString, spName, parameterValues));
                 var result = await thisTask;
 
@@ -99,8 +104,7 @@ namespace DataAccess.Implementation
             try
             {
                 var spName = "dbo.usp_Groups_Delete";
-                var parameterValues = new object[1];
-                parameterValues[0] = id;
+                var parameterValues = new object[1] {id};
                 var thisTask = Task.Run(() => SqlHelper.ExecuteNonQueryAsync(_connString, spName, parameterValues));
                 var result = await thisTask;
                 return result;

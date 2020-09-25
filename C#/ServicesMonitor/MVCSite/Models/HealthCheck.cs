@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Runtime.InteropServices.ComTypes;
 using System.Threading.Tasks;
 using CommonLibs;
 using DataAccess.Implementation;
@@ -14,15 +15,17 @@ namespace MVCSite.Models
     public partial class HealthCheck
     {
         private string ConnectionString { get; }
-        private ExtendSettings Settings { get; }
-        public HealthCheck(IOptions<ExtendSettings> settings = null)
+        private ExtendSettings ExtendSettings { get; set; }
+        public HealthCheck(IOptionsSnapshot<ExtendSettings> settings = null)
         {
-            if (settings != null) Settings = settings.Value;
+            if (settings != null) ExtendSettings = settings.Value;
             ConnectionString = Startup.ConnectionString;
         }
 
-        public async Task SendAlert(Guid jGuid)
+        public async Task SendAlert(Guid jGuid, ExtendSettings extendSettings)
         {
+            ExtendSettings ??= extendSettings;
+
             var serviceList = await new ServicesImpl(ConnectionString).ListByStatus(0);
             var serviceErrorList = "";
 
@@ -39,7 +42,7 @@ namespace MVCSite.Models
             await Task.WhenAll(tasks);
         }
 
-        public async Task SendAlertEmail(Guid jGuid, string serviceErrorList)
+        private async Task SendAlertEmail(Guid jGuid, string serviceErrorList)
         {
             using var client = new HttpClient();
             try
@@ -47,7 +50,7 @@ namespace MVCSite.Models
                 var emailConfig = await new EmailConfigImpl(ConnectionString).ListByAlertConfigId(1);
                 foreach (var item in emailConfig.Where(x => x.IsEnable))
                 {
-                    var emailSettings = new MailRequest()
+                    var emailSetting = new MailRequest()
                     {
                         SenderName = item.SenderName,
                         ToMail = item.ToMail,
@@ -62,9 +65,19 @@ namespace MVCSite.Models
                         DataSign = item.DataSign
                     };
 
-                    using var stringContent = new StringContent(JsonConvert.SerializeObject(emailSettings), System.Text.Encoding.UTF8, "application/json");
-                    var response = await client.PostAsync(new Uri(Settings.SendMailUrl), stringContent);
-                    await response.Content.ReadAsStringAsync();
+                    using var stringContent = new StringContent(JsonConvert.SerializeObject(emailSetting), System.Text.Encoding.UTF8, "application/json");
+                    //var response = await client.PostAsync(new Uri(ExtendSettings.SendMailUrl), stringContent);
+                    var response = await client.PostAsync(new Uri(ExtendSettings.SendMailUrl), stringContent);
+                    var responseMessage = await response.Content.ReadAsStringAsync();
+
+                    var alertLog = new AlertLog()
+                    {
+                        AlertType = "EMAIL",
+                        AlertUrl = ExtendSettings.SendMailUrl,
+                        RequestMessage = JsonConvert.SerializeObject(emailSetting),
+                        ResponseMessage = responseMessage
+                    };
+                    await new AlertLogImpl(ConnectionString).Add(alertLog);
                 }
             }
             catch (Exception)
@@ -73,15 +86,15 @@ namespace MVCSite.Models
             }
         }
 
-        public async Task SendAlertSms()
+        private async Task SendAlertSms()
         {
             using var client = new HttpClient();
             try
             {
-                var emailConfig = await new SmsConfigImpl(ConnectionString).ListByAlertConfigId(1);
-                foreach (var item in emailConfig.Where(x => x.IsEnable))
+                var smsConfig = await new SmsConfigImpl(ConnectionString).ListByAlertConfigId(1);
+                foreach (var item in smsConfig.Where(x => x.IsEnable))
                 {
-                    var emailSettings = new SmsRequest()
+                    var smsSetting = new SmsRequest()
                     {
                         AccountName = item.AccountName,
                         Mobile = item.Mobile,
@@ -93,9 +106,18 @@ namespace MVCSite.Models
                         DataSign = item.DataSign
                     };
 
-                    using var stringContent = new StringContent(JsonConvert.SerializeObject(emailSettings), System.Text.Encoding.UTF8, "application/json");
-                    var response = await client.PostAsync(new Uri(Settings.SendSmsUrl), stringContent);
-                    await response.Content.ReadAsStringAsync();
+                    using var stringContent = new StringContent(JsonConvert.SerializeObject(smsSetting), System.Text.Encoding.UTF8, "application/json");
+                    var response = await client.PostAsync(new Uri(ExtendSettings.SendSmsUrl), stringContent);
+                    var responseMessage = await response.Content.ReadAsStringAsync();
+                    
+                    var alertLog = new AlertLog()
+                    {
+                        AlertType = "SMS",
+                        AlertUrl = ExtendSettings.SendSmsUrl,
+                        RequestMessage = JsonConvert.SerializeObject(smsSetting),
+                        ResponseMessage = responseMessage
+                    };
+                    await new AlertLogImpl(ConnectionString).Add(alertLog);
                 }
             }
             catch (Exception)

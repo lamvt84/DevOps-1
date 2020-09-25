@@ -1,11 +1,3 @@
-# ENTRY POINT MAIN()
-Param(
-    [Parameter(Mandatory = $true)]
-    $ipaddress = "",
-    [Parameter(Mandatory = $true)]
-    $port = ""
-)
-
 function Test-Port {
 
     [CmdletBinding()]
@@ -47,8 +39,4 @@ function Test-Port {
     }
 
     Return $true
-
 }
-
-Test-Port $ipaddress $port
-

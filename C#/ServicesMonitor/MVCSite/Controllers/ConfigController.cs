@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using DataAccess.Implementation;
 using DataAccess.SMDB;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
 using MVCSite.Models;
 
@@ -63,17 +64,22 @@ namespace MVCSite.Controllers
         }
         public IActionResult GroupInsertOrUpdate(int? id)
         {
-            Groups mGroups = new Groups();
+            var groupViewModel = new GroupViewModel();
+            var groupType = new GroupTypeImpl(ConnectionString).List();
+            groupViewModel.GroupType = groupType.Result;
+            Groups mGroup = new Groups();
             if (id == null)
             {
-                return View(mGroups);
+                groupViewModel.Groups = mGroup;
+                return View(groupViewModel);
             }
-            mGroups = new GroupsImpl(ConnectionString).Get(id ?? default(int)).Result;
-            if (mGroups == null)
+            mGroup = new GroupsImpl(ConnectionString).Get(id ?? default(int)).Result;
+            if (mGroup == null)
             {
                 return NotFound();
             }
-            return View(mGroups);
+            groupViewModel.Groups = mGroup;
+            return View(groupViewModel);
         }
         public IActionResult Alert()
         {
@@ -129,17 +135,17 @@ namespace MVCSite.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> GroupInsertOrUpdate([Bind(include: "Id,Name,Description")] Groups mGroup)
+        public async Task<IActionResult> GroupInsertOrUpdate(GroupViewModel mGroupViewModel)
         {
-            if (!ModelState.IsValid) return View(mGroup);
-            if (mGroup.Id == 0)
+            if (!ModelState.IsValid) return View(mGroupViewModel);
+            if (mGroupViewModel.Groups.Id == 0)
             {
                 //create
-                await new GroupsImpl(ConnectionString).Add(mGroup);
+                await new GroupsImpl(ConnectionString).Add(mGroupViewModel.Groups);
             }
             else
             {
-                await new GroupsImpl(ConnectionString).Update(mGroup);
+                await new GroupsImpl(ConnectionString).Update(mGroupViewModel.Groups);
             }
             return RedirectToAction("Group");
         }
@@ -174,6 +180,8 @@ namespace MVCSite.Controllers
             {
                 emailConfig.DataSign = Encryption
                     .Md5Hash($"{emailConfig.ToMail}-{emailConfig.CCMail}-{ExtendSettings.SecureKey}").ToLower();
+                emailConfig.CCMail = (emailConfig.CCMail == null) ? "" : emailConfig.CCMail;
+
                 if (emailConfig.Id == 0)
                 {
                     //create

@@ -27,9 +27,12 @@ namespace DataAccess.Implementation
             {
                 var spName = "dbo.usp_Services_UpdateStatus";
 
-                var parameterValues = new object[2];
-                parameterValues[0] = service.Id;
-                parameterValues[1] = service.Status;
+                var parameterValues = new object[2]
+                {
+                    service.Id,
+                    service.Status
+                };
+                
                 var thisTask = Task.Run(() => SqlHelper.ExecuteNonQueryAsync(_connString, spName, parameterValues));
                 var result = await thisTask;
                 return result;
@@ -46,15 +49,18 @@ namespace DataAccess.Implementation
             {
                 var spName = "dbo.usp_Services_Add";
 
-                var parameterValues = new object[8];
-                parameterValues[0] = service.GroupId;
-                parameterValues[1] = service.Name;
-                parameterValues[2] = service.Description;
-                parameterValues[3] = service.Url;
-                parameterValues[4] = service.Params;
-                parameterValues[5] = service.ResponseCode;
-                parameterValues[6] = service.Enable;
-                parameterValues[7] = service.Status;
+                var parameterValues = new object[8]
+                {
+                    service.GroupId,
+                    service.Name,
+                    service.Description,
+                    service.Url,
+                    service.Params,
+                    service.ResponseCode,
+                    service.Enable,
+                    service.Status
+                };
+                
                 var thisTask = Task.Run(() => SqlHelper.ExecuteNonQueryAsync(_connString, spName, parameterValues));
                 var result = await thisTask;
                 return result;
@@ -70,16 +76,19 @@ namespace DataAccess.Implementation
             {
                 var spName = "dbo.usp_Services_Update";
 
-                var parameterValues = new object[9];
-                parameterValues[0] = service.Id;
-                parameterValues[1] = service.GroupId;
-                parameterValues[2] = service.Name;
-                parameterValues[3] = service.Description;
-                parameterValues[4] = service.Url;
-                parameterValues[5] = service.Params;
-                parameterValues[6] = service.ResponseCode;
-                parameterValues[7] = service.Enable;
-                parameterValues[8] = service.Status;
+                var parameterValues = new object[9]
+                {
+                    service.Id,
+                    service.GroupId,
+                    service.Name,
+                    service.Description,
+                    service.Url,
+                    service.Params,
+                    service.ResponseCode,
+                    service.Enable,
+                    service.Status
+                };
+             
                 var thisTask = Task.Run(() => SqlHelper.ExecuteNonQueryAsync(_connString, spName, parameterValues));
                 var result = await thisTask;
                 return result;
@@ -94,8 +103,7 @@ namespace DataAccess.Implementation
             try
             {
                 var spName = "dbo.usp_Services_ListByStatus";
-                var parameterValues = new object[1];
-                parameterValues[0] = status;
+                var parameterValues = new object[1] {status};
                 var thisTask = Task.Run(() => SqlHelper.ExecuteDatasetAsync(_connString, spName, parameterValues));
                 var result = await thisTask;
                 
@@ -111,8 +119,7 @@ namespace DataAccess.Implementation
             try
             {
                 var spName = "dbo.usp_Services_ListByGroupId";
-                var parameterValues = new object[1];
-                parameterValues[0] = groupId;
+                var parameterValues = new object[1] {groupId};
                 var thisTask = Task.Run(() => SqlHelper.ExecuteDatasetAsync(_connString, spName, parameterValues));
                 var result = await thisTask;
                 
@@ -144,8 +151,7 @@ namespace DataAccess.Implementation
             try
             {
                 var spName = "dbo.usp_Services_ListByEnable";
-                var parameterValues = new object[1];
-                parameterValues[0] = enable;
+                var parameterValues = new object[1] {enable};
                 var thisTask = Task.Run(() => SqlHelper.ExecuteDatasetAsync(_connString, spName, parameterValues));
                 var result = await thisTask;
                 
@@ -161,8 +167,7 @@ namespace DataAccess.Implementation
             try
             {
                 var spName = "dbo.usp_Services_Get";
-                var parameterValues = new object[1];
-                parameterValues[0] = id;
+                var parameterValues = new object[1] {id};
                 var thisTask = Task.Run(() => SqlHelper.ExecuteDatasetAsync(_connString, spName, parameterValues));
                 var result = await thisTask;
 
@@ -179,8 +184,7 @@ namespace DataAccess.Implementation
             try
             {
                 var spName = "dbo.usp_Services_Delete";
-                var parameterValues = new object[1];
-                parameterValues[0] = id;
+                var parameterValues = new object[1] {id};
                 var thisTask = Task.Run(() => SqlHelper.ExecuteNonQueryAsync(_connString, spName, parameterValues));
                 var result = await thisTask;
                 return result;

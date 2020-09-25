@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using DataAccess.Implementation;
 using DataAccess.SMDB;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using MVCSite.Models;
 using Newtonsoft.Json;
 
@@ -15,10 +16,19 @@ namespace MVCSite.Controllers
     public class ApiController : ControllerBase
     {
         private string ConnectionString { get; }
-        public ApiController()
+        private ExtendSettings ExtendSettings { get; }
+        public ApiController(IOptionsSnapshot<ExtendSettings> settings = null)
         {
+            if (settings != null) ExtendSettings = settings.Value;
             ConnectionString = Startup.ConnectionString;
         }
+
+        [HttpPost("SendAlert")]
+        public async Task SendAlert(string jGuid)
+        {
+            await new HealthCheck().SendAlert(Guid.Parse(jGuid), ExtendSettings);
+        }
+
         [HttpGet("CollectHealthCheck")]
         public async Task CollectHealthCheck()
         {
@@ -73,7 +83,7 @@ namespace MVCSite.Controllers
                 var result = await new AlertConfigImpl(ConnectionString).Get(1);
                 if (result.PauseStatus == 0)
                 {
-                    await new HealthCheck().SendAlert(journalGuid);
+                    await new HealthCheck().SendAlert(journalGuid, ExtendSettings);
                 }
             }
         }

@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Security.Cryptography;
 using System.Text;
+using System.Text.RegularExpressions;
+using DataAccess.SMDB;
 
 namespace MVCSite.Models
 {
@@ -9,6 +12,12 @@ namespace MVCSite.Models
         public string SecureKey { get; set; }
         public string SendMailUrl { get; set; }
         public string SendSmsUrl { get; set; }
+    }
+
+    public class GroupViewModel
+    {
+        public Groups Groups { get; set; }
+        public List<GroupType> GroupType { get; set; }
     }
 
     public static class Encryption

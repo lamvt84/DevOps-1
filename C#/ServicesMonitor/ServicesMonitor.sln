@@ -20,6 +20,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TaskSchedule", "TaskSchedule", "{B7C80993-BC68-4AA1-BE7C-A1DEDD8392E2}"
 	ProjectSection(SolutionItems) = preProject
 		TaskSchedule\CallApiHealthCheck.ps1 = TaskSchedule\CallApiHealthCheck.ps1
+		TaskSchedule\CheckPort.ps1 = TaskSchedule\CheckPort.ps1
 		TaskSchedule\CreateTask.ps1 = TaskSchedule\CreateTask.ps1
 		TaskSchedule\guide.md = TaskSchedule\guide.md
 		TaskSchedule\TaskTemplate.xml = TaskSchedule\TaskTemplate.xml

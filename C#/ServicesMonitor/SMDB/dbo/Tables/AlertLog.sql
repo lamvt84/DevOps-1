@@ -1,0 +1,10 @@
+﻿CREATE TABLE [dbo].[AlertLog]
+(
+	[Id] INT NOT NULL IDENTITY(1,1),
+	[AlertType] VARCHAR(10),
+	[AlertUrl] VARCHAR(200),
+	[RequestMessage] VARCHAR(1000),
+	[ReponseMessage] VARCHAR(1000),
+	[CreatedTime] DATETIMEOFFSET NOT NULL CONSTRAINT DF_AlertLog_CreatedTime DEFAULT SYSDATETIMEOFFSET(), 
+    CONSTRAINT PK_AlertLog PRIMARY KEY CLUSTERED (Id)
+)

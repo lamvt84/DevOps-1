@@ -1,35 +1,40 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Data;
+using System.Linq;
+using System.Runtime.InteropServices.ComTypes;
 using System.Threading.Tasks;
-using CommonLibs;
 using DataAccess.Interface;
 using DataAccess.SMDB;
+using CommonLibs;
+using Microsoft.IdentityModel.Protocols;
+using Microsoft.Data.SqlClient;
 
 namespace DataAccess.Implementation
 {
-    public class ServicesLogImpl: IServicesLog
+    public class AlertLogImpl : IAlertLog
     {
         private readonly string _connString;
 
-        public ServicesLogImpl(string connString)
+        public AlertLogImpl(string connString)
         {
             _connString = connString;
         }
-        public async Task<int> Add(ServicesLog service)
+
+        public async Task<int> Add(AlertLog alertLog)
         {
             try
             {
-                var spName = "dbo.usp_ServicesLog_Add";
+                var spName = "dbo.usp_AlertLog_Add";
 
                 var parameterValues = new object[4]
                 {
-                    service.JournalGuid,
-                    service.ServiceId,
-                    service.ServiceUrl,
-                    service.ServiceStatus
+                    alertLog.AlertType,
+                    alertLog.AlertUrl,
+                    alertLog.RequestMessage,
+                    alertLog.ResponseMessage
                 };
-
+               
                 var thisTask = Task.Run(() => SqlHelper.ExecuteNonQueryAsync(_connString, spName, parameterValues));
                 var result = await thisTask;
                 return result;

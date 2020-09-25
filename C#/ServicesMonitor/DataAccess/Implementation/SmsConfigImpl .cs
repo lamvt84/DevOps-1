@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
 using CommonLibs;
@@ -25,8 +26,7 @@ namespace DataAccess.Implementation
             try
             {
                 var spName = "dbo.usp_SmsConfig_Get";
-                var parameterValues = new object[1];
-                parameterValues[0] = id;
+                var parameterValues = new object[1] {id};
                 var thisTask = Task.Run(() => SqlHelper.ExecuteDatasetAsync(_connString, spName, parameterValues));
                 var result = await thisTask;
 
@@ -43,8 +43,7 @@ namespace DataAccess.Implementation
             try
             {
                 var spName = "dbo.usp_SmsConfig_ListByAlertConfigId";
-                var parameterValues = new object[1];
-                parameterValues[0] = alertConfigId;
+                var parameterValues = new object[1] {alertConfigId};
                 var thisTask = Task.Run(() => SqlHelper.ExecuteDatasetAsync(_connString, spName, parameterValues));
                 var result = await thisTask;
 
@@ -60,12 +59,15 @@ namespace DataAccess.Implementation
             try
             {
                 var spName = "dbo.usp_SmsConfig_Update";
-                var parameterValues = new object[5];
-                parameterValues[0] = smsConfig.Id;
-                parameterValues[1] = smsConfig.AccountName;
-                parameterValues[2] = smsConfig.Mobile;
-                parameterValues[3] = smsConfig.Message;
-                parameterValues[4] = smsConfig.DataSign;
+                var parameterValues = new object[5]
+                {
+                    smsConfig.Id,
+                    smsConfig.AccountName,
+                    smsConfig.Mobile,
+                    smsConfig.Message,
+                    smsConfig.DataSign
+                };
+                
                 var thisTask = Task.Run(() => SqlHelper.ExecuteNonQueryAsync(_connString, spName, parameterValues));
                 var result = await thisTask;
                 return result;
@@ -81,12 +83,15 @@ namespace DataAccess.Implementation
             try
             {
                 var spName = "dbo.usp_SmsConfig_Add";
-                var parameterValues = new object[5];
-                parameterValues[0] = smsConfig.AlertConfigId;
-                parameterValues[1] = smsConfig.AccountName;
-                parameterValues[2] = smsConfig.Mobile;
-                parameterValues[3] = smsConfig.Message;
-                parameterValues[4] = smsConfig.DataSign;
+                var parameterValues = new object[5]
+                {
+                    smsConfig.AlertConfigId,
+                    smsConfig.AccountName,
+                    smsConfig.Mobile,
+                    smsConfig.Message,
+                    smsConfig.DataSign
+                };
+                
                 var thisTask = Task.Run(() => SqlHelper.ExecuteNonQueryAsync(_connString, spName, parameterValues));
                 var result = await thisTask;
                 return result;
@@ -108,9 +113,12 @@ namespace DataAccess.Implementation
                     Direction = ParameterDirection.Output
                 };
 
-                var parameterValues = new object[2];
-                parameterValues[0] = id;
-                parameterValues[1] = outputParameter;
+                var parameterValues = new object[2]
+                {
+                    id,
+                    outputParameter
+                };
+                
                 var thisTask = Task.Run(() => SqlHelper.ExecuteNonQueryAsync(_connString, spName, parameterValues));
                 var result = await thisTask;
                 return (int)outputParameter.Value;
@@ -126,8 +134,7 @@ namespace DataAccess.Implementation
             try
             {
                 var spName = "dbo.usp_SmsConfig_Delete";
-                var parameterValues = new object[1];
-                parameterValues[0] = id;
+                var parameterValues = new object[1] {id};
                 var thisTask = Task.Run(() => SqlHelper.ExecuteNonQueryAsync(_connString, spName, parameterValues));
                 var result = await thisTask;
                 return result;
