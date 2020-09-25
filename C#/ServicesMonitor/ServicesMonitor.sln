@@ -19,11 +19,16 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MVCSite", "MVCSite\MVCSite.
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TaskSchedule", "TaskSchedule", "{B7C80993-BC68-4AA1-BE7C-A1DEDD8392E2}"
 	ProjectSection(SolutionItems) = preProject
-		TaskSchedule\CallApiHealthCheck.ps1 = TaskSchedule\CallApiHealthCheck.ps1
-		TaskSchedule\CheckPort.ps1 = TaskSchedule\CheckPort.ps1
 		TaskSchedule\CreateTask.ps1 = TaskSchedule\CreateTask.ps1
 		TaskSchedule\guide.md = TaskSchedule\guide.md
+		TaskSchedule\ProcessHealthCheck.ps1 = TaskSchedule\ProcessHealthCheck.ps1
 		TaskSchedule\TaskTemplate.xml = TaskSchedule\TaskTemplate.xml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Modules", "Modules", "{E43442A6-D62D-4AFF-8E37-D00FE8FEA97C}"
+	ProjectSection(SolutionItems) = preProject
+		TaskSchedule\Modules\HealthCheck.ps1 = TaskSchedule\Modules\HealthCheck.ps1
+		TaskSchedule\Modules\HealthCheck.psm1 = TaskSchedule\Modules\HealthCheck.psm1
 	EndProjectSection
 EndProject
 Global
@@ -59,6 +64,7 @@ Global
 		{3829B7C6-21EC-49D5-B69E-415F88EC0551} = {126230A1-CEC1-4F62-9E42-59F1E39855CA}
 		{187BC766-0774-421C-885E-4CF3857C2685} = {126230A1-CEC1-4F62-9E42-59F1E39855CA}
 		{2215E18F-E7D5-4BD6-BA74-3A0E37D31145} = {EC3D47F3-A45F-47BB-94BF-F8357D0A3D30}
+		{E43442A6-D62D-4AFF-8E37-D00FE8FEA97C} = {B7C80993-BC68-4AA1-BE7C-A1DEDD8392E2}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {65D55427-E094-4C64-94AE-AFE2B564EDDD}
