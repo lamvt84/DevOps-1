@@ -4,12 +4,13 @@
     "\\C#",
     "\\C#\\ServicesMonitor",
     "\\C#\\ServicesMonitor\\MVCSite",
-    "\\C#\\ServicesMonitor\\MVCSite\\Controllers",
     "\\C#\\ServicesMonitor\\MVCSite\\Views",
     "\\C#\\ServicesMonitor\\MVCSite\\Views\\Shared",
+    "\\C#\\ServicesMonitor\\TaskSchedule",
+    "\\C#\\ServicesMonitor\\TaskSchedule\\Modules",
     "\\Powershell",
     "\\Powershell\\Training"
   ],
-  "SelectedNode": "\\C#\\ServicesMonitor\\MVCSite\\Views\\Shared\\_Layout.cshtml",
+  "SelectedNode": "\\C#\\ServicesMonitor\\TaskSchedule",
   "PreviewInSolutionExplorer": false
 }

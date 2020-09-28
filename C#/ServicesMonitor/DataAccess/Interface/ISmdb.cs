@@ -76,4 +76,9 @@ namespace DataAccess.Interface
     {
         Task<int> Add(AlertLog alertLog);
     }
+
+    public interface ITaskSchedulerLog
+    {
+        Task<int> Add(TaskSchedulerLog taskSchedulerLog);
+    }
 }

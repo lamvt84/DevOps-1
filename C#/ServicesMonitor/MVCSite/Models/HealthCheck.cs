@@ -26,20 +26,31 @@ namespace MVCSite.Models
         {
             ExtendSettings ??= extendSettings;
 
-            var serviceList = await new ServicesImpl(ConnectionString).ListByStatus(0);
-            var serviceErrorList = "";
-
-            var tasks = new List<Task>();
-
-            foreach (var item in serviceList)
+            try
             {
-                serviceErrorList += $"- {item.Name}: {item.Url}<br />";
+                var alertConfig = await new AlertConfigImpl(ConnectionString).Get(1);
+                if (alertConfig.PauseStatus == 1) return;
+
+                var serviceList = await new ServicesImpl(ConnectionString).ListByStatus(0);
+                var serviceErrorList = "";
+
+                var tasks = new List<Task>();
+
+                foreach (var item in serviceList)
+                {
+                    serviceErrorList += $"- {item.Name}: {item.Url}<br />";
+                }
+
+                tasks.Add(SendAlertEmail(jGuid, serviceErrorList));
+                tasks.Add(SendAlertSms());
+
+                await Task.WhenAll(tasks);
+            }
+            catch (Exception)
+            {
+                throw;
             }
 
-            tasks.Add(SendAlertEmail(jGuid, serviceErrorList));
-            tasks.Add(SendAlertSms());
-
-            await Task.WhenAll(tasks);
         }
 
         private async Task SendAlertEmail(Guid jGuid, string serviceErrorList)

@@ -45,5 +45,5 @@ END
 TRUNCATE TABLE dbo.GroupType
 
 INSERT dbo.GroupType
-VALUES (1,N'HealthCheck Api',N'Check via health check function'),
-       (2,N'Powershell Check',N'Check via powershell script with IP and Port')
+VALUES (1,N'Api',N'Check via Api'),
+       (2,N'TcpClient',N'Check via TcpClient')

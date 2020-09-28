@@ -152,7 +152,7 @@ namespace MVCSite.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> ServiceInsertOrUpdate([Bind(include: "Id,Name,Description,GroupId,Url,Params,ResponseCode,Enable")] Services mService)
+        public async Task<IActionResult> ServiceInsertOrUpdate([Bind(include: "Id,Name,Description,GroupId,Url,Params,ResponseCode,Enable,Status")] Services mService)
         {
             if (ModelState.IsValid)
             {
