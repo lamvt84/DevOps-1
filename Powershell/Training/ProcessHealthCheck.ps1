@@ -17,7 +17,7 @@ $rootPath = (Split-Path $MyInvocation.MyCommand.Path)
 Import-Module $rootPath/Modules/HealthCheck
 
 # Functions
-function Invoke-ProcessSpecialCase() {
+function Invoke-ProcessSpecialCase {
     [CmdletBinding()]
     Param(
         [Parameter(Mandatory = $true)]    
@@ -60,7 +60,7 @@ function Invoke-ProcessSpecialCase() {
     Write-Host "Total time elapsed: $([datetime]::UtcNow - $dtStart)"
 }
 
-function Invoke-ProcessCommonCaseAsync() {
+function Invoke-ProcessCommonCaseAsync {
     <#[CmdletBinding()]
     Param(
         [Parameter(ValueFromPipeline=$true, Mandatory = $false)]
@@ -74,7 +74,7 @@ function Invoke-ProcessCommonCaseAsync() {
         $Guid = New-Guid
         Write-Host "Guid: $Guid"
 
-        $ThreadCount = 20
+        $ThreadCount = 0
         $ErrorCount = 0
         
         $root = $PSScriptRoot            
@@ -87,13 +87,14 @@ function Invoke-ProcessCommonCaseAsync() {
 
         $DataSet = $DataSet | Select-Object Id, Url, @{Name = 'IpAddress'; Expression = { ($_.Url.Split("/")[2]).Split(":")[0] } }`
                                             , @{Name='Port';Expression={($_.Url.Split("/")[2]).Split(":")[1]}}, GroupTypeId
+        $ThreadCount = $DataSet.Count
 
         $Query = "EXEC [dbo].[usp_ServicesLog_Add]
                     @JournalGuid = '$Guid',
                     @ServiceId = '0',
                     @ServiceUrl = '',
                     @ServiceStatus = 'START'"
-        Invoke-SqlCmd -Query $Query -ServerInstance $Config.SqlInstance -Username $Config.User -Password $Config.Password -Database $Config.Database                
+        Invoke-SqlCmd -Query $Query -ServerInstance $Config.SqlInstance -Username $Config.User -Password $Config.Password -Database $Config.Database -ErrorAction Stop               
     }
     Process
     {   
@@ -112,41 +113,17 @@ function Invoke-ProcessCommonCaseAsync() {
                 }
                 catch {
                     Write-Warning "$($Error[0]) = $($Data.Url)"
+                    $HealthCheckResult = $false
                 }
                 
-                try {
-                    #Write-Warning $Url
-                    $status = if ($HealthCheckResult -eq $true) { 1 } else { 0 }
-                    if ($status -eq 1) { $ErrorCount += 1 }
-                    $statusCode = if ($HealthCheckResult -eq $true) { "OK" } else { "ERROR" }
-
-                    $Query = "EXEC [dbo].[usp_ServicesLog_Add] 
-                        @JournalGuid = '$Guid',
-                        @ServiceId = '$($Data.Id)',
-                        @ServiceUrl = '$($Data.Url)',
-                        @ServiceStatus = $statusCode"
-                    Invoke-SqlCmd -Query $Query -ServerInstance $Config.SqlInstance -Username $Config.User -Password $Config.Password -Database $Config.Database 
-
-                            
-                    $Query = "EXEC [dbo].[usp_Services_UpdateStatus] 
-                        @Id = $($Data.Id), 
-                        @Status = $status"
-                    Invoke-SqlCmd -Query $Query -ServerInstance $Config.SqlInstance -Username $Config.User -Password $Config.Password -Database $Config.Database 
+                $ResultSet = @{
+                    Id         = $Data.Id
+                    Url        = $Data.Url
+                    Status     = if ($HealthCheckResult -eq $true) { 1 } else { 0 }
+                    StatusCode = if ($HealthCheckResult -eq $true) { "OK" } else { "ERROR" }               
                 }
-                catch {
-                    #Write-Warning $Error[0]
-                    $ErrorCount += 1
-                    $Query = "EXEC [dbo].[usp_ServicesLog_Add] 
-                        @JournalGuid = '$Guid',
-                        @ServiceId = '$($Data.Id)',
-                        @ServiceUrl = '$($Data.Url)',
-                        @ServiceStatus = 'ERROR'"
-                    Invoke-SqlCmd -Query $Query -ServerInstance $Config.SqlInstance -Username $Config.User -Password $Config.Password -Database $Config.Database 
-                    $Query = "EXEC [dbo].[usp_Services_UpdateStatus] 
-                        @Id = $($Data.Id), 
-                        @Status = $status"
-                    Invoke-SqlCmd -Query $Query -ServerInstance $Config.SqlInstance -Username $Config.User -Password $Config.Password -Database $Config.Database 
-                }   
+                
+                Write-Output $ResultSet
             }
 
             $jobs = $DataSet | ForEach-Object { 
@@ -155,21 +132,51 @@ function Invoke-ProcessCommonCaseAsync() {
                     -InitializationScript $initScript
             }
 
+
             Write-Host "Waiting for $($jobs.Count) jobs to complete..."
+            
+            $ResultSet = Receive-Job -Job $jobs -Wait -AutoRemoveJob  
+            Write-Host "RESULT..."  
 
-            Receive-Job -Job $jobs -Wait -AutoRemoveJob
-            Write-Host "Total time elapsed: $([datetime]::UtcNow - $dtStart)"
+            try {
+                $scope = New-Object -TypeName System.Transactions.TransactionScope
 
-            $Query = "EXEC [dbo].[usp_ServicesLog_Add] 
-                    @JournalGuid = '$Guid',
-                    @ServiceId = '0',
-                    @ServiceUrl = '',
-                    @ServiceStatus = 'END'"
-            Invoke-SqlCmd -Query $Query -ServerInstance $Config.SqlInstance -Username $Config.User -Password $Config.Password -Database $Config.Database 
+                $ResultSet | ForEach-Object {
+                    $service = $_ | ConvertTo-Json -Depth 2 | ConvertFrom-Json
+
+                    $Query = "EXEC [dbo].[usp_ServicesLog_Add] 
+                        @JournalGuid = '$Guid',
+                        @ServiceId = '$($service.Id)',
+                        @ServiceUrl = '$($service.Url)',
+                        @ServiceStatus = '$($service.StatusCode)'"
+                    Invoke-SqlCmd -Query $Query -ServerInstance $Config.SqlInstance -Username $Config.User -Password $Config.Password -Database $Config.Database -ErrorAction Stop
+                    $Query = "EXEC [dbo].[usp_Services_UpdateStatus] 
+                        @Id = '$($service.Id)', 
+                        @Status = '$($service.Status)'"
+                    Invoke-SqlCmd -Query $Query -ServerInstance $Config.SqlInstance -Username $Config.User -Password $Config.Password -Database $Config.Database -ErrorAction Stop
+
+                    if ($service.status -eq 0) { $ErrorCount += 1 }
+                }
+            }
+            catch {
+                $_.exception.message
+            }
+            finally {
+                $scope.Complete();
+                $scope.Dispose() 
+            }            
         }
+        Write-Host "Total time elapsed: $([datetime]::UtcNow - $dtStart)"
+        $Query = "EXEC [dbo].[usp_ServicesLog_Add] 
+                @JournalGuid = '$Guid',
+                @ServiceId = '0',
+                @ServiceUrl = '',
+                @ServiceStatus = 'END'"
+        Invoke-SqlCmd -Query $Query -ServerInstance $Config.SqlInstance -Username $Config.User -Password $Config.Password -Database $Config.Database -ErrorAction Stop
     }
     End {
         if ($ErrorCount -gt 0) {
+            $ErrorCount 
             <#
         Invoke-WebRequest -Headers @{} `
                   -Method POST `

@@ -1,6 +1,6 @@
 @{
 
-    RootModule        = 'HealthCheck.psm1'
+    RootModule        = 'ServiceControl.psm1'
 
     ModuleVersion     = '1.0'
 
@@ -16,13 +16,13 @@
 
     PowerShellVersion = '5.1.18362.752'
 
-    FunctionsToExport = 'Invoke-HealthCheck'
+    FunctionsToExport = 'Invoke-ServiceControl'
 
     PrivateData       = @{
 
         PSData = @{
 
-            Tags       = 'HealthCheck', 'Troubleshooting', 'Testing'
+            Tags       = 'ServiceControl', 'Troubleshooting', 'Testing'
 
             ProjectUri = ''
 

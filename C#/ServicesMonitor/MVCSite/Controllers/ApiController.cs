@@ -49,6 +49,11 @@ namespace MVCSite.Controllers
                 ServiceUrl = url,
                 ServiceStatus = status
             });
+            await new ServicesImpl(ConnectionString).UpdateStatus(new Services()
+            {
+                Id = serviceId,
+                Status = (status == "OK") ? 1 : 0
+            });
 
             await new ServicesLogImpl(ConnectionString).Add(new ServicesLog()
             {

@@ -52,5 +52,10 @@ Function Test-ScriptBlock
 $rootPath = (Split-Path $MyInvocation.MyCommand.Path)
 Import-Module $rootPath/Modules/HealthCheck
 
-$result = Invoke-HealthCheck -DnsName 171.244.52.202 -Port 7879 -Type 2
-Write-Host "Return: $result"
+#$result = Invoke-HealthCheck -DnsName 171.244.52.202 -Port 7879 -Type 2
+#Write-Host "Return: $result"
+
+@{
+    title       = "game result"    
+    attachments = "a"
+} | ConvertTo-Json -Depth 1
