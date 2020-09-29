@@ -63,6 +63,7 @@
     <Folder Include="dbo\Stored Procedures" />
     <Folder Include="Security" />
     <Folder Include="Scripts" />
+    <Folder Include="dbo\Functions" />
   </ItemGroup>
   <ItemGroup>
     <Build Include="dbo\Stored Procedures\usp_Groups_Add.sql" />
@@ -116,6 +117,7 @@
     <Build Include="dbo\Stored Procedures\usp_AlertLog_Add.sql" />
     <Build Include="dbo\Tables\TaskSchedulerLog.sql" />
     <Build Include="dbo\Stored Procedures\usp_TaskSchedulerLog_Add.sql" />
+    <Build Include="dbo\Functions\SplitString.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="SMDB.refactorlog" />

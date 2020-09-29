@@ -5,7 +5,8 @@
                                           @Params       VARCHAR(500), 
                                           @ResponseCode VARCHAR(100), 
                                           @Enable       TINYINT, 
-                                          @Status       TINYINT
+                                          @Status       TINYINT,
+                                          @SpecialCase      TINYINT
 AS
      INSERT INTO [dbo].[Services]
      ([GroupId], 
@@ -14,8 +15,9 @@ AS
       [Url], 
       [Params], 
       [ResponseCode], 
-      [Enable], 
-      [Status]
+      [Enable],
+      [Status],
+      SpecialCase
      )
      VALUES
      (@GroupId, 
@@ -25,5 +27,6 @@ AS
       @Params, 
       @ResponseCode, 
       @Enable, 
-      @Status
+      @Status,
+      @SpecialCase
      );

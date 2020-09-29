@@ -7,7 +7,8 @@ CREATE PROCEDURE dbo.usp_Services_Update @Id           INT,
                                          @Params       VARCHAR(500), 
                                          @ResponseCode VARCHAR(100), 
                                          @Enable       TINYINT, 
-                                         @Status       TINYINT
+                                         @Status       TINYINT,
+                                         @SpecialCase      TINYINT
 AS
     BEGIN
         UPDATE dbo.Services
@@ -20,6 +21,7 @@ AS
               ResponseCode = @ResponseCode, 
               UpdatedTime = SYSDATETIMEOFFSET(), 
               Enable = @Enable, 
-              Status = @Status
+              Status = @Status,
+              SpecialCase = @SpecialCase
         WHERE Id = @Id;
     END;

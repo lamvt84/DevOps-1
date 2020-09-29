@@ -36,7 +36,7 @@ namespace MVCSite.Models
 
                 var tasks = new List<Task>();
 
-                foreach (var item in serviceList)
+                foreach (var item in serviceList.Where(x => x.Enable == 1))
                 {
                     serviceErrorList += $"- {item.Name}: {item.Url}<br />";
                 }
@@ -50,7 +50,6 @@ namespace MVCSite.Models
             {
                 throw;
             }
-
         }
 
         private async Task SendAlertEmail(Guid jGuid, string serviceErrorList)

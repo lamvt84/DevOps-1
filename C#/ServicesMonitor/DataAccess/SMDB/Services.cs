@@ -20,5 +20,6 @@ namespace DataAccess.SMDB
         public DateTimeOffset UpdatedTime { get; set; }
         public int Enable { get; set; }
         public int Status { get; set; }
+        public int SpecialCase { get; set; }
     }
 }

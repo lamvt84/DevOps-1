@@ -59,30 +59,49 @@ function Invoke-HealthCheck() {
 
     }
 
-    function Invoke-ScriptTcpClient($DnsName, $Port) {
-        for ($i = 1; ((Invoke-Test -DnsName $DnsName -Port $Port) -ne $True); $i++) {
-            if ($i -ge $Count) {
-                Write-Warning "Timed out while waiting for port $Port to be open on $DnsName!"
-                Return $false
+    function Invoke-ScriptTcpClient($DnsName, $Port) {        
+        for ($i = 1; $i -le $Count; $i++) {
+            $test = Invoke-Test -DnsName $DnsName -Port $Port
+            if ($test -eq $true) {
+                return $test
             }
-
-            Write-Warning "Port $Port not open, retrying..."
-            Sleep $Delay
+            else {
+                Write-Warning "Port $Port not open, retrying..."
+                Start-Sleep $Delay
+            }
         }
+        Write-Warning "Timed out while waiting for port $Port to be open on $DnsName!"
+        Return $false
     }
 
-    function Invoke-ScriptApi($Url){
-        $status = Invoke-WebRequest -Uri $Url -Method GET 
+    function Invoke-ScriptApi($Url){   
+        
+        add-type @"
+            using System.Net;
+            using System.Security.Cryptography.X509Certificates;
+            public class TrustAllCertsPolicy : ICertificatePolicy {
+                public bool CheckValidationResult(
+                    ServicePoint srvPoint, X509Certificate certificate,
+                    WebRequest request, int certificateProblem) {
+                    return true;
+                }
+            }
+"@
+        $AllProtocols = [System.Net.SecurityProtocolType]'Ssl3,Tls,Tls11,Tls12'
+        [System.Net.ServicePointManager]::SecurityProtocol = $AllProtocols
+        [System.Net.ServicePointManager]::CertificatePolicy = New-Object TrustAllCertsPolicy
+        
+        $status = Invoke-WebRequest -Uri $Url -Method GET
 
         if ($status.StatusCode -ne 200) { Return $false}
         Return $true
     }
 
     if ($Type -eq 2){
-        $result = Invoke-ScriptTcpClient -DnsName $DnsName -Port $Port
+        $result = Invoke-ScriptTcpClient -DnsName $DnsName -Port $Port        
         Return $result
     }
-    else {        
+    else {
         $result = Invoke-ScriptApi -Url $Url
         Return $result
     }

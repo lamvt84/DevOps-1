@@ -49,7 +49,7 @@ namespace DataAccess.Implementation
             {
                 var spName = "dbo.usp_Services_Add";
 
-                var parameterValues = new object[8]
+                var parameterValues = new object[9]
                 {
                     service.GroupId,
                     service.Name,
@@ -58,7 +58,8 @@ namespace DataAccess.Implementation
                     service.Params,
                     service.ResponseCode,
                     service.Enable,
-                    service.Status
+                    service.Status,
+                    service.SpecialCase
                 };
                 
                 var thisTask = Task.Run(() => SqlHelper.ExecuteNonQueryAsync(_connString, spName, parameterValues));
@@ -76,7 +77,7 @@ namespace DataAccess.Implementation
             {
                 var spName = "dbo.usp_Services_Update";
 
-                var parameterValues = new object[9]
+                var parameterValues = new object[10]
                 {
                     service.Id,
                     service.GroupId,
@@ -86,7 +87,8 @@ namespace DataAccess.Implementation
                     service.Params,
                     service.ResponseCode,
                     service.Enable,
-                    service.Status
+                    service.Status,
+                    service.SpecialCase
                 };
              
                 var thisTask = Task.Run(() => SqlHelper.ExecuteNonQueryAsync(_connString, spName, parameterValues));

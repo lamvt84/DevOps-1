@@ -24,19 +24,16 @@ namespace MVCSite.Controllers
         }
 
         [HttpPost("SendAlert")]
-        public async Task SendAlert(string jGuid)
+        public async Task<string> SendAlert(string jGuid)
         {
             await new HealthCheck().SendAlert(Guid.Parse(jGuid), ExtendSettings);
+            return JsonConvert.SerializeObject(new { status = "OK" });
         }
 
-        [HttpGet("CollectHealthCheck")]
-        public async Task CollectHealthCheck()
+        [HttpPost("UpdateHealthCheckSpecialCase")]
+        public async Task<string> UpdateHealthCheckSpecialCase(int serviceId, string status, string jGuid, string url)
         {
-            var errorCount = 0;
-            var serviceList = await new ServicesImpl(ConnectionString).ListByEnable(1);
-            var journalGuid = Guid.NewGuid();
-            var tasks = new List<Task<int>>();
-
+            var journalGuid = Guid.Parse(jGuid);
             await new ServicesLogImpl(ConnectionString).Add(new ServicesLog()
             {
                 JournalGuid = journalGuid,
@@ -45,30 +42,13 @@ namespace MVCSite.Controllers
                 ServiceStatus = "START"
             });
 
-            foreach (var item in serviceList)
+            await new ServicesLogImpl(ConnectionString).Add(new ServicesLog()
             {
-                tasks.Add(new HealthCheck().CallHealthCheckApi(item, journalGuid));
-
-                if (tasks.Count == 20)
-                {
-                    int[] resultsAll = await Task.WhenAll(tasks);
-                    foreach (var r in resultsAll)
-                    {
-                        if (r == 0) errorCount += 1;
-                    }
-                    tasks.Clear();
-                }
-            }
-
-            if (tasks.Any())
-            {
-                int[] resultsAll = await Task.WhenAll(tasks);
-                foreach (var r in resultsAll)
-                {
-                    if (r == 0) errorCount += 1;
-                }
-                tasks.Clear();
-            }
+                JournalGuid = journalGuid,
+                ServiceId = serviceId,
+                ServiceUrl = url,
+                ServiceStatus = status
+            });
 
             await new ServicesLogImpl(ConnectionString).Add(new ServicesLog()
             {
@@ -78,15 +58,72 @@ namespace MVCSite.Controllers
                 ServiceStatus = "END"
             });
 
-            if (errorCount > 0)
+            if (status != "OK")
             {
-                var result = await new AlertConfigImpl(ConnectionString).Get(1);
-                if (result.PauseStatus == 0)
-                {
-                    await new HealthCheck().SendAlert(journalGuid, ExtendSettings);
-                }
+                await new HealthCheck().SendAlert(journalGuid, ExtendSettings);
             }
+
+            return JsonConvert.SerializeObject(new { status = "OK" });
         }
+
+        //[HttpGet("CollectHealthCheck")]
+        //public async Task CollectHealthCheck()
+        //{
+        //    var errorCount = 0;
+        //    var serviceList = await new ServicesImpl(ConnectionString).ListByEnable(1);
+        //    var journalGuid = Guid.NewGuid();
+        //    var tasks = new List<Task<int>>();
+
+        //    await new ServicesLogImpl(ConnectionString).Add(new ServicesLog()
+        //    {
+        //        JournalGuid = journalGuid,
+        //        ServiceId = 0,
+        //        ServiceUrl = "",
+        //        ServiceStatus = "START"
+        //    });
+
+        //    foreach (var item in serviceList)
+        //    {
+        //        tasks.Add(new HealthCheck().CallHealthCheckApi(item, journalGuid));
+
+        //        if (tasks.Count == 20)
+        //        {
+        //            int[] resultsAll = await Task.WhenAll(tasks);
+        //            foreach (var r in resultsAll)
+        //            {
+        //                if (r == 0) errorCount += 1;
+        //            }
+        //            tasks.Clear();
+        //        }
+        //    }
+
+        //    if (tasks.Any())
+        //    {
+        //        int[] resultsAll = await Task.WhenAll(tasks);
+        //        foreach (var r in resultsAll)
+        //        {
+        //            if (r == 0) errorCount += 1;
+        //        }
+        //        tasks.Clear();
+        //    }
+
+        //    await new ServicesLogImpl(ConnectionString).Add(new ServicesLog()
+        //    {
+        //        JournalGuid = journalGuid,
+        //        ServiceId = 0,
+        //        ServiceUrl = "",
+        //        ServiceStatus = "END"
+        //    });
+
+        //    if (errorCount > 0)
+        //    {
+        //        var result = await new AlertConfigImpl(ConnectionString).Get(1);
+        //        if (result.PauseStatus == 0)
+        //        {
+        //            await new HealthCheck().SendAlert(journalGuid, ExtendSettings);
+        //        }
+        //    }
+        //}
         [HttpGet("GetServiceSummary")]
         public async Task<string> GetServiceSummary()
         {

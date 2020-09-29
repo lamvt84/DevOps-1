@@ -5,9 +5,11 @@ AS
             SELECT s.*, g.Name GroupName
             FROM dbo.[Services] s
                 JOIN dbo.Groups g ON s.GroupId = g.Id
-            WHERE GroupId = @GroupId;
+            WHERE GroupId = @GroupId
+            ORDER BY Name ASC;
         ELSE
             SELECT s.*, g.Name GroupName
             FROM dbo.[Services] s
-                JOIN dbo.Groups g ON s.GroupId = g.Id;
+                JOIN dbo.Groups g ON s.GroupId = g.Id
+            ORDER BY Name ASC;
     END;

@@ -52,6 +52,7 @@ function loadDataTable() {
         "language": {
             "emptyTable": "no data found"
         },
-        "width": "100%"
+        "width": "100%",
+        "pageLength": 50
     });
 }

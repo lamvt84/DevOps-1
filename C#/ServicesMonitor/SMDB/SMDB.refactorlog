@@ -77,4 +77,25 @@
     <Property Name="ParentElementType" Value="SqlTable" />
     <Property Name="NewName" Value="SmsEmailId" />
   </Operation>
+  <Operation Name="Rename Refactor" Key="a99ea6bb-2c1d-400a-a770-f6c9f25bf7cd" ChangeDateTime="09/28/2020 07:50:44">
+    <Property Name="ElementName" Value="[dbo].[Services].[Special]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[Services]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="Specific" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="63e98105-9179-43d6-a2f9-02844ce3a03c" ChangeDateTime="09/28/2020 07:52:48">
+    <Property Name="ElementName" Value="[dbo].[Services].[Specific]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[Services]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="Orphan" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="3e0a74af-80a8-482f-ad6c-89a4679d9d28" ChangeDateTime="09/28/2020 07:56:29">
+    <Property Name="ElementName" Value="[dbo].[Services].[Orphan]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[Services]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="SpecialCase" />
+  </Operation>
 </Operations>
