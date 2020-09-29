@@ -19,6 +19,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MVCSite", "MVCSite\MVCSite.
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TaskSchedule", "TaskSchedule", "{B7C80993-BC68-4AA1-BE7C-A1DEDD8392E2}"
 	ProjectSection(SolutionItems) = preProject
+		config.json = config.json
 		TaskSchedule\CreateTask.ps1 = TaskSchedule\CreateTask.ps1
 		TaskSchedule\guide.md = TaskSchedule\guide.md
 		TaskSchedule\ProcessHealthCheck.ps1 = TaskSchedule\ProcessHealthCheck.ps1
