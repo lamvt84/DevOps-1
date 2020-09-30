@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using CommonLibs;
 using DataAccess.Implementation;
 using DataAccess.SMDB;
+using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 
@@ -30,21 +31,43 @@ namespace MVCSite.Models
             {
                 var alertConfig = await new AlertConfigImpl(ConnectionString).Get(1);
                 if (alertConfig.PauseStatus == 1) return;
+                if (alertConfig.PausePeriod == (int)AlertRule.Level5) return;
 
-                var serviceList = await new ServicesImpl(ConnectionString).ListByStatus(0);
-                var serviceErrorList = "";
+                var currentTime = DateTimeOffset.Now;
 
-                var tasks = new List<Task>();
-
-                foreach (var item in serviceList.Where(x => x.Enable == 1))
+                if (currentTime.Subtract(alertConfig.UpdatedTime).TotalSeconds >= alertConfig.PausePeriod)
                 {
-                    serviceErrorList += $"- {item.Name}: {item.Url}<br />";
+                    var nextLevel = alertConfig.PausePeriod switch
+                    {
+                        0 => (int)AlertRule.Level2,
+                        300 => (int)AlertRule.Level3,
+                        900 => (int)AlertRule.Level4,
+                        3600 => (int)AlertRule.Level5,
+                        _ => throw new NotImplementedException()
+                    };
+
+                    await new AlertConfigImpl(ConnectionString).UpdateWarningStatus(new AlertConfig()
+                    {
+                        Id = alertConfig.Id,
+                        PauseStatus = 0,
+                        PausePeriod = nextLevel
+                    });
+
+                    var serviceList = await new ServicesImpl(ConnectionString).ListByStatus(0);
+                    var serviceErrorList = "";
+
+                    var tasks = new List<Task>();
+
+                    foreach (var item in serviceList.Where(x => x.Enable == 1))
+                    {
+                        serviceErrorList += $"- {item.Name}: {item.Url}<br />";
+                    }
+
+                    tasks.Add(SendAlertEmail(jGuid, serviceErrorList));
+                    tasks.Add(SendAlertSms());
+
+                    await Task.WhenAll(tasks);
                 }
-
-                tasks.Add(SendAlertEmail(jGuid, serviceErrorList));
-                tasks.Add(SendAlertSms());
-
-                await Task.WhenAll(tasks);
             }
             catch (Exception)
             {

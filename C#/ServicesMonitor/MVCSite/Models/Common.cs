@@ -38,4 +38,13 @@ namespace MVCSite.Models
             return hash;
         }
     }
+
+    public enum AlertRule
+    {
+        Level1 = 0,
+        Level2 = 300,
+        Level3 = 900,
+        Level4 = 3600,
+        Level5 = -1
+    }
 }

@@ -71,64 +71,6 @@ namespace MVCSite.Controllers
             return JsonConvert.SerializeObject(new { status = "OK" });
         }
 
-        //[HttpGet("CollectHealthCheck")]
-        //public async Task CollectHealthCheck()
-        //{
-        //    var errorCount = 0;
-        //    var serviceList = await new ServicesImpl(ConnectionString).ListByEnable(1);
-        //    var journalGuid = Guid.NewGuid();
-        //    var tasks = new List<Task<int>>();
-
-        //    await new ServicesLogImpl(ConnectionString).Add(new ServicesLog()
-        //    {
-        //        JournalGuid = journalGuid,
-        //        ServiceId = 0,
-        //        ServiceUrl = "",
-        //        ServiceStatus = "START"
-        //    });
-
-        //    foreach (var item in serviceList)
-        //    {
-        //        tasks.Add(new HealthCheck().CallHealthCheckApi(item, journalGuid));
-
-        //        if (tasks.Count == 20)
-        //        {
-        //            int[] resultsAll = await Task.WhenAll(tasks);
-        //            foreach (var r in resultsAll)
-        //            {
-        //                if (r == 0) errorCount += 1;
-        //            }
-        //            tasks.Clear();
-        //        }
-        //    }
-
-        //    if (tasks.Any())
-        //    {
-        //        int[] resultsAll = await Task.WhenAll(tasks);
-        //        foreach (var r in resultsAll)
-        //        {
-        //            if (r == 0) errorCount += 1;
-        //        }
-        //        tasks.Clear();
-        //    }
-
-        //    await new ServicesLogImpl(ConnectionString).Add(new ServicesLog()
-        //    {
-        //        JournalGuid = journalGuid,
-        //        ServiceId = 0,
-        //        ServiceUrl = "",
-        //        ServiceStatus = "END"
-        //    });
-
-        //    if (errorCount > 0)
-        //    {
-        //        var result = await new AlertConfigImpl(ConnectionString).Get(1);
-        //        if (result.PauseStatus == 0)
-        //        {
-        //            await new HealthCheck().SendAlert(journalGuid, ExtendSettings);
-        //        }
-        //    }
-        //}
         [HttpGet("GetServiceSummary")]
         public async Task<string> GetServiceSummary()
         {
@@ -140,6 +82,41 @@ namespace MVCSite.Controllers
         public string health_check()
         {
             return JsonConvert.SerializeObject(new { status = "OK"});
+        }
+        [HttpPost("Test")]
+        public async Task<string> Test()
+        {
+            var alertConfig = await new AlertConfigImpl(ConnectionString).Get(1);
+            if (alertConfig.PauseStatus == 1) return JsonConvert.SerializeObject(new { pause_status = alertConfig.PauseStatus }); ;
+            if (alertConfig.PausePeriod == (int)AlertRule.Level5) return JsonConvert.SerializeObject(new { pause_period = alertConfig.PausePeriod }); ;
+
+            var currentTime = DateTimeOffset.Now;
+
+            if (currentTime.Subtract(alertConfig.UpdatedTime).TotalSeconds >= alertConfig.PausePeriod)
+            {
+                var nextLevel = alertConfig.PausePeriod switch
+                {
+                    0 => (int)AlertRule.Level2,
+                    300 => (int)AlertRule.Level3,
+                    900 => (int)AlertRule.Level4,
+                    3600 => (int)AlertRule.Level5,
+                    _ => throw new NotImplementedException()
+                };
+
+                await new AlertConfigImpl(ConnectionString).UpdateWarningStatus(new AlertConfig()
+                {
+                    Id = alertConfig.Id,
+                    PauseStatus = 0,
+                    PausePeriod = nextLevel
+                });
+                return JsonConvert.SerializeObject(new
+                {
+                    Id = alertConfig.Id,
+                    PauseStatus = 0,
+                    PausePeriod = nextLevel
+                });
+            }
+            return JsonConvert.SerializeObject(new { time_span = currentTime.Subtract(alertConfig.UpdatedTime).TotalSeconds }); ;
         }
     }
 

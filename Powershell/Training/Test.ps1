@@ -58,4 +58,4 @@ Import-Module $rootPath/Modules/HealthCheck
 @{
     title       = "game result"    
     attachments = "a"
-} | ConvertTo-Json -Depth 1
+} | ConvertTo-Json -Depth 2
