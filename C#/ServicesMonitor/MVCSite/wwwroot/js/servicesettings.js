@@ -24,15 +24,16 @@ function loadDataTable() {
         },
         "columns": [
             { "data": "name" },
+            { "data": "url" },
             {
                 "data": "createdTime",
-                "render": function(data) {
+                "render": function (data) {
                     return convertDatetimeOffset(data);
                 }
             },
-            { "data": "url" },
             { "data": "status", "className": "text-center" },
             { "data": "enable", "className": "text-center" },
+            { "data": "specialCase", "className": "text-center" },
             {
                 "data": "id",
                 "render": function (data) {

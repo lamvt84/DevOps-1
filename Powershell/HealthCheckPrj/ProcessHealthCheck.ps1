@@ -1,13 +1,5 @@
 [CmdletBinding()]
-Param(
-    [Parameter(Mandatory = $false)]    
-    [System.Int32]
-    $GroupType = 0 # 1: api, 2: tcp
-    ,
-    [Parameter(Mandatory = $false)]    
-    [System.String]
-    $Url = "" # special case, need to call API for update status
-    ,
+Param(    
     [Parameter(Mandatory = $false)]    
     [System.Int32]
     $ServiceId = 0 # ServiceId
@@ -19,38 +11,50 @@ Import-Module $rootPath/Modules/HealthCheck
 # Functions
 function Invoke-ProcessSpecialCase {
     [CmdletBinding()]
-    Param(
-        [Parameter(Mandatory = $true)]    
-        [System.Int32]
-        $GroupType # 1: api, 2: tcp
-        ,
-        [Parameter(Mandatory = $true)]    
-        [System.String]
-        $Url # special case, need to call API for update status
-        ,
+    Param(       
         [Parameter(Mandatory = $true)]    
         [System.Int32]
         $ServiceId # ServiceId
     )
     $dtStart = [datetime]::UtcNow 
     $Config = Get-Content $rootPath\config.json | ConvertFrom-Json
+    
+    $ApiUrl = $Config.RootUrl + "/api_service/Get?id=$ServiceId"
+    try {
+        $ServiceData = Invoke-WebRequest -Method GET -Uri $ApiUrl -ContentType "application/json" | ConvertFrom-Json
+    }
+    catch {        
+        Write-Warning $Error[0]   
+        return
+    }    
 
-    $IpAddress = ($Url.Split("/")[2]).Split(":")[0]
-    $Port = ($Url.Split("/")[2]).Split(":")[1]
+    if ($ServiceData.data -eq $null) { return }
+    if ($ServiceData.data.specialCase -eq 0 -OR $ServiceData.data.enalble -eq 0) { return }
+
+    $ApiUrl = $Config.RootUrl + "/api_group/Get?id=$($ServiceData.data.groupId)"
+    try {
+        $GroupData = Invoke-WebRequest -Method GET -Uri $ApiUrl -ContentType "application/json" | ConvertFrom-Json
+    }
+    catch {        
+        Write-Warning $Error[0]   
+        return
+    }   
+    
+    $IpAddress = ($ServiceData.Data.Url.Split("/")[2]).Split(":")[0]
+    $Port = ($ServiceData.Data.Url.Split("/")[2]).Split(":")[1]
     
     $Guid = New-Guid
-    Write-Host $Guid
-    try {
-            if ($GroupType -eq 1) { $HealthCheckResult = Invoke-HealthCheck -DnsName $IpAddress -Port $Port -Type $GroupType -Url $Url }
-            else { $HealthCheckResult = Invoke-HealthCheck -DnsName $IpAddress -Port $Port -Type $GroupType }
+    Write-Host "Guid: $Guid"
+    try {            
+            $HealthCheckResult = Invoke-HealthCheck -DnsName $IpAddress -Port $Port -Type $GroupData.Data.groupTypeId -Url $ServiceData.Data.Url
             $status = if ($HealthCheckResult -eq $true) { "OK" } else { "ERROR" }
         }
     catch {
         Write-Warning $Error[0]
     }  
-    
-    $Uri = $Config.UpdateUrl + "?serviceId=$ServiceId&jGuid=$Guid&status=$status&url=$Url"
-    Write-Host $Uri
+
+    $Uri = $Config.RootUrl + "/api/UpdateHealthCheckSpecialCase?serviceId=$ServiceId&jGuid=$Guid&status=$status&url=$($ServiceData.Data.Url)"
+   
     try {
         Invoke-WebRequest -Method POST -Uri $Uri -ContentType "application/json"
     }
@@ -184,7 +188,7 @@ function Invoke-ProcessCommonCaseAsync {
                   -Uri url `
                   -ContentType application/json
     #>
-            $Uri = $Config.AlertUrl + "?jGuid=$Guid"
+            $Uri = $Config.RootUrl + "/api/SendAlert?jGuid=$Guid"
     
             try {
                 Invoke-WebRequest -Method POST -Uri $Uri -ContentType "application/json"
@@ -200,5 +204,5 @@ if ($ServiceId -eq 0) {
     Invoke-ProcessCommonCaseAsync
 }
 else {
-    Invoke-ProcessSpecialCase -GroupType $GroupType -Url $Url -ServiceId $ServiceId
+    Invoke-ProcessSpecialCase -ServiceId $ServiceId
 }

@@ -162,6 +162,11 @@ namespace MVCSite.Controllers
         {
             ConnectionString = Startup.ConnectionString;
         }
+        [HttpGet("Get")]
+        public async Task<ActionResult> Get(int? id)
+        {
+            return Json(new { data = await new GroupsImpl(ConnectionString).Get(id ?? 0) });
+        }
         [HttpGet("GetList")]
         public async Task<ActionResult> GetList()
         {
@@ -188,6 +193,11 @@ namespace MVCSite.Controllers
         public ServiceApiController()
         {
             ConnectionString = Startup.ConnectionString;
+        }
+        [HttpGet("Get")]
+        public async Task<ActionResult> Get(int? id)
+        {
+            return Json(new { data = await new ServicesImpl(ConnectionString).Get(id ?? 0) });
         }
         [HttpGet("GetList")]
         public async Task<ActionResult> GetList(int? id)

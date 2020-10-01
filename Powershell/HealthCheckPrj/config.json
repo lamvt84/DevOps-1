@@ -3,6 +3,5 @@
     "Database": "SMDB",
     "User": "sqlmonitor",
     "Password": "**M00nj$--Hto##",
-    "AlertUrl": "https://localhost:44358/api/SendAlert",
-    "UpdateUrl": "https://localhost:44358/api/UpdateHealthCheckSpecialCase"
+    "RootUrl": "https://localhost:44358"
 }
