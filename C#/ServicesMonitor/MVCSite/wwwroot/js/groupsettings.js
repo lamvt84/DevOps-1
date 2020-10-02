@@ -12,7 +12,7 @@ function loadDataTable() {
             "datatype": "json"
         },
         "columns": [
-            { "data": "groupTypeName" },
+            { "data": "tag" },
             { "data": "name" },
             { "data": "description" },
             {

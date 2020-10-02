@@ -1,11 +1,4 @@
 function Invoke-HealthCheck() {
-    <#
-        .SYNOPSIS
-        Uses Runspaces to issue async http requests.
-        .EXAMPLE
-        Invoke-HealthCheckUrl -DnsName www.1fintech.vn -Port 80
-        Invoke-HealthCheckUrl -DnsName www.1fintech.vn -Port 80
-    #>
     [CmdletBinding()]
     param(
         [parameter(Mandatory = $true)]

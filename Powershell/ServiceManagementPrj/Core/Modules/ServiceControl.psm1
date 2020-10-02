@@ -1,4 +1,87 @@
 function Invoke-ServiceControl {
+    <#     
+    .SYNOPSIS     
+        Test port from server. 
+        Call Api with GET method.
+        
+    .DESCRIPTION   
+        Test port from server. 
+        Call Api with GET method.
+      
+    .PARAMETER Object   
+        Name, ipaddress of server to test the port connection on. 
+        Api url    
+        
+    .PARAMETER Port   
+        Port to test
+    
+    .PARAMETER Tcp   
+        Use tcp port  
+       
+    .PARAMETER Udp   
+        Use udp port   
+    
+    .PARAMETER Api   
+        Use Api
+    
+    .PARAMETER UDPTimeOut  
+        Sets a timeout for UDP port query. (In milliseconds, Default is 1000)   
+        
+    .PARAMETER TCPTimeOut  
+        Sets a timeout for TCP port query. (In milliseconds, Default is 1000)
+           
+    .PARAMETER APITimeOut  
+        Sets a timeout for Api query. (In seconds, Default is 3)      
+    
+    .NOTES
+        https://gallery.technet.microsoft.com/scriptcenter/97119ed6-6fb2-446d-98d8-32d823867131
+
+    .LINK 
+        https://gallery.technet.microsoft.com/scriptcenter/97119ed6-6fb2-446d-98d8-32d823867131
+
+    .EXAMPLE     
+        Invoke-HealthCheck -Object 'server' -Port 80
+        Checks port 80 on server 'server' to see if it is listening
+        
+    .EXAMPLE     
+        'server' | Invoke-HealthCheck -port 80
+        Checks port 80 on server 'server' to see if it is listening  
+        
+    .EXAMPLE     
+        Invoke-HealthCheck -Object @("server1","server2") -port 80   
+        Checks port 80 on server1 and server2 to see if it is listening   
+    
+    .EXAMPLE     
+        Invoke-HealthCheck -Object 'http://api/' -Api
+        Call api with GET method return http status 
+        
+    .EXAMPLE 
+        Invoke-HealthCheck -Object dc1 -Port 17 -udp -UDPtimeout 10000 
+        
+        Server   : dc1 
+        Port     : 17 
+        TypePort : UDP 
+        Open     : True 
+        Notes    : "My spelling is Wobbly.  It's good spelling but it Wobbles, and the letters 
+                get in the wrong places." A. A. Milne (1882-1958) 
+        
+        Description 
+        ----------- 
+        Queries port 17 (qotd) on the UDP port and returns whether port is open or not 
+        
+    .EXAMPLE     
+        (Get-Content hosts.txt) | Invoke-HealthCheck -port 80   
+        Checks port 80 on servers in host file to see if it is listening  
+        
+    .EXAMPLE     
+        Invoke-HealthCheck -Object (Get-Content hosts.txt) -Port 80   
+        Checks port 80 on servers in host file to see if it is listening  
+            
+    .EXAMPLE     
+        Invoke-HealthCheck -computer (Get-Content hosts.txt) -Port @(1..59)   
+        Checks a range of ports from 1-59 on all servers in the hosts.txt file       
+                
+    #>
     [CmdletBinding()]
     param(
         [parameter(Mandatory = $true)]

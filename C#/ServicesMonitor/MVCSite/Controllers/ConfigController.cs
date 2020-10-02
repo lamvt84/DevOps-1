@@ -1,4 +1,5 @@
-﻿using System.Dynamic;
+﻿using System.Collections.Generic;
+using System.Dynamic;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using DataAccess.Implementation;
@@ -65,8 +66,13 @@ namespace MVCSite.Controllers
         public IActionResult GroupInsertOrUpdate(int? id)
         {
             var groupViewModel = new GroupViewModel();
-            var groupType = new GroupTypeImpl(ConnectionString).List();
-            groupViewModel.GroupType = groupType.Result;
+            var groupTag = new List<GroupTag>()
+            {
+                new GroupTag() {Tag = "API"},
+                new GroupTag() {Tag = "TCP"},
+                new GroupTag() {Tag = "UDP"}
+            };
+            groupViewModel.GroupTag = groupTag;
             Groups mGroup = new Groups();
             if (id == null)
             {

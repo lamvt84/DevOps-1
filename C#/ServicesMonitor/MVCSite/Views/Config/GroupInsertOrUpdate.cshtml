@@ -12,10 +12,10 @@
         }
         <div class="form-group row">
             <div class="col-3">
-                <label asp-for="Groups.GroupTypeId"></label>
+                <label asp-for="Groups.Tag"></label>
             </div>
             <div class="col-6">
-                <select asp-for="Groups.GroupTypeId" asp-items="@(new SelectList(Model.GroupType,"Id","Name"))" style="width: 200px; text-align: center">
+                <select asp-for="Groups.Tag" asp-items="@(new SelectList(Model.GroupTag,"Tag","Tag"))" style="width: 200px; text-align: center">
                     <option>== Choose ==</option>
                 </select>
             </div>

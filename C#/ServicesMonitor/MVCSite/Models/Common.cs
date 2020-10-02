@@ -14,10 +14,14 @@ namespace MVCSite.Models
         public string SendSmsUrl { get; set; }
     }
 
+    public class GroupTag
+    {
+        public string Tag { get; set; }
+    }
     public class GroupViewModel
     {
         public Groups Groups { get; set; }
-        public List<GroupType> GroupType { get; set; }
+        public List<GroupTag> GroupTag { get; set; }
     }
 
     public static class Encryption
