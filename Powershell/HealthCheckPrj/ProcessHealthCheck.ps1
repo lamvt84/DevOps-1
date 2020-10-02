@@ -25,7 +25,7 @@ function Invoke-ProcessSpecialCase {
         $ErrorActionPreference = "SilentlyContinue"
         
         $errorCount = 0          
-        $initScript = [scriptblock]::Create(". $rootPath/Libs.ps1")
+        $initScript = [scriptblock]::Create(". $PSScriptRoot/Libs.ps1")
 
         $apiUrl = $config.RootUrl + "/api_service/GetList"        
         try {
@@ -73,7 +73,7 @@ function Invoke-ProcessSpecialCase {
             
             $jobs = $dataSet | ForEach-Object {
                 $params = ($_, $config, $guid)
-                Start-ThreadJob -ThrottleLimit $($dataSet.Count - 1) -ArgumentList $params -ScriptBlock $scriptBlock `
+                Start-ThreadJob -ThrottleLimit $($dataSet.Count) -ArgumentList $params -ScriptBlock $scriptBlock `
                     -InitializationScript $initScript
             }
 
@@ -85,38 +85,41 @@ function Invoke-ProcessSpecialCase {
         }
     }
     End {
-        Write-Host "Total time elapsed: $([datetime]::UtcNow - $dtStart)"
-        $uri = $config.RootUrl + "/api/UpdateHealthCheckSpecialCase?serviceId=0&jGuid=$guid
-                                        &status=START
-                                        &url=N"            
-        Invoke-WebRequest -Method POST -Uri $uri -ContentType "application/json" | Out-Null  
-        
-        $report | ForEach-Object {
-            try {
-                $uri = $config.RootUrl + "/api/UpdateHealthCheckSpecialCase?serviceId=$($_.Id)&jGuid=$guid
-                                        &status=$(if ($_.Status) { "OK" } else { "ERROR" })
-                                        &url=$(if ($_.CheckType -eq "API") { $_.Object } else { $_.Object + ":" + $_.Port })"
+        if ($dataSet.Count -gt 0) 
+        {
+            Write-Host "Total time elapsed: $([datetime]::UtcNow - $dtStart)"
+            $uri = $config.RootUrl + "/api/UpdateHealthCheckSpecialCase?serviceId=0&jGuid=$guid
+                                            &status=START
+                                            &url=N"            
+            Invoke-WebRequest -Method POST -Uri $uri -ContentType "application/json" | Out-Null  
             
-                Invoke-WebRequest -Method POST -Uri $uri -ContentType "application/json" | Out-Null           
+            $report | ForEach-Object {
+                try {
+                    $uri = $config.RootUrl + "/api/UpdateHealthCheckSpecialCase?serviceId=$($_.Id)&jGuid=$guid
+                                            &status=$(if ($_.Status) { "OK" } else { "ERROR" })
+                                            &url=$(if ($_.CheckType -eq "API") { $_.Object } else { $_.Object + ":" + $_.Port })"
+                
+                    Invoke-WebRequest -Method POST -Uri $uri -ContentType "application/json" | Out-Null           
+                }
+                catch {
+                    Write-Verbose $Error[0]        
+                }
+                if ($_.Status -eq $False) { $errorCount += 1}
             }
-            catch {
-                Write-Verbose $Error[0]        
-            }
-            if ($_.Status -eq $False) { $errorCount += 1}
-        }
-        $uri = $config.RootUrl + "/api/UpdateHealthCheckSpecialCase?serviceId=0&jGuid=$guid
-                                        &status=END
-                                        &url=N"            
-        Invoke-WebRequest -Method POST -Uri $uri -ContentType "application/json" | Out-Null 
+            $uri = $config.RootUrl + "/api/UpdateHealthCheckSpecialCase?serviceId=0&jGuid=$guid
+                                            &status=END
+                                            &url=N"            
+            Invoke-WebRequest -Method POST -Uri $uri -ContentType "application/json" | Out-Null 
 
-        if ($errorCount -gt 0) {
-            try {
-                $uri = $config.RootUrl + "/api/SendAlert?jGuid=$guid"
-                Invoke-WebRequest -Method POST -Uri $uri -ContentType "application/json" | Out-Null
+            if ($errorCount -gt 0) {
+                try {
+                    $uri = $config.RootUrl + "/api/SendAlert?jGuid=$guid"
+                    Invoke-WebRequest -Method POST -Uri $uri -ContentType "application/json" | Out-Null
+                }
+                catch {
+                    Write-Verbose $Error[0]   
+                }    
             }
-            catch {
-                Write-Verbose $Error[0]   
-            }    
         }
     }
 }
@@ -132,7 +135,7 @@ function Invoke-ProcessCommonCaseAsync {
         $ErrorActionPreference = "SilentlyContinue"
         $errorCount = 0
           
-        $initScript = [scriptblock]::Create(". $rootPath/Libs.ps1")
+        $initScript = [scriptblock]::Create(". $PSScriptRoot/Libs.ps1")
 
         $query = "SELECT s.Id, s.Url, g.Tag
                 FROM dbo.[Services] s 
