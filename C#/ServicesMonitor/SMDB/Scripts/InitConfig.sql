@@ -41,9 +41,3 @@ BEGIN
         VALUES (1,'Service Alert Config', 0, 0, SYSDATETIMEOFFSET(), NULL)
     SET IDENTITY_INSERT dbo.AlertConfig OFF
 END
-
-TRUNCATE TABLE dbo.GroupType
-
-INSERT dbo.GroupType
-VALUES (1,N'Api',N'Check via Api'),
-       (2,N'TcpClient',N'Check via TcpClient')

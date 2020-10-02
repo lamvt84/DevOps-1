@@ -1,5 +1,4 @@
 ﻿CREATE PROCEDURE [dbo].[usp_Groups_List]
 AS
-     SELECT g.*, gt.Name GroupTypeName
+     SELECT g.*
      FROM dbo.Groups g
-     LEFT JOIN dbo.GroupType gt ON g.GroupTypeId = gt.Id;

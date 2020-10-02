@@ -1,14 +1,14 @@
-﻿CREATE PROCEDURE [dbo].[usp_Groups_Add] @GroupTypeId    INT, 
+﻿CREATE PROCEDURE [dbo].[usp_Groups_Add] @Tag           VARCHAR(10),
                                         @Name        VARCHAR(100), 
                                         @Description VARCHAR(500)
 AS
      INSERT INTO [dbo].[Groups]
-     (GroupTypeId, 
+     ([Tag], 
       [Name], 
       [Description]
      )
      VALUES
-     (@GroupTypeId, 
+     (@Tag, 
       @Name, 
       @Description
      );

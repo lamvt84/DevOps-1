@@ -29,7 +29,7 @@ namespace DataAccess.Implementation
 
                 var parameterValues = new object[3]
                 {
-                    group.GroupTypeId,
+                    group.Tag,
                     group.Name,
                     group.Description
                 };
@@ -52,7 +52,7 @@ namespace DataAccess.Implementation
                 var parameterValues = new object[4]
                 {
                     group.Id, 
-                    group.GroupTypeId, 
+                    group.Tag, 
                     group.Name, 
                     group.Description
                 };

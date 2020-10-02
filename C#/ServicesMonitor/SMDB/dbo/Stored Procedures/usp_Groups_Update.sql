@@ -1,5 +1,5 @@
 ﻿CREATE PROCEDURE [dbo].[usp_Groups_Update] @Id          INT, 
-                                           @GroupTypeId    INT,
+                                           @Tag         VARCHAR(10),
                                            @Name        VARCHAR(100), 
                                            @Description VARCHAR(500)
 AS
@@ -7,6 +7,6 @@ AS
        SET 
            Name = @Name, 
            Description = @Description, 
-           GroupTypeId = @GroupTypeId,
+           Tag = @Tag,
            UpdatedTime = SYSDATETIMEOFFSET()
      WHERE Id = @Id;

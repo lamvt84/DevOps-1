@@ -110,8 +110,6 @@
     <Build Include="dbo\Stored Procedures\usp_SmsConfig_UpdateStatus.sql" />
     <Build Include="dbo\Stored Procedures\usp_SmsConfig_Delete.sql" />
     <Build Include="dbo\Stored Procedures\usp_EmailConfig_Delete.sql" />
-    <Build Include="dbo\Tables\GroupType.sql" />
-    <Build Include="dbo\Stored Procedures\usp_GroupType_List.sql" />
     <Build Include="dbo\Tables\AlertLog.sql" />
     <Build Include="dbo\Stored Procedures\usp_AlertLog_Add.sql" />
     <Build Include="dbo\Tables\TaskSchedulerLog.sql" />
