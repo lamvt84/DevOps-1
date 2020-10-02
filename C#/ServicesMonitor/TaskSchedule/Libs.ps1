@@ -59,10 +59,10 @@ function Invoke-HealthCheck {
         Use Api
     
     .PARAMETER UDPTimeOut  
-        Sets a timeout for UDP port query. (In milliseconds, Default is 1000)   
+        Sets a timeout for UDP port query. (In milliseconds, Default is 3000)   
         
     .PARAMETER TCPTimeOut  
-        Sets a timeout for TCP port query. (In milliseconds, Default is 1000)
+        Sets a timeout for TCP port query. (In milliseconds, Default is 3000)
            
     .PARAMETER APITimeOut  
         Sets a timeout for Api query. (In seconds, Default is 3)      
@@ -146,11 +146,11 @@ function Invoke-HealthCheck {
         [Parameter(   
             Mandatory = $False,   
             ParameterSetName = '')]   
-            [int]$TCPtimeout=1000,   
+            [int]$TCPtimeout=3000,   
         [Parameter(   
             Mandatory = $False,   
             ParameterSetName = '')]   
-            [int]$UDPtimeout=1000,
+            [int]$UDPtimeout=3000,
         [Parameter(   
             Mandatory = $False,   
             ParameterSetName = '')]   
@@ -240,7 +240,7 @@ function Invoke-HealthCheck {
                                 $temp.Port = $p   
                                 $temp.CheckType = "TCP"   
                                 $temp.Status = $True
-                                $temp.Notes = ""   
+                                $temp.Notes = "OK"   
                             }   
                         }      
                         #Reset failed value   
@@ -277,11 +277,10 @@ function Invoke-HealthCheck {
                                 $temp.Port = $p   
                                 $temp.CheckType = "UDP"   
                                 $temp.Status = "True"   
-                                $temp.Notes = $returndata    
+                                $temp.Notes = "OK"
                                 $udpobject.close()    
                             }                        
-                        } Catch {  
-                            Write-Host $Error[0]
+                        } Catch {
                             If ($Error[0].ToString() -match "\bRespond after a period of time\b") {  
                                 #Close connection   
                                 $udpobject.Close()   
@@ -293,7 +292,7 @@ function Invoke-HealthCheck {
                                     $temp.Port = $p   
                                     $temp.CheckType = "UDP"
                                     $temp.Status = $True   
-                                    $temp.Notes = ""  
+                                    $temp.Notes = "OK"  
                                 } Else {  
                                     <#  
                                     It is possible that the host is not online or that the host is online,   
@@ -321,7 +320,7 @@ function Invoke-HealthCheck {
                                 $udpobject.close()  
                             }  
                         }      
-                        Write-Host "End"
+                        
                         #Merge temp array with report               
                         $report += $temp   
                     }                                   
