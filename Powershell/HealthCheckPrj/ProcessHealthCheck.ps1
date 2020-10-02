@@ -150,13 +150,13 @@ function Invoke-ProcessCommonCaseAsync {
                     $query = "EXEC [dbo].[usp_ServicesLog_Add] 
                         @JournalGuid = '$guid',
                         @ServiceId = '$($item.Id)',
-                        @ServiceUrl = '$($item.Object)',
-                        @ServiceStatus = '$(if ($item.Status) { "OK "} else { "ERROR" })'"
+                        @ServiceUrl = '$(if ($item.CheckType -eq "API") { $item.Object } else { $item.Object + ":" + $item.Port })',
+                        @ServiceStatus = '$(if ($item.Status) { "OK"} else { "ERROR" })'"
                     Invoke-SqlCmd -Query $query -ServerInstance $config.SqlInstance -Username $config.User -Password $config.Password -Database $config.Database -ErrorAction Stop
                     $query = "EXEC [dbo].[usp_Services_UpdateStatus] 
                         @Id = '$($item.Id)', 
-                        @Status = '$(if ($item.Status) { "OK "} else { "ERROR" })'"
-                    #Invoke-SqlCmd -Query $query -ServerInstance $config.SqlInstance -Username $config.User -Password $config.Password -Database $config.Database -ErrorAction Stop
+                        @Status = '$(if ($item.Status) { 1 } else { 0 })'"
+                    Invoke-SqlCmd -Query $query -ServerInstance $config.SqlInstance -Username $config.User -Password $config.Password -Database $config.Database -ErrorAction Stop
 
                     if ($item.status -eq $False) { $errorCount += 1 }
                 }
@@ -190,7 +190,7 @@ function Invoke-ProcessCommonCaseAsync {
             $uri = $config.RootUrl + "/api/SendAlert?jGuid=$Guid"
     
             try {
-                Invoke-WebRequest -Method POST -Uri $uri -ContentType "application/json"
+                Invoke-WebRequest -Method POST -Uri $uri -ContentType "application/json" | Out-Null
             }
             catch {
                 Write-Warning $Error[0]   
