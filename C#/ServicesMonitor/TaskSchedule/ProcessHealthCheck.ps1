@@ -1,62 +1,58 @@
 [CmdletBinding()]
-Param(
+Param(    
     [Parameter(Mandatory = $false)]    
     [System.Int32]
-    $GroupType = 0 # 1: api, 2: tcp
-    ,
-    [Parameter(Mandatory = $false)]    
-    [System.String]
-    $Url = "" # special case, need to call API for update status
-    ,
-    [Parameter(Mandatory = $false)]    
-    [System.Int32]
-    $ServiceId = 0 # ServiceId
+    $ServiceId = 0
 )
-
 $rootPath = (Split-Path $MyInvocation.MyCommand.Path)
-Import-Module $rootPath/Modules/HealthCheck
+. $rootPath/Libs.ps1
 
-# Functions
+
 function Invoke-ProcessSpecialCase {
     [CmdletBinding()]
-    Param(
-        [Parameter(Mandatory = $true)]    
-        [System.Int32]
-        $GroupType # 1: api, 2: tcp
-        ,
-        [Parameter(Mandatory = $true)]    
-        [System.String]
-        $Url # special case, need to call API for update status
-        ,
+    Param(       
         [Parameter(Mandatory = $true)]    
         [System.Int32]
         $ServiceId # ServiceId
     )
     $dtStart = [datetime]::UtcNow 
-    $Config = Get-Content $rootPath\config.json | ConvertFrom-Json
-
-    $IpAddress = ($Url.Split("/")[2]).Split(":")[0]
-    $Port = ($Url.Split("/")[2]).Split(":")[1]
+    $config = Get-Content $rootPath\config.json | ConvertFrom-Json
     
-    $Guid = New-Guid
-    Write-Host $Guid
+    $apiUrl = $config.RootUrl + "/api_service/Get?id=$ServiceId"
     try {
-            if ($GroupType -eq 1) { $HealthCheckResult = Invoke-HealthCheck -DnsName $IpAddress -Port $Port -Type $GroupType -Url $Url }
-            else { $HealthCheckResult = Invoke-HealthCheck -DnsName $IpAddress -Port $Port -Type $GroupType }
-            $status = if ($HealthCheckResult -eq $true) { "OK" } else { "ERROR" }
+        $service = Invoke-WebRequest -Method GET -Uri $apiUrl -ContentType "application/json" | ConvertFrom-Json
+    }
+    catch {        
+        Write-Warning $Error[0]   
+        return
+    }    
+    
+    if ($null -eq $service.data) { return }
+    if ($service.data.specialCase -eq 0 -OR $service.data.enable -eq 0) { return }    
+    
+    $ipAddress = ($service.data.url.Split("/")[2]).Split(":")[0]
+    $port = ($service.data.url.Split("/")[2]).Split(":")[1]
+
+    $guid = New-Guid
+    Write-Host "Guid: $guid"   
+    $response = switch ($service.data.groupTag) {
+                    "API" {
+                        Test-HealthCheck -Object $service.data.url -GroupTag $service.data.groupTag
+                        break
+                    }
+                    default {                    
+                        Test-HealthCheck -Object $ipAddress -Port $port -GroupTag $service.data.groupTag
+                        break
+                    }
+                }
+    try {   
+            $uri = $config.RootUrl + "/api/UpdateHealthCheckSpecialCase?serviceId=$ServiceId&jGuid=$guid&status=$(if ($response[0].Status) { "OK" } else { "ERROR" })&url=$($service.data.url)"
+            
+            Invoke-WebRequest -Method POST -Uri $uri -ContentType "application/json" | Out-Null           
         }
     catch {
-        Write-Warning $Error[0]
-    }  
-    
-    $Uri = $Config.UpdateUrl + "?serviceId=$ServiceId&jGuid=$Guid&status=$status&url=$Url"
-    Write-Host $Uri
-    try {
-        Invoke-WebRequest -Method POST -Uri $Uri -ContentType "application/json"
-    }
-    catch {
-        Write-Warning $Error[0]   
-    }    
+        Write-Warning $Error[0]        
+    } 
     Write-Host "Total time elapsed: $([datetime]::UtcNow - $dtStart)"
 }
 
@@ -70,92 +66,99 @@ function Invoke-ProcessCommonCaseAsync {
     Begin
     {
         # Init
-        $Config = Get-Content $rootPath\config.json | ConvertFrom-Json
-        $Guid = New-Guid
-        Write-Host "Guid: $Guid"
+        $config = Get-Content $rootPath\config.json | ConvertFrom-Json
+        $guid = New-Guid
+        Write-Host "Guid: $guid"
 
-        $ThreadCount = 0
-        $ErrorCount = 0
+        $threadCount = 0
+        $errorCount = 0
+          
+        $initScript = [scriptblock]::Create(". $rootPath/Libs.ps1")          
+
+        $query = "SELECT s.Id, s.Url, g.Tag
+                FROM dbo.[Services] s 
+                    LEFT JOIN dbo.Groups g ON s.GroupId = g.Id                     
+                WHERE s.Enable = 1 AND s.SpecialCase = 0"
+        $dataSet = Invoke-SqlCmd -Query $query -ServerInstance $config.SqlInstance -Username $config.User -Password $config.Password -Database $config.Database `
+                    | Select-Object Id, Url, Tag, @{Name = 'IpAddress'; Expression = { ($_.Url.Split("/")[2]).Split(":")[0] } }`
+                                            , @{Name='Port';Expression={($_.Url.Split("/")[2]).Split(":")[1]}}
         
-        $root = $PSScriptRoot            
-        $initScript = [scriptblock]::Create("Import-Module -Name '$root\Modules\HealthCheck'")    
-      
+        $threadCount = $dataSet.Count - 1
 
-        $Query = "SELECT s.Id, s.Url, g.GroupTypeId FROM dbo.[Services] s JOIN dbo.Groups g ON s.GroupId = g.Id WHERE s.Enable = 1 AND s.SpecialCase = 0"
-        $DataSet = Invoke-SqlCmd -Query $Query -ServerInstance $Config.SqlInstance -Username $Config.User -Password $Config.Password -Database $Config.Database `
-                    | Select-Object Id, Url, GroupTypeId
-
-        $DataSet = $DataSet | Select-Object Id, Url, @{Name = 'IpAddress'; Expression = { ($_.Url.Split("/")[2]).Split(":")[0] } }`
-                                            , @{Name='Port';Expression={($_.Url.Split("/")[2]).Split(":")[1]}}, GroupTypeId
-        $ThreadCount = $DataSet.Count
-
-        $Query = "EXEC [dbo].[usp_ServicesLog_Add]
+        $query = "EXEC [dbo].[usp_ServicesLog_Add]
                     @JournalGuid = '$Guid',
                     @ServiceId = '0',
                     @ServiceUrl = '',
                     @ServiceStatus = 'START'"
-        Invoke-SqlCmd -Query $Query -ServerInstance $Config.SqlInstance -Username $Config.User -Password $Config.Password -Database $Config.Database -ErrorAction Stop               
+        Invoke-SqlCmd -Query $query -ServerInstance $config.SqlInstance -Username $config.User -Password $config.Password -Database $config.Database -ErrorAction Stop
     }
     Process
     {   
         $dtStart = [datetime]::UtcNow   
-        
-        if ($DataSet.Count -gt 0) 
+        if ($dataSet.Count -gt 0) 
         {    
-            $ScriptBlock = [scriptblock] `
+            $scriptBlock = [scriptblock] `
             {    
-                param($Data, $Config, $Guid)
-                try {
-                    if ($Data.GroupTypeId -eq 1) { $HealthCheckResult = Invoke-HealthCheck -DnsName $Data.IpAddress -Port $Data.Port -Type $Data.GroupTypeId -Url $Data.Url }
-                    else {                        
-                        $HealthCheckResult = Invoke-HealthCheck -DnsName $Data.IpAddress -Port $Data.Port -Type $Data.GroupTypeId 
-                    }
+                param($data, $config, $guid)
+                $temp = "" | Select-Object Id, Object, Port, CheckType, Status, Notes 
+                try {                    
+                    #if ($Data.GroupTypeId -eq 1) { $HealthCheckResult = Invoke-HealthCheck -DnsName $Data.IpAddress -Port $Data.Port -Type $Data.GroupTypeId -Url $Data.Url }
+                    #else {                        
+                    #    $HealthCheckResult = Invoke-HealthCheck -DnsName $Data.IpAddress -Port $Data.Port -Type $Data.GroupTypeId 
+                    #}
+                    $response = switch ($data.Tag) {
+                        "API" {
+                            Test-HealthCheck -Object $data.Url -GroupTag $data.Tag
+                            break
+                        }
+                        default {                    
+                            Test-HealthCheck -Object $data.IpAddress -Port $data.Port -GroupTag $data.Tag
+                            break
+                        }
+                    }                   
+                    
+                    $temp.Object = $response[0].Id
+                    $temp.Object = $response[0].Object
+                    $temp.Port = $response[0].Port    
+                    $temp.CheckType = $data.Tag
+                    $temp.Status = $response[0].Status
+                    $temp.Notes = $response[0].Notes   
                 }
                 catch {
-                    Write-Warning "$($Error[0]) = $($Data.Url)"
-                    $HealthCheckResult = $false
-                }
-                
-                $ResultSet = @{
-                    Id         = $Data.Id
-                    Url        = $Data.Url
-                    Status     = if ($HealthCheckResult -eq $true) { 1 } else { 0 }
-                    StatusCode = if ($HealthCheckResult -eq $true) { "OK" } else { "ERROR" }               
-                }
-                
-                Write-Output $ResultSet
+                    Write-Host "$($Error[0]) = $($data.Url)"                    
+                }                
+                Write-Output $temp
             }
-
-            $jobs = $DataSet | ForEach-Object { 
-                $Params = ($_, $Config, $Guid)
-                Start-ThreadJob -ThrottleLimit $ThreadCount -ArgumentList $Params -ScriptBlock $ScriptBlock `
+            
+            $jobs = $dataSet | ForEach-Object { 
+                $params = ($_, $Config, $Guid)
+                Start-ThreadJob -ThrottleLimit $threadCount -ArgumentList $params -ScriptBlock $scriptBlock `
                     -InitializationScript $initScript
             }
 
-
             Write-Host "Waiting for $($jobs.Count) jobs to complete..."
             
-            $ResultSet = Receive-Job -Job $jobs -Wait -AutoRemoveJob  
+            $report = Receive-Job -Job $jobs -Wait -AutoRemoveJob
             Write-Host "RESULT..."  
 
             try {
                 $scope = New-Object -TypeName System.Transactions.TransactionScope
 
-                $ResultSet | ForEach-Object {
-                    $service = $_ | ConvertTo-Json -Depth 2 | ConvertFrom-Json
+                $report | ForEach-Object {
+                    $item = $_ | ConvertTo-Json -Depth 2 | ConvertFrom-Json
 
-                    $Query = "EXEC [dbo].[usp_ServicesLog_Add] 
-                        @JournalGuid = '$Guid',
-                        @ServiceId = '$($service.Id)',
-                        @ServiceUrl = '$($service.Url)',
-                        @ServiceStatus = '$($service.StatusCode)'"
-                    Invoke-SqlCmd -Query $Query -ServerInstance $Config.SqlInstance -Username $Config.User -Password $Config.Password -Database $Config.Database -ErrorAction Stop
-                    $Query = "EXEC [dbo].[usp_Services_UpdateStatus] 
-                        @Id = '$($service.Id)', 
-                        @Status = '$($service.Status)'"
-                    Invoke-SqlCmd -Query $Query -ServerInstance $Config.SqlInstance -Username $Config.User -Password $Config.Password -Database $Config.Database -ErrorAction Stop
+                    $query = "EXEC [dbo].[usp_ServicesLog_Add] 
+                        @JournalGuid = '$guid',
+                        @ServiceId = '$($item.Id)',
+                        @ServiceUrl = '$(if ($item.CheckType -eq "API") { $item.Object } else { $item.Object + ":" + $item.Port })',
+                        @ServiceStatus = '$(if ($item.Status) { "OK"} else { "ERROR" })'"
+                    Invoke-SqlCmd -Query $query -ServerInstance $config.SqlInstance -Username $config.User -Password $config.Password -Database $config.Database -ErrorAction Stop
+                    $query = "EXEC [dbo].[usp_Services_UpdateStatus] 
+                        @Id = '$($item.Id)', 
+                        @Status = '$(if ($item.Status) { 1 } else { 0 })'"
+                    Invoke-SqlCmd -Query $query -ServerInstance $config.SqlInstance -Username $config.User -Password $config.Password -Database $config.Database -ErrorAction Stop
 
-                    if ($service.status -eq 0) { $ErrorCount += 1 }
+                    if ($item.status -eq $False) { $errorCount += 1 }
                 }
             }
             catch {
@@ -167,16 +170,16 @@ function Invoke-ProcessCommonCaseAsync {
             }            
         }
         Write-Host "Total time elapsed: $([datetime]::UtcNow - $dtStart)"
-        $Query = "EXEC [dbo].[usp_ServicesLog_Add] 
-                @JournalGuid = '$Guid',
+        $query = "EXEC [dbo].[usp_ServicesLog_Add] 
+                @JournalGuid = '$guid',
                 @ServiceId = '0',
                 @ServiceUrl = '',
                 @ServiceStatus = 'END'"
-        Invoke-SqlCmd -Query $Query -ServerInstance $Config.SqlInstance -Username $Config.User -Password $Config.Password -Database $Config.Database -ErrorAction Stop
+        Invoke-SqlCmd -Query $query -ServerInstance $config.SqlInstance -Username $config.User -Password $config.Password -Database $config.Database -ErrorAction Stop
     }
     End {
-        if ($ErrorCount -gt 0) {
-            $ErrorCount 
+        if ($errorCount -gt 0) {
+            #$ErrorCount 
             <#
         Invoke-WebRequest -Headers @{} `
                   -Method POST `
@@ -184,10 +187,10 @@ function Invoke-ProcessCommonCaseAsync {
                   -Uri url `
                   -ContentType application/json
     #>
-            $Uri = $Config.AlertUrl + "?jGuid=$Guid"
+            $uri = $config.RootUrl + "/api/SendAlert?jGuid=$Guid"
     
             try {
-                Invoke-WebRequest -Method POST -Uri $Uri -ContentType "application/json"
+                Invoke-WebRequest -Method POST -Uri $uri -ContentType "application/json" | Out-Null
             }
             catch {
                 Write-Warning $Error[0]   
@@ -195,10 +198,10 @@ function Invoke-ProcessCommonCaseAsync {
         }
     }    
 }
-    
+
 if ($ServiceId -eq 0) {
     Invoke-ProcessCommonCaseAsync
 }
 else {
-    Invoke-ProcessSpecialCase -GroupType $GroupType -Url $Url -ServiceId $ServiceId
+    Invoke-ProcessSpecialCase -ServiceId $ServiceId
 }

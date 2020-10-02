@@ -37,35 +37,18 @@ namespace MVCSite.Controllers
             await new ServicesLogImpl(ConnectionString).Add(new ServicesLog()
             {
                 JournalGuid = journalGuid,
-                ServiceId = 0,
-                ServiceUrl = "",
-                ServiceStatus = "START"
-            });
-
-            await new ServicesLogImpl(ConnectionString).Add(new ServicesLog()
-            {
-                JournalGuid = journalGuid,
                 ServiceId = serviceId,
-                ServiceUrl = url,
+                ServiceUrl = (serviceId == 0? "" : url),
                 ServiceStatus = status
             });
-            await new ServicesImpl(ConnectionString).UpdateStatus(new Services()
-            {
-                Id = serviceId,
-                Status = (status == "OK") ? 1 : 0
-            });
 
-            await new ServicesLogImpl(ConnectionString).Add(new ServicesLog()
+            if (serviceId > 0)
             {
-                JournalGuid = journalGuid,
-                ServiceId = 0,
-                ServiceUrl = "",
-                ServiceStatus = "END"
-            });
-
-            if (status != "OK")
-            {
-                await new HealthCheck().SendAlert(journalGuid, ExtendSettings);
+                await new ServicesImpl(ConnectionString).UpdateStatus(new Services()
+                {
+                    Id = serviceId,
+                    Status = (status == "OK") ? 1 : 0
+                });
             }
 
             return JsonConvert.SerializeObject(new { status = "OK" });
