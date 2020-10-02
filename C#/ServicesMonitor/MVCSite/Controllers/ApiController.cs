@@ -38,7 +38,7 @@ namespace MVCSite.Controllers
             {
                 JournalGuid = journalGuid,
                 ServiceId = serviceId,
-                ServiceUrl = (serviceId == 0? "" : url),
+                ServiceUrl = (serviceId == 0) ? "" : url,
                 ServiceStatus = status
             });
 

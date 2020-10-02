@@ -27,7 +27,7 @@ function Invoke-ProcessSpecialCase {
         $errorCount = 0          
         $initScript = [scriptblock]::Create(". $PSScriptRoot/Libs.ps1")
 
-        $apiUrl = $config.RootUrl + "/api_service/GetList"        
+        $apiUrl = "$($config.RootUrl)/api_service/GetList"        
         try {
             $list = Invoke-WebRequest -Method GET -Uri $apiUrl -ContentType "application/json" | ConvertFrom-Json 
         }
@@ -88,16 +88,14 @@ function Invoke-ProcessSpecialCase {
         if ($dataSet.Count -gt 0) 
         {
             Write-Host "Total time elapsed: $([datetime]::UtcNow - $dtStart)"
-            $uri = $config.RootUrl + "/api/UpdateHealthCheckSpecialCase?serviceId=0&jGuid=$guid
-                                            &status=START
-                                            &url=N"            
+            $uri = "{0}/api/UpdateHealthCheckSpecialCase?serviceId={1}&jGuid={2}&status=START&url=N" -f $config.RootUrl,$_.Id,$guid
             Invoke-WebRequest -Method POST -Uri $uri -ContentType "application/json" | Out-Null  
             
             $report | ForEach-Object {
                 try {
-                    $uri = $config.RootUrl + "/api/UpdateHealthCheckSpecialCase?serviceId=$($_.Id)&jGuid=$guid
-                                            &status=$(if ($_.Status) { "OK" } else { "ERROR" })
-                                            &url=$(if ($_.CheckType -eq "API") { $_.Object } else { $_.Object + ":" + $_.Port })"
+                    $uri = "{0}/api/UpdateHealthCheckSpecialCase?serviceId={1}&jGuid={2}&status={3}&url={4}" `
+                            -f $config.RootUrl,$_.Id,$guid,$(if ($_.Status) { "OK" } else { "ERROR" }),`
+                            $(if ($_.CheckType -eq "API") { $_.Object } else { $_.Object + ":" + $_.Port })
                 
                     Invoke-WebRequest -Method POST -Uri $uri -ContentType "application/json" | Out-Null           
                 }
@@ -106,14 +104,12 @@ function Invoke-ProcessSpecialCase {
                 }
                 if ($_.Status -eq $False) { $errorCount += 1}
             }
-            $uri = $config.RootUrl + "/api/UpdateHealthCheckSpecialCase?serviceId=0&jGuid=$guid
-                                            &status=END
-                                            &url=N"            
+            $uri = "{0}/api/UpdateHealthCheckSpecialCase?serviceId={1}&jGuid={2}&status=START&url=N" -f $config.RootUrl,$_.Id,$guid
             Invoke-WebRequest -Method POST -Uri $uri -ContentType "application/json" | Out-Null 
 
             if ($errorCount -gt 0) {
                 try {
-                    $uri = $config.RootUrl + "/api/SendAlert?jGuid=$guid"
+                    $uri = "{0}/api/SendAlert?jGuid={1}" -f $config.RootUrl,$guid
                     Invoke-WebRequest -Method POST -Uri $uri -ContentType "application/json" | Out-Null
                 }
                 catch {
@@ -235,8 +231,8 @@ function Invoke-ProcessCommonCaseAsync {
         Invoke-SqlCmd -Query $query -ServerInstance $config.SqlInstance -Username $config.User -Password $config.Password -Database $config.Database -ErrorAction Stop
         Write-Host "Total time elapsed: $([datetime]::UtcNow - $dtStart)"
         if ($errorCount -gt 0) {
-            try {
-                $uri = $config.RootUrl + "/api/SendAlert?jGuid=$Guid"
+            try {                
+                $uri = "{0}/api/SendAlert?jGuid={1}" -f $config.RootUrl,$guid
                 Invoke-WebRequest -Method POST -Uri $uri -ContentType "application/json" | Out-Null
             }
             catch {
