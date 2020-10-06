@@ -1,6 +1,9 @@
 <h1 align="center">Deployment & Configuration</h1>
 
-
+<div align="center">
+    Contributor: Louis Vũ<br />
+	@2020
+</div>
 
 
 
