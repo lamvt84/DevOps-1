@@ -146,11 +146,11 @@ function Invoke-HealthCheck {
         [Parameter(   
             Mandatory = $False,   
             ParameterSetName = '')]   
-            [int]$TCPtimeout=3000,   
+            [int]$TCPtimeout=5000,   
         [Parameter(   
             Mandatory = $False,   
             ParameterSetName = '')]   
-            [int]$UDPtimeout=3000,
+            [int]$UDPtimeout=5000,
         [Parameter(   
             Mandatory = $False,   
             ParameterSetName = '')]   

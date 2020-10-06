@@ -23,7 +23,7 @@ namespace MVCSite.Controllers
             ConnectionString = Startup.ConnectionString;
         }
 
-        [HttpPost("SendAlert")]
+        [HttpPost("SendStatusChangedAlert")]
         public async Task<string> SendStatusChangedAlert(string jGuid, string listId)
         {
             await new HealthCheck().SendStatusChangedAlert(Guid.Parse(jGuid), listId, ExtendSettings);

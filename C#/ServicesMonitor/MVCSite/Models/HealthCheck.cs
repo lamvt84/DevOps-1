@@ -29,12 +29,11 @@ namespace MVCSite.Models
             var alertConfigId = 2;
             try
             {
-                var alertConfig = await new AlertConfigImpl(ConnectionString).Get(alertConfigId);
-                
                 var serviceList = await new ServicesImpl(ConnectionString).ListByGroupId(0);
                 var serviceChangedList = "";
 
-                foreach (var item in serviceList.Where(x => listId.Contains(x.Id.ToString())))
+                List<string> listIdString = listId.Split(',').ToList();
+                foreach (var item in serviceList.Where(x => listIdString.Exists(e => e == x.Id.ToString())))
                 {
                     serviceChangedList += $"- {item.Name}: {item.Url}<br />";
                 }

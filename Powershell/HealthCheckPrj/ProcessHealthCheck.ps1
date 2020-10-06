@@ -24,7 +24,8 @@ function Invoke-ProcessSpecialCase {
         
         $ErrorActionPreference = "SilentlyContinue"
         
-        $errorCount = 0          
+        $errorCount = 0
+        $listId = @()
         $initScript = [scriptblock]::Create(". $PSScriptRoot/Libs.ps1")
 
         $apiUrl = "$($config.RootUrl)/api_service/GetList"        
@@ -101,6 +102,8 @@ function Invoke-ProcessSpecialCase {
                 
                     Invoke-WebRequest -Method POST -Uri $uri -ContentType "application/json" | Out-Null
                     Write-Verbose $_.Id
+
+                    if ($_.Status -AND $_.CurrStatus -eq 0) { $listId += $_.Id }
                 }
                 catch {
                     Write-Verbose $Error[0]        
@@ -113,6 +116,15 @@ function Invoke-ProcessSpecialCase {
             if ($errorCount -gt 0) {
                 try {
                     $uri = "{0}/api/SendAlert?jGuid={1}" -f $config.RootUrl,$guid
+                    Invoke-WebRequest -Method POST -Uri $uri -ContentType "application/json" | Out-Null
+                }
+                catch {
+                    Write-Verbose $Error[0]   
+                }    
+            }
+            if (($listId | Measure-Object).Count -gt 0) {            
+                $uri = "{0}/api/SendStatusChangedAlert?jGuid={1}&listId={2}" -f $config.RootUrl, $guid, $($listId -join ",")
+                try {                
                     Invoke-WebRequest -Method POST -Uri $uri -ContentType "application/json" | Out-Null
                 }
                 catch {
@@ -133,7 +145,7 @@ function Invoke-ProcessCommonCaseAsync {
         
         $ErrorActionPreference = "SilentlyContinue"
         $errorCount = 0
-          
+        $listId = @()
         $initScript = [scriptblock]::Create(". $PSScriptRoot/Libs.ps1")
 
         $query = "SELECT s.Id, s.Url, g.Tag, s.Status
@@ -216,6 +228,7 @@ function Invoke-ProcessCommonCaseAsync {
                     Invoke-SqlCmd -Query $query -ServerInstance $config.SqlInstance -Username $config.User -Password $config.Password -Database $config.Database -ErrorAction Stop                    
 
                     if ($item.status -eq $False) { $errorCount += 1 }
+                    elseif ($item.CurrStatus -eq 0) { $listId += $item.Id }                     
                 }
             }
             catch {
@@ -227,7 +240,7 @@ function Invoke-ProcessCommonCaseAsync {
             }            
         }  
     }
-    End {        
+    End {           
         $query = "EXEC [dbo].[usp_ServicesLog_Add] 
                 @JournalGuid = '$guid',
                 @ServiceId = '0',
@@ -238,6 +251,15 @@ function Invoke-ProcessCommonCaseAsync {
         if ($errorCount -gt 0) {
             try {                
                 $uri = "{0}/api/SendAlert?jGuid={1}" -f $config.RootUrl,$guid
+                Invoke-WebRequest -Method POST -Uri $uri -ContentType "application/json" | Out-Null
+            }
+            catch {
+                Write-Verbose $Error[0]   
+            }    
+        }
+        if (($listId | Measure-Object).Count -gt 0){            
+            $uri = "{0}/api/SendStatusChangedAlert?jGuid={1}&listId={2}" -f $config.RootUrl, $guid, $($listId -join ",")
+            try{                
                 Invoke-WebRequest -Method POST -Uri $uri -ContentType "application/json" | Out-Null
             }
             catch {
