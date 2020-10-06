@@ -123,7 +123,7 @@ https://dev.azure.com/iris2019/1F_PayMobi_DevOps/_git/1F_PayMobi_DevOps
 
 ## Groups, Services & Alert configuration
 
-All these configurations can be check in Site > Configuration
+All these configurations can be check in **Site > Configuration**
 
 **GROUPS**
 

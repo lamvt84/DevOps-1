@@ -1,9 +1,9 @@
 ﻿@model DataAccess.SMDB.Users
 
-<br />
-<h2 class="text-info">@(Model.Id!=0 ? "Edit" : "Create") User</h2>
-<br />
-
+<hr />
+<div class="text-center">
+    <h2 class="text-dark">@(Model.Id!=0 ? "Edit" : "Create") User</h2>
+</div>
 <div class="border container" style="padding:30px;">
     <form method="post">
         @if (Model.Id != 0)

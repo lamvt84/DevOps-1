@@ -25,19 +25,36 @@ DECLARE @mailTable TABLE ([Id] INT NOT NULL,
     [IsEnable] BIT
 )
 */
-IF NOT EXISTS (SELECT 1 FROM dbo.EmailConfig WHERE Id = 1)
-BEGIN
-    SET IDENTITY_INSERT dbo.EmailConfig ON
-    INSERT dbo.EmailConfig(Id,[AlertConfigId],[SenderName],[ToMail],[CCMail],[Subject],[Message],[IsResend],[ServiceId],[SmsEmailId],[LangId],[DataSign],[IsEnable],[CreatedTime],[UpdatedTime]) 
-        VALUES (1,1,'MONITOR SYSTEM','devops@1fintech.vn','','[PAYMOBI] ALERT - SERVICE ERROR','<b>ALERT</b><br /><br /><b>CHECK ID: </b>{check_id}<br />{service_list}<br /><br />Sent by monitor system',
-                            0,0,0,0,'befea2e192a917222d09c0d4c2f34466',1, SYSDATETIMEOFFSET(), NULL);
-    SET IDENTITY_INSERT dbo.EmailConfig OFF
-END
 
-IF NOT EXISTS (SELECT 1 FROM dbo.AlertConfig WHERE Id = 1)
-BEGIN
-    SET IDENTITY_INSERT dbo.AlertConfig ON
-    INSERT dbo.AlertConfig(Id,[Name],[PauseStatus],[PausePeriod],[CreatedTime],[UpdatedTime]) 
-        VALUES (1,'Service Alert Config', 0, 0, SYSDATETIMEOFFSET(), NULL)
-    SET IDENTITY_INSERT dbo.AlertConfig OFF
-END
+DECLARE @tempAlertConfig TABLE
+(
+	[Id] INT,
+    [Name] NVARCHAR(100)
+)
+
+INSERT INTO @tempAlertConfig SELECT 1,'Alert when service is down'
+INSERT INTO @tempAlertConfig SELECT 2, 'Alert when service is up'
+
+SET IDENTITY_INSERT dbo.AlertConfig ON
+MERGE INTO dbo.AlertConfig a
+USING @tempAlertConfig t ON a.Id = t.Id
+WHEN NOT MATCHED THEN
+    INSERT (Id, Name) VALUES (t.Id, t.Name);
+SET IDENTITY_INSERT dbo.AlertConfig OFF
+
+DECLARE @tempEmail TABLE 
+(
+	[Id] INT,
+    AlertConfigId INT,
+	[SenderName] VARCHAR(50)
+)
+
+INSERT INTO @tempEmail SELECT 1,1,'MONITOR SYSTEM'
+INSERT INTO @tempEmail SELECT 2,2,'MONITOR SYSTEM'
+
+SET IDENTITY_INSERT dbo.EmailConfig ON
+MERGE INTO dbo.EmailConfig a
+USING @tempEmail t ON a.Id = t.Id
+WHEN NOT MATCHED THEN
+    INSERT (Id, AlertConfigId, SenderName) VALUES (t.Id, t.AlertConfigId, t.SenderName);
+SET IDENTITY_INSERT dbo.EmailConfig OFF

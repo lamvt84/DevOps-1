@@ -2,8 +2,8 @@
 (
 	[Id] INT NOT NULL IDENTITY(1,1),
     [Name] NVARCHAR(100),    
-    [PauseStatus] TINYINT NOT NULL, 
-    [PausePeriod] INT NOT NULL,
+    [PauseStatus] TINYINT NULL, 
+    [PausePeriod] INT NULL,
     [CreatedTime] DATETIMEOFFSET NOT NULL CONSTRAINT DF_AlertConfig_CreatedTime DEFAULT SYSDATETIMEOFFSET(), 
     [UpdatedTime] DATETIMEOFFSET NULL, 
     CONSTRAINT PK_AlertConfig PRIMARY KEY CLUSTERED (Id)

@@ -23,13 +23,44 @@ namespace MVCSite.Models
             ConnectionString = Startup.ConnectionString;
         }
 
+        public async Task SendStatusChangedAlert(Guid jGuid, string listId, ExtendSettings extendSettings)
+        {
+            ExtendSettings ??= extendSettings;
+            var alertConfigId = 2;
+            try
+            {
+                var alertConfig = await new AlertConfigImpl(ConnectionString).Get(alertConfigId);
+                
+                var serviceList = await new ServicesImpl(ConnectionString).ListByGroupId(0);
+                var serviceChangedList = "";
+
+                foreach (var item in serviceList.Where(x => listId.Contains(x.Id.ToString())))
+                {
+                    serviceChangedList += $"- {item.Name}: {item.Url}<br />";
+                }
+
+                var tasks = new List<Task>
+                {
+                    SendAlertEmail(jGuid, alertConfigId, serviceChangedList),
+                    SendAlertSms(alertConfigId)
+                };
+
+                await Task.WhenAll(tasks);
+               
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
         public async Task SendAlert(Guid jGuid, ExtendSettings extendSettings)
         {
             ExtendSettings ??= extendSettings;
-
+            var alertConfigId = 1;
             try
             {
-                var alertConfig = await new AlertConfigImpl(ConnectionString).Get(1);
+                var alertConfig = await new AlertConfigImpl(ConnectionString).Get(alertConfigId);
                 if (alertConfig.PauseStatus == 1) return;
                 if (alertConfig.PausePeriod == (int)AlertRule.Level5) return;
 
@@ -56,15 +87,15 @@ namespace MVCSite.Models
                     var serviceList = await new ServicesImpl(ConnectionString).ListByStatus(0);
                     var serviceErrorList = "";
 
-                    var tasks = new List<Task>();
-
                     foreach (var item in serviceList.Where(x => x.Enable == 1))
                     {
                         serviceErrorList += $"- {item.Name}: {item.Url}<br />";
                     }
-
-                    tasks.Add(SendAlertEmail(jGuid, serviceErrorList));
-                    tasks.Add(SendAlertSms());
+                    var tasks = new List<Task>
+                    {
+                        SendAlertEmail(jGuid, alertConfigId, serviceErrorList),
+                        SendAlertSms(alertConfigId)
+                    };
 
                     await Task.WhenAll(tasks);
                 }
@@ -75,12 +106,12 @@ namespace MVCSite.Models
             }
         }
 
-        private async Task SendAlertEmail(Guid jGuid, string serviceErrorList)
+        private async Task SendAlertEmail(Guid jGuid, int alertConfigId, string serviceErrorList)
         {
             using var client = new HttpClient();
             try
             {
-                var emailConfig = await new EmailConfigImpl(ConnectionString).ListByAlertConfigId(1);
+                var emailConfig = await new EmailConfigImpl(ConnectionString).ListByAlertConfigId(alertConfigId);
                 foreach (var item in emailConfig.Where(x => x.IsEnable))
                 {
                     var emailSetting = new MailRequest()
@@ -119,12 +150,12 @@ namespace MVCSite.Models
             }
         }
 
-        private async Task SendAlertSms()
+        private async Task SendAlertSms(int alertConfigId)
         {
             using var client = new HttpClient();
             try
             {
-                var smsConfig = await new SmsConfigImpl(ConnectionString).ListByAlertConfigId(1);
+                var smsConfig = await new SmsConfigImpl(ConnectionString).ListByAlertConfigId(alertConfigId);
                 foreach (var item in smsConfig.Where(x => x.IsEnable))
                 {
                     var smsSetting = new SmsRequest()

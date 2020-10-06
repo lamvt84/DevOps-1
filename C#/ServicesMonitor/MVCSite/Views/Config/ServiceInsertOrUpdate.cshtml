@@ -1,9 +1,9 @@
 ﻿@model DataAccess.SMDB.Services
 
-<br />
-<h2 class="text-info">@(Model.Id!=0 ? "Edit" : "Create") Service</h2>
-<br />
-
+<hr />
+<div class="text-center">
+    <h2 class="text-dark">@(Model.Id!=0 ? "Edit" : "Create") Service</h2>
+</div>
 <div class="border container" style="padding:30px;">
     <form method="post">
         @if (Model.Id != 0)
@@ -27,7 +27,7 @@
                 <label>Group</label>
             </div>
             <div class="col-6">
-                <select id="DDL_Load" asp-for="GroupId">
+                <select id="DDL_Load" asp-for="GroupId" class="form-control">
                     <option selected="selected" value="0">Select group</option>
                 </select>
             </div>

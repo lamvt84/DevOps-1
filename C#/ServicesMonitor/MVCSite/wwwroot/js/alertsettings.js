@@ -12,7 +12,7 @@ function loadDataTable() {
             "datatype": "json"
         },
         "columns": [
-            { "data": "id" },
+            { "data": "alertConfigId", "className": "text-center" },
             { "data": "senderName" },
             { "data": "toMail" },
             { "data": "ccMail" },
@@ -41,7 +41,7 @@ function loadDataTable() {
             "datatype": "json"
         },
         "columns": [
-            { "data": "id" },
+            { "data": "alertConfigId", "className": "text-center" },
             { "data": "accountName" },
             { "data": "mobile" },
             { "data": "message" },
@@ -50,7 +50,7 @@ function loadDataTable() {
                 "data": "id",
                 "render": function (data) {
                     return `<div class="text-center">
-                        <a href="/Config/EmailInsertOrUpdate?id=${data}" class='btn btn-success text-white' style='cursor:pointer; width:70px;'>
+                        <a href="/Config/SmsInsertOrUpdate?id=${data}" class='btn btn-success text-white' style='cursor:pointer; width:70px;'>
                             Edit
                         </a>
                         &nbsp;

@@ -1,21 +1,43 @@
 ﻿@model DataAccess.SMDB.EmailConfig
 
-<br />
-<h2 class="text-info">@(Model.Id!=0 ? "Edit" : "Create") Group</h2>
-<br />
-
-<div class="border container" style="padding:30px;">
+<hr/>
+<div class="text-center">
+    <h2 class="text-dark">@(Model.Id!=0 ? "Edit" : "Create") Email</h2>
+</div>
+<div class="border container" style="padding: 30px;">
     <form method="post">
         @if (Model.Id != 0)
         {
-            <input type="hidden" asp-for="Id" />
+            <input type="hidden" asp-for="Id"/>
         }
+        <div class="form-group row">
+            <div class="col-3">
+                Type
+            </div>
+            <div class="col-6">
+                @if (Model.AlertConfigId == 1)
+                {
+                    <input class="form-control" value="Alert when services down" disabled="disabled"/>
+                }
+                else if (Model.AlertConfigId == 2)
+                {
+                    <input class="form-control" value="Alert when services up" disabled="disabled"/>
+                }
+                else
+                {
+                    <select asp-for="AlertConfigId" class="form-control">
+                        <option value="1">Alert when services down</option>
+                        <option value="2">Alert when services up</option>
+                    </select>
+                }
+            </div>
+        </div>
         <div class="form-group row">
             <div class="col-3">
                 <label asp-for="SenderName"></label>
             </div>
             <div class="col-6">
-                <input asp-for="SenderName" class="form-control" />
+                <input asp-for="SenderName" class="form-control"/>
             </div>
         </div>
         <div class="form-group row">
@@ -23,7 +45,7 @@
                 <label asp-for="ToMail"></label>
             </div>
             <div class="col-6">
-                <input asp-for="ToMail" class="form-control" />
+                <input asp-for="ToMail" class="form-control"/>
             </div>
         </div>
         <div class="form-group row">
@@ -31,7 +53,7 @@
                 <label asp-for="CCMail"></label>
             </div>
             <div class="col-6">
-                <input asp-for="CCMail" class="form-control" />
+                <input asp-for="CCMail" class="form-control"/>
             </div>
         </div>
         <div class="form-group row">
@@ -39,7 +61,7 @@
                 <label asp-for="Subject">Subject Format</label>
             </div>
             <div class="col-6">
-                <input asp-for="Subject" class="form-control" />
+                <input asp-for="Subject" class="form-control"/>
             </div>
         </div>
         <div class="form-group row">
@@ -56,7 +78,7 @@
                 <label asp-for="DataSign">DataSign</label>
             </div>
             <div class="col-6">
-                <input asp-for="DataSign" class="form-control" disabled="disabled" />
+                <input asp-for="DataSign" class="form-control" disabled="disabled"/>
             </div>
         </div>
         <div class="form-group row">

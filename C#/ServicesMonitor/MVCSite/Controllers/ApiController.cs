@@ -24,6 +24,13 @@ namespace MVCSite.Controllers
         }
 
         [HttpPost("SendAlert")]
+        public async Task<string> SendStatusChangedAlert(string jGuid, string listId)
+        {
+            await new HealthCheck().SendStatusChangedAlert(Guid.Parse(jGuid), listId, ExtendSettings);
+            return JsonConvert.SerializeObject(new { status = "OK" });
+        }
+
+        [HttpPost("SendAlert")]
         public async Task<string> SendAlert(string jGuid)
         {
             await new HealthCheck().SendAlert(Guid.Parse(jGuid), ExtendSettings);
@@ -230,16 +237,26 @@ namespace MVCSite.Controllers
             ConnectionString = Startup.ConnectionString;
         }
 
-        [HttpGet("GetEmailConfigList")]
-        public async Task<ActionResult> GetEmailConfigList(int? id)
+        [HttpGet("GetEmailConfigListById")]
+        public async Task<ActionResult> GetEmailConfigListById(int? id)
         {
             return Json(new { data = await new EmailConfigImpl(ConnectionString).ListByAlertConfigId(id ?? 1) });
         }
+        [HttpGet("GetEmailConfigList")]
+        public async Task<ActionResult> GetEmailConfigList()
+        {
+            return Json(new { data = await new EmailConfigImpl(ConnectionString).List() });
+        }
 
-        [HttpGet("GetSmsConfigList")]
+        [HttpGet("GetSmsConfigListById")]
         public async Task<ActionResult> GetSmsConfigList(int? id)
         {
             return Json(new { data = await new SmsConfigImpl(ConnectionString).ListByAlertConfigId(id ?? 1) });
+        }
+        [HttpGet("GetSmsConfigList")]
+        public async Task<ActionResult> GetSmsConfigList()
+        {
+            return Json(new { data = await new SmsConfigImpl(ConnectionString).List() });
         }
 
         [HttpPost("DeleteSmsConfig")]

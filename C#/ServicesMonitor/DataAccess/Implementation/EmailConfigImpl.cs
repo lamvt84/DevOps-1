@@ -36,7 +36,21 @@ namespace DataAccess.Implementation
                 throw ex;
             }
         }
+        public async Task<List<EmailConfig>> List()
+        {
+            try
+            {
+                var spName = "dbo.usp_EmailConfig_List";
+                var thisTask = Task.Run(() => SqlHelper.ExecuteDatasetAsync(_connString, spName, null));
+                var result = await thisTask;
 
+                return result.Tables[0].ToList<EmailConfig>();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
         public async Task<List<EmailConfig>> ListByAlertConfigId(int alertConfigId)
         {
             try

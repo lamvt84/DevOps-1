@@ -1,15 +1,37 @@
 ﻿@model DataAccess.SMDB.SmsConfig
 
-<br />
-<h2 class="text-info">@(Model.Id!=0 ? "Edit" : "Create") Group</h2>
-<br />
-
+<hr />
+<div class="text-center">
+    <h2 class="text-dark">@(Model.Id!=0 ? "Edit" : "Create") SMS</h2>
+</div>
 <div class="border container" style="padding:30px;">
     <form method="post">
         @if (Model.Id != 0)
         {
             <input type="hidden" asp-for="Id" />
         }
+        <div class="form-group row">
+            <div class="col-3">
+                Type
+            </div>
+            <div class="col-6">
+                @*@if (Model.AlertConfigId == 1)
+                {
+                    <input class="form-control" value="Alert when services down" disabled="disabled" />
+                }
+                else if (Model.AlertConfigId == 2)
+                {
+                    <input class="form-control" value="Alert when services up" disabled="disabled" />
+                }
+                else
+                {*@
+                    <select asp-for="AlertConfigId" class="form-control">
+                        <option value="1">Alert when services down</option>
+                        <option value="2">Alert when services up</option>
+                    </select>
+                @*}*@
+            </div>
+        </div>
         <div class="form-group row">
             <div class="col-3">
                 <label asp-for="AccountName"></label>

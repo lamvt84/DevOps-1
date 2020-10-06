@@ -107,12 +107,11 @@ namespace MVCSite.Controllers
         }
         public IActionResult EmailInsertOrUpdate(int? id)
         {
-            EmailConfig emailConfig = new EmailConfig();
             if (id == null)
             {
                 return NotFound();
             }
-            emailConfig = new EmailConfigImpl(ConnectionString).Get(id ?? default(int)).Result;
+            EmailConfig emailConfig = new EmailConfigImpl(ConnectionString).Get(id ?? default(int)).Result;
             if (emailConfig == null)
             {
                 return NotFound();
@@ -213,7 +212,7 @@ namespace MVCSite.Controllers
             {
                 smsConfig.DataSign = Encryption
                     .Md5Hash($"{smsConfig.AccountName}-{smsConfig.Mobile}-{smsConfig.Message}-{ExtendSettings.SecureKey}").ToLower();
-                smsConfig.AlertConfigId = 1;
+                //smsConfig.AlertConfigId = 1;
                 if (smsConfig.Id == 0)
                 {
                     //create

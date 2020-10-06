@@ -1,9 +1,9 @@
 ﻿@model GroupViewModel
 
-<br />
-<h2 class="text-info">@(Model.Groups.Id!=0 ? "Edit" : "Create") Group</h2>
-<br />
-
+<hr />
+<div class="text-center">
+    <h2 class="text-dark">@(Model.Groups.Id!=0 ? "Edit" : "Create") Group</h2>
+</div>
 <div class="border container" style="padding:30px;">
     <form method="post">
         @if (Model.Groups.Id != 0)
@@ -15,7 +15,7 @@
                 <label asp-for="Groups.Tag"></label>
             </div>
             <div class="col-6">
-                <select asp-for="Groups.Tag" asp-items="@(new SelectList(Model.GroupTag,"Tag","Tag"))" style="width: 200px; text-align: center">
+                <select asp-for="Groups.Tag" asp-items="@(new SelectList(Model.GroupTag,"Tag","Tag"))" class="form-control">
                     <option>== Choose ==</option>
                 </select>
             </div>

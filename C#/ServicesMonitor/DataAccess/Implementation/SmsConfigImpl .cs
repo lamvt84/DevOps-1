@@ -37,7 +37,21 @@ namespace DataAccess.Implementation
                 throw ex;
             }
         }
+        public async Task<List<SmsConfig>> List()
+        {
+            try
+            {
+                var spName = "dbo.usp_SmsConfig_List";
+                var thisTask = Task.Run(() => SqlHelper.ExecuteDatasetAsync(_connString, spName, null));
+                var result = await thisTask;
 
+                return result.Tables[0].ToList<SmsConfig>();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
         public async Task<List<SmsConfig>> ListByAlertConfigId(int alertConfigId)
         {
             try
@@ -59,9 +73,10 @@ namespace DataAccess.Implementation
             try
             {
                 var spName = "dbo.usp_SmsConfig_Update";
-                var parameterValues = new object[5]
+                var parameterValues = new object[6]
                 {
                     smsConfig.Id,
+                    smsConfig.AlertConfigId,
                     smsConfig.AccountName,
                     smsConfig.Mobile,
                     smsConfig.Message,

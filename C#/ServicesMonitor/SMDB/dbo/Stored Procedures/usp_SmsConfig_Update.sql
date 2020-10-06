@@ -1,5 +1,6 @@
 ﻿
-CREATE PROCEDURE dbo.usp_SmsConfig_Update @Id       INT, 
+CREATE PROCEDURE dbo.usp_SmsConfig_Update @Id       INT,
+                                            @AlertConfigId INT,
                                             @AccountName   VARCHAR(30), 
                                             @Mobile   VARCHAR(30), 
                                             @Message  NVARCHAR(130),
@@ -8,6 +9,7 @@ AS
     BEGIN
         UPDATE [dbo].[SmsConfig]
         SET [AccountName] = @AccountName
+            ,[AlertConfigId] = @AlertConfigId
             ,[Mobile] = @Mobile
             ,[Message] = @Message
             ,[DataSign] = @DataSign          
