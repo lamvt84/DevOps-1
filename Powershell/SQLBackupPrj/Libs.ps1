@@ -54,11 +54,26 @@ function Backup-Database {
     $Password = ConvertTo-SecureString $DbPassword -AsPlainText -Force
     $Credential = New-Object System.Management.Automation.PSCredential ($DbUser, $Password)
 
+    try {
+        $BackupPath = "{0}\{1}" -f $SqlBackupDir, $DbName		
+
+        if (!(Test-Path $BackupPath -PathType Container)) {  
+            New-Item -ItemType Directory -Force -Path $BackupPath
+            Write-Verbose "Folder path has been created successfully at: " $BackupPath    
+        }
+        else { 
+            Write-Verbose "The given folder path $BackupPath already exists"; 
+        }
+    }
+    catch {
+        Write-Verbose $Error[0]
+    }
+
     $params = @{
         SqlCredential    = $Credential
         SqlInstance      = $SqlInstance
         Database         = $DbName
-        BackupDirectory  = $SqlBackupDir
+        BackupDirectory  = $BackupPath
         BackupFileName   = $FileName
         Type             = $BackupType
         ReplaceInName    = $true
@@ -66,7 +81,7 @@ function Backup-Database {
         IgnoreFileChecks = $true
     }
 
-    Backup-DbaDatabase @params
+    Backup-DbaDatabase @params | Out-Null
 }
 
 function Get-BackupFileName {
