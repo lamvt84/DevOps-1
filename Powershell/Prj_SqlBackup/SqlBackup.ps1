@@ -1,7 +1,7 @@
 # ENTRY POINT MAIN()
 Param(
     [Parameter(Position = 1, Mandatory = $True, HelpMessage = "Backup Type: F - Full, D - Differential, L - Log", ValueFromPipeline = $true)]
-    [ValidateSet("F", "D", "L")]
+    #[ValidateSet("F", "D", "L")]
     [string]$Type
 )
 

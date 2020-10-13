@@ -18,7 +18,7 @@ function Invoke-ProcessSpecialCase {
     )
     
     Begin {
-        $config = Get-Content $rootPath\config.json | ConvertFrom-Json
+        $config = Get-Content $rootPath\config_old.json | ConvertFrom-Json
         $guid = New-Guid
         Write-Host "Guid: $guid"
         
@@ -139,7 +139,7 @@ function Invoke-ProcessCommonCaseAsync {
     Begin
     {
         # Init
-        $config = Get-Content $rootPath\config.json | ConvertFrom-Json
+        $config = Get-Content $rootPath\config_old.json | ConvertFrom-Json
         $guid = New-Guid
         Write-Host "Guid: $guid"
         
