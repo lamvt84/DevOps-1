@@ -1,19 +1,19 @@
-$rootPath = (Split-Path $MyInvocation.MyCommand.Path)
-. "$rootPath\Config.ps1"
-
+$Config = Get-Content "$(Split-Path $MyInvocation.MyCommand.Path)\Config.json" | ConvertFrom-Json
+#. "$rootPath\Config.ps1"
 # FUNCTION
 function Initialize-BackupProcess {
     [CmdletBinding()]
     Param
     (        
-        [Parameter(Position = 1, Mandatory = $True, HelpMessage = "Backup Type: F - Full, D - Differential, L - Log", ValueFromPipeline = $true)]
-        [ArgumentCompleter( {
-                $possibleValues = $ValidateBackupType
-                return $possibleValues | ForEach-Object { $_ }
-            })]
+        [Parameter(Position = 1, Mandatory = $True, HelpMessage = "Backup Type: F - Full, D - Differential, L - Log", ValueFromPipeline = $true)]     
         [string]$Type
     )
 
+    if (!$Config.ValidateBackupType.Contains($Type)) {
+        Write-Host "Error Input"
+        Break
+    }
+    
     # Check FCI current node
     $isPrimary = Get-ClusterCurrentStatus $env:COMPUTERNAME
     Write-Host "Current node $env:COMPUTERNAME status: $isPrimary"
@@ -21,11 +21,11 @@ function Initialize-BackupProcess {
         break
     }
     # Get all databases' name exclude system databases    
-    $DbArr = Get-DbaDatabase -SqlInstance $SqlInstance -ExcludeSystem | Where-Object { $SqlDbExclude -notcontains $_.Name } | Select-Object Name
-
+    $DbArr = Get-DbaDatabase -SqlInstance $Config.SqlInstance -ExcludeSystem | Where-Object { !$Config.SqlDbExclude.Contains($_.Name) } | Select-Object Name
+  
     # Do backup
     # Where DB not in $SqlDbExclude
-    foreach ($item in $DbArr) {       
+    foreach ($item in $DbArr) {
         $BackupType = Get-BackupType $Type
         $FileName = Get-BackupFileName $item.Name $Type
         $DBName = $item.Name
@@ -51,11 +51,8 @@ function Backup-Database {
         [string]$BackupType
     )
 
-    $Password = ConvertTo-SecureString $DbPassword -AsPlainText -Force
-    $Credential = New-Object System.Management.Automation.PSCredential ($DbUser, $Password)
-
     try {
-        $BackupPath = "{0}\{1}" -f $SqlBackupDir, $DbName		
+        $BackupPath = "{0}\{1}" -f $Config.SqlBackupDir, $DbName		
 
         if (!(Test-Path $BackupPath -PathType Container)) {  
             New-Item -ItemType Directory -Force -Path $BackupPath
@@ -70,8 +67,7 @@ function Backup-Database {
     }
 
     $params = @{
-        SqlCredential    = $Credential
-        SqlInstance      = $SqlInstance
+        SqlInstance      = $Config.SqlInstance
         Database         = $DbName
         BackupDirectory  = $BackupPath
         BackupFileName   = $FileName
@@ -80,7 +76,7 @@ function Backup-Database {
         CompressBackup   = $true
         IgnoreFileChecks = $true
     }
-
+    
     Backup-DbaDatabase @params | Out-Null
 }
 
@@ -194,6 +190,7 @@ function Get-ClusterCurrentStatus {
     Else {
         Write-Warning "Server does not exist"
     }
+
     if ($CheckNode) { $retVal = 1 } 
     else { $retVal = 0 }
     return $retVal
