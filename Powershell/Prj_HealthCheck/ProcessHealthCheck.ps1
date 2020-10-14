@@ -28,6 +28,21 @@ function Invoke-ProcessSpecialCase {
         $listId = @()
         $initScript = [scriptblock]::Create(". $PSScriptRoot/Libs.ps1")
 
+        # Check if MonitorSite is pause or not
+        $apiUrl = "$($config.RootUrl)/api_alert/Get?id=1"
+        try {
+            $AlertStatus = Invoke-WebRequest -Method GET -Uri $apiUrl -ContentType "application/json" | ConvertFrom-Json 
+        }
+        catch {        
+            Write-Verbose $Error[0]
+            Write-Host "Couldn't check alert Status"
+            Exit
+        }
+        if ($AlertStatus.pause_status -eq "OFF") {
+            Write-Host "Alert status is OFF"
+            Exit
+        }
+
         $apiUrl = "$($config.RootUrl)/api_service/GetList"        
         try {
             $list = Invoke-WebRequest -Method GET -Uri $apiUrl -ContentType "application/json" | ConvertFrom-Json 
@@ -150,6 +165,29 @@ function Invoke-ProcessCommonCaseAsync {
         $listId = @()
         $initScript = [scriptblock]::Create(". $PSScriptRoot/Libs.ps1")
 
+        # Check if MonitorSite is pause or not        
+        try {
+            $query = "SELECT * FROM dbo.AlertConfig WHERE Id = 1"
+            $dataSet = Invoke-DbaQuery -Query $query -SqlInstance $db -Database $config.Database -ErrorAction Stop `
+            | Select-Object Id, PauseStatus            
+        }
+        catch {                    
+            Write-Verbose $Error[0]
+            Write-Host "Couldn't check alert status"
+            Exit
+        }
+        if (($dataSet | Measure-Object).Count -gt 0) {
+            if ($dataSet[0].PauseStatus -eq 1) {
+                Write-Host "Couldn't check alert status"
+                Exit
+            }
+        }
+        else {
+            Write-Host "Couldn't check alert status"
+            Exit
+        }
+
+
         $query = "SELECT s.Id, s.Url, g.Tag, s.Status
                 FROM dbo.[Services] s 
                     LEFT JOIN dbo.Groups g ON s.GroupId = g.Id                     
@@ -158,7 +196,7 @@ function Invoke-ProcessCommonCaseAsync {
                     | Select-Object Id, Url, Tag, Status, @{Name = 'IpAddress'; Expression = { ($_.Url.Split("/")[2]).Split(":")[0] } }`
                                             , @{Name='Port';Expression={($_.Url.Split("/")[2]).Split(":")[1]}}
 
-        $dataSet | ft | Write-Verbose
+        $dataSet | Format-Table | Write-Verbose
         $dtStart = [datetime]::UtcNow
         Write-Verbose "START: $($dtStart)"
 
