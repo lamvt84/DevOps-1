@@ -29,6 +29,14 @@ namespace MVCSite.Models
             var alertConfigId = 2;
             try
             {
+                var alertConfig = await new AlertConfigImpl(ConnectionString).Get(alertConfigId);
+                if (alertConfig.PauseStatus == 0 && alertConfig.PausePeriod > (int)AlertRule.Level3) 
+                    await new AlertConfigImpl(ConnectionString).UpdateWarningStatus(new AlertConfig()
+                    {
+                        Id = alertConfig.Id,
+                        PauseStatus = 0,
+                        PausePeriod = (int)AlertRule.Level1
+                    });
                 var serviceList = await new ServicesImpl(ConnectionString).ListByGroupId(0);
                 var serviceChangedList = "";
 
@@ -45,7 +53,6 @@ namespace MVCSite.Models
                 };
 
                 await Task.WhenAll(tasks);
-               
             }
             catch (Exception)
             {

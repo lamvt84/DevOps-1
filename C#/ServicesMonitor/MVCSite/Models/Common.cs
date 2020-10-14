@@ -12,6 +12,7 @@ namespace MVCSite.Models
         public string SecureKey { get; set; }
         public string SendMailUrl { get; set; }
         public string SendSmsUrl { get; set; }
+        public int ServiceId { get; set; }
     }
 
     public class GroupTag

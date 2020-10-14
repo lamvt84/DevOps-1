@@ -73,13 +73,14 @@ namespace DataAccess.Implementation
             try
             {
                 var spName = "dbo.usp_SmsConfig_Update";
-                var parameterValues = new object[6]
+                var parameterValues = new object[7]
                 {
                     smsConfig.Id,
                     smsConfig.AlertConfigId,
                     smsConfig.AccountName,
                     smsConfig.Mobile,
                     smsConfig.Message,
+                    smsConfig.ServiceId,
                     smsConfig.DataSign
                 };
                 
@@ -98,12 +99,13 @@ namespace DataAccess.Implementation
             try
             {
                 var spName = "dbo.usp_SmsConfig_Add";
-                var parameterValues = new object[5]
+                var parameterValues = new object[6]
                 {
                     smsConfig.AlertConfigId,
                     smsConfig.AccountName,
                     smsConfig.Mobile,
                     smsConfig.Message,
+                    smsConfig.ServiceId,
                     smsConfig.DataSign
                 };
                 

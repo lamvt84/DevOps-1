@@ -186,6 +186,7 @@ namespace MVCSite.Controllers
                 emailConfig.DataSign = Encryption
                     .Md5Hash($"{emailConfig.ToMail}-{emailConfig.CCMail}-{ExtendSettings.SecureKey}").ToLower();
                 emailConfig.CCMail = (emailConfig.CCMail == null) ? "" : emailConfig.CCMail;
+                emailConfig.ServiceId = ExtendSettings.ServiceId;
 
                 if (emailConfig.Id == 0)
                 {
@@ -212,6 +213,7 @@ namespace MVCSite.Controllers
             {
                 smsConfig.DataSign = Encryption
                     .Md5Hash($"{smsConfig.AccountName}-{smsConfig.Mobile}-{smsConfig.Message}-{ExtendSettings.SecureKey}").ToLower();
+                smsConfig.ServiceId = ExtendSettings.ServiceId;
                 //smsConfig.AlertConfigId = 1;
                 if (smsConfig.Id == 0)
                 {

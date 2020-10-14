@@ -1,0 +1,13 @@
+﻿CREATE TABLE [dbo].[DbSummary]
+(
+	[Id] INT NOT NULL IDENTITY(1,1),
+	Date DATE,
+	DbName VARCHAR(50),
+	FileGroupName VARCHAR(50),
+	FileName VARCHAR(50),
+	FilePath VARCHAR(150),
+	TotalSizeKB NUMERIC(20,8),
+	TotalSizeMB NUMERIC(20,8),
+	TotalSizeGB NUMERIC(20,8),
+	CONSTRAINT PK_DbSummary PRIMARY KEY CLUSTERED (Id)
+)
