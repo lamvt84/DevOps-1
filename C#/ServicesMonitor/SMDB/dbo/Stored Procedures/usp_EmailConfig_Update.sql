@@ -5,6 +5,7 @@ CREATE PROCEDURE dbo.usp_EmailConfig_Update @Id         INT,
                                             @CCMail     VARCHAR(500), 
                                             @Subject    NVARCHAR(250), 
                                             @Message    NVARCHAR(MAX), 
+                                            @ServiceId INT,
                                             @DataSign   VARCHAR(100)
 AS
     BEGIN
@@ -15,6 +16,7 @@ AS
               [CCMail] = @CCMail, 
               [Subject] = @Subject, 
               [Message] = @Message, 
+              [ServiceId] = @ServiceId,
               [DataSign] = @DataSign, 
               [UpdatedTime] = SYSDATETIMEOFFSET()
         WHERE Id = @Id;

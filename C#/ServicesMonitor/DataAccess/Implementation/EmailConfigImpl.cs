@@ -72,7 +72,7 @@ namespace DataAccess.Implementation
             try
             {
                 var spName = "dbo.usp_EmailConfig_Update";
-                var parameterValues = new object[7]
+                var parameterValues = new object[8]
                 {
                     emailConfig.Id,
                     emailConfig.SenderName,
@@ -80,6 +80,7 @@ namespace DataAccess.Implementation
                     emailConfig.CCMail,
                     emailConfig.Subject,
                     emailConfig.Message,
+                    emailConfig.ServiceId,
                     emailConfig.DataSign
             };
                 
