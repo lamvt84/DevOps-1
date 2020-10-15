@@ -9,7 +9,7 @@ $rootPath = (Split-Path $MyInvocation.MyCommand.Path)
 
 function Invoke-ProcessSpecialCase {
     [CmdletBinding()]
-    Param(       
+    Param(
         [Parameter(
             Mandatory = $True,
             ValueFromPipeline = $True)]    
@@ -18,7 +18,7 @@ function Invoke-ProcessSpecialCase {
     )
     
     Begin {
-        $config = Get-Content $rootPath\config_old.json | ConvertFrom-Json
+        $config = Get-Content $rootPath\config.json | ConvertFrom-Json
         $guid = New-Guid
         Write-Host "Guid: $guid"
         
@@ -27,6 +27,21 @@ function Invoke-ProcessSpecialCase {
         $errorCount = 0
         $listId = @()
         $initScript = [scriptblock]::Create(". $PSScriptRoot/Libs.ps1")
+
+        # Check if MonitorSite is pause or not
+        $apiUrl = "$($config.RootUrl)/api_alert/Get?id=1"
+        try {
+            $AlertStatus = Invoke-WebRequest -Method GET -Uri $apiUrl -ContentType "application/json" | ConvertFrom-Json 
+        }
+        catch {        
+            Write-Verbose $Error[0]
+            Write-Host "Couldn't check alert Status"
+            Exit
+        }
+        if ($AlertStatus.pause_status -eq "OFF") {
+            Write-Host "Alert status is OFF"
+            Exit
+        }
 
         $apiUrl = "$($config.RootUrl)/api_service/GetList"        
         try {
@@ -139,29 +154,57 @@ function Invoke-ProcessCommonCaseAsync {
     Begin
     {
         # Init
-        $config = Get-Content $rootPath\config_old.json | ConvertFrom-Json
+        $config = Get-Content $rootPath\config.json | ConvertFrom-Json
         $guid = New-Guid
         Write-Host "Guid: $guid"
+
+        $db = Connect-DbaInstance -SqlInstance $config.SqlInstance
         
         $ErrorActionPreference = "SilentlyContinue"
         $errorCount = 0
         $listId = @()
         $initScript = [scriptblock]::Create(". $PSScriptRoot/Libs.ps1")
 
+        # Check if MonitorSite is pause or not        
+        try {
+            $query = "SELECT * FROM dbo.AlertConfig WHERE Id = 1"
+            $dataSet = Invoke-DbaQuery -Query $query -SqlInstance $db -Database $config.Database -ErrorAction Stop `
+            | Select-Object Id, PauseStatus            
+        }
+        catch {                    
+            Write-Verbose $Error[0]
+            Write-Host "Couldn't check alert status"
+            Exit
+        }
+        if (($dataSet | Measure-Object).Count -gt 0) {
+            if ($dataSet[0].PauseStatus -eq 1) {
+                Write-Host "Couldn't check alert status"
+                Exit
+            }
+        }
+        else {
+            Write-Host "Couldn't check alert status"
+            Exit
+        }
+
+
         $query = "SELECT s.Id, s.Url, g.Tag, s.Status
                 FROM dbo.[Services] s 
                     LEFT JOIN dbo.Groups g ON s.GroupId = g.Id                     
                 WHERE s.Enable = 1 AND s.SpecialCase = 0"
-        $dataSet = Invoke-SqlCmd -Query $query -ServerInstance $config.SqlInstance -Username $config.User -Password $config.Password -Database $config.Database `
+        $dataSet = Invoke-DbaQuery -Query $query -SqlInstance $db -Database $config.Database -ErrorAction Stop `
                     | Select-Object Id, Url, Tag, Status, @{Name = 'IpAddress'; Expression = { ($_.Url.Split("/")[2]).Split(":")[0] } }`
                                             , @{Name='Port';Expression={($_.Url.Split("/")[2]).Split(":")[1]}}
+
+        $dataSet | Format-Table | Write-Verbose
         $dtStart = [datetime]::UtcNow
-        $query = "EXEC [dbo].[usp_ServicesLog_Add]
-                    @JournalGuid = '$Guid',
-                    @ServiceId = '0',
-                    @ServiceUrl = '',
-                    @ServiceStatus = 'START'"
-        Invoke-SqlCmd -Query $query -ServerInstance $config.SqlInstance -Username $config.User -Password $config.Password -Database $config.Database -ErrorAction Stop
+        Write-Verbose "START: $($dtStart)"
+
+        $query = "INSERT dbo.ServicesLog (JournalGuid, ServiceId, ServiceUrl, ServiceStatus) VALUES ('$guid', 0, '', 'START')"
+        Invoke-DbaQuery -Query $query -SqlInstance $db -Database $config.Database -ErrorAction Stop 
+
+        Write-Host "# Init: $([datetime]::UtcNow - $dtStart)"
+        $query = ""
     }
     Process
     {              
@@ -208,24 +251,19 @@ function Invoke-ProcessCommonCaseAsync {
             $report = Receive-Job -Job $jobs -Wait -AutoRemoveJob
             Write-Verbose "RESULT..." 
             $report | Select-Object | Format-Table  | Out-String | Write-Verbose
-
+            Write-Host "# Test: $([datetime]::UtcNow - $dtStart)"
             try {
-                $scope = New-Object -TypeName System.Transactions.TransactionScope
-
+                #$scope = New-Object -TypeName System.Transactions.TransactionScope
+                
                 $report | ForEach-Object {
                     $item = $_ | ConvertTo-Json -Depth 2 | ConvertFrom-Json
 
-                    $query = "EXEC [dbo].[usp_ServicesLog_Add] 
-                        @JournalGuid = '$guid',
-                        @ServiceId = '$($item.Id)',
-                        @ServiceUrl = '$(if ($item.CheckType -eq "API") { $item.Object } else { $item.Object + ":" + $item.Port })',
-                        @ServiceStatus = '$(if ($item.Status) { "OK"} else { "ERROR" })'"
-                    Invoke-SqlCmd -Query $query -ServerInstance $config.SqlInstance -Username $config.User -Password $config.Password -Database $config.Database -ErrorAction Stop
+                    $query += "INSERT dbo.ServicesLog (JournalGuid, ServiceId, ServiceUrl, ServiceStatus) 
+                            VALUES ('$Guid', $($item.Id), '$(if ($item.CheckType -eq "API") { $item.Object } else { $item.Object + ":" + $item.Port })', '$(if ($item.Status) { "OK"} else { "ERROR" })')
+                    "                    
                     
-                    $query = "EXEC [dbo].[usp_Services_UpdateStatus] 
-                        @Id = '$($item.Id)', 
-                        @Status = '$(if ($item.Status) { 1 } else { 0 })'"
-                    Invoke-SqlCmd -Query $query -ServerInstance $config.SqlInstance -Username $config.User -Password $config.Password -Database $config.Database -ErrorAction Stop                    
+                    $query += "UPDATE dbo.Services SET Status = $(if ($item.Status) { 1 } else { 0 }), UpdatedTime = SYSDATETIMEOFFSET() WHERE Id = $($item.Id)
+                    "                    
 
                     if ($item.status -eq $False) { $errorCount += 1 }
                     elseif ($item.CurrStatus -eq 0) { $listId += $item.Id }                     
@@ -235,18 +273,16 @@ function Invoke-ProcessCommonCaseAsync {
                 $_.exception.message
             }
             finally {
-                $scope.Complete();
-                $scope.Dispose() 
-            }            
+                #$scope.Complete();
+                #$scope.Dispose() 
+            }
+            Invoke-DbaQuery -Query $query -SqlInstance $db -Database $config.Database -ErrorAction Stop
+            Write-Host "# Update data: $([datetime]::UtcNow - $dtStart)"          
         }  
     }
     End {           
-        $query = "EXEC [dbo].[usp_ServicesLog_Add] 
-                @JournalGuid = '$guid',
-                @ServiceId = '0',
-                @ServiceUrl = '',
-                @ServiceStatus = 'END'"
-        Invoke-SqlCmd -Query $query -ServerInstance $config.SqlInstance -Username $config.User -Password $config.Password -Database $config.Database -ErrorAction Stop
+        $query = "INSERT dbo.ServicesLog (JournalGuid, ServiceId, ServiceUrl, ServiceStatus) VALUES ('$guid', 0, '', 'END')"
+        Invoke-DbaQuery -Query $query -SqlInstance $db -Database $config.Database -ErrorAction Stop        
         Write-Host "Total time elapsed: $([datetime]::UtcNow - $dtStart)"
         if ($errorCount -gt 0) {
             try {                
