@@ -5,7 +5,6 @@ Param(
     $Object
 )
 $rootPath = (Split-Path $MyInvocation.MyCommand.Path)
-. $rootPath/Libs.ps1
 
 function Invoke-ProcessSpecialCase {
     [CmdletBinding()]
@@ -26,7 +25,7 @@ function Invoke-ProcessSpecialCase {
         
         $errorCount = 0
         $listId = @()
-        $initScript = [scriptblock]::Create(". $PSScriptRoot/Libs.ps1")
+        $initScript = [scriptblock]::Create("Import-Module $($config.RootModulePath)/HealthCheck")
 
         # Check if MonitorSite is pause or not
         $apiUrl = "$($config.RootUrl)/api_alert/Get?id=1"
@@ -50,27 +49,37 @@ function Invoke-ProcessSpecialCase {
         catch {        
             Write-Verbose $Error[0]
         }
+        $dtStart = [datetime]::UtcNow
         
         $dataSet = $list.data | Where-Object { $Object -contains $_.id -AND $_.specialCase -eq 1 -AND $_.enable -eq 1 } `
                     | Select-Object Id, Url, groupTag, Status, @{Name = 'IpAddress'; Expression = { ($_.Url.Split("/")[2]).Split(":")[0] } }`
                                             , @{Name='Port';Expression={($_.Url.Split("/")[2]).Split(":")[1]}}
-        $dtStart = [datetime]::UtcNow
+        
+        Write-Host "# Init: $([datetime]::UtcNow - $dtStart)"
     }
     Process {        
         if (($dataSet | Measure-Object).Count -gt 0)
         {               
             $scriptBlock = [scriptblock] `
-            {                    
+            {
                 param($data, $config, $guid)
                 $temp = "" | Select-Object Id, Object, Port, CheckType, Status, Notes, CurrStatus
                 try {   
                     $response = switch ($data.groupTag) {
                         "API" {
-                            Test-HealthCheck -Object $data.url -GroupTag $data.groupTag
+                            Invoke-HealthCheck -Object $data.url -Api
+                            break
+                        }
+                        "TCP" {
+                            Invoke-HealthCheck -Object $data.IpAddress -Port $data.Port -Tcp
+                            break
+                        }
+                        "UDP" {
+                            Invoke-HealthCheck -Object $data.IpAddress -Port $data.Port -Udp
                             break
                         }
                         default {                    
-                            Test-HealthCheck -Object $data.IpAddress -Port $data.Port -GroupTag $data.groupTag
+                            Write-Verbose "Nothing to do"
                             break
                         }
                     }                    
@@ -99,6 +108,7 @@ function Invoke-ProcessSpecialCase {
             $report = Receive-Job -Job $jobs -Wait -AutoRemoveJob
             Write-Verbose "RESULT..."
             $report | Select-Object | Format-Table  | Out-String | Write-Verbose
+            Write-Host "# Test: $([datetime]::UtcNow - $dtStart)"
         }
     }
     End {
@@ -160,10 +170,10 @@ function Invoke-ProcessCommonCaseAsync {
 
         $db = Connect-DbaInstance -SqlInstance $config.SqlInstance
         
-        $ErrorActionPreference = "SilentlyContinue"
+        #$ErrorActionPreference = "SilentlyContinue"
         $errorCount = 0
         $listId = @()
-        $initScript = [scriptblock]::Create(". $PSScriptRoot/Libs.ps1")
+        $initScript = [scriptblock]::Create("Import-Module $($config.RootModulePath)/HealthCheck")
 
         # Check if MonitorSite is pause or not        
         try {
@@ -187,7 +197,6 @@ function Invoke-ProcessCommonCaseAsync {
             Exit
         }
 
-
         $query = "SELECT s.Id, s.Url, g.Tag, s.Status
                 FROM dbo.[Services] s 
                     LEFT JOIN dbo.Groups g ON s.GroupId = g.Id                     
@@ -196,7 +205,7 @@ function Invoke-ProcessCommonCaseAsync {
                     | Select-Object Id, Url, Tag, Status, @{Name = 'IpAddress'; Expression = { ($_.Url.Split("/")[2]).Split(":")[0] } }`
                                             , @{Name='Port';Expression={($_.Url.Split("/")[2]).Split(":")[1]}}
 
-        $dataSet | Format-Table | Write-Verbose
+        $dataSet | Write-Verbose
         $dtStart = [datetime]::UtcNow
         Write-Verbose "START: $($dtStart)"
 
@@ -209,19 +218,28 @@ function Invoke-ProcessCommonCaseAsync {
     Process
     {              
         if (($dataSet | Measure-Object).Count -gt 0) 
-        {    
+        {                
             $scriptBlock = [scriptblock] `
-            {    
+            {  
                 param($data, $config, $guid)
                 $temp = "" | Select-Object Id, Object, Port, CheckType, Status, Notes, CurrStatus
-                try {
+                            
+                try {                    
                     $response = switch ($data.Tag) {
                         "API" {
-                            Test-HealthCheck -Object $data.Url -GroupTag $data.Tag
+                            Invoke-HealthCheck -Object $data.Url -Api
+                            break
+                        }
+                        "TCP" {
+                            Invoke-HealthCheck -Object $data.IpAddress -Port $data.Port -Tcp
+                            break
+                        }
+                        "UDP" {
+                            Invoke-HealthCheck -Object $data.IpAddress -Port $data.Port -Udp
                             break
                         }
                         default {                    
-                            Test-HealthCheck -Object $data.IpAddress -Port $data.Port -GroupTag $data.Tag
+                            Write-Verbose "Nothing to do"
                             break
                         }
                     } 
@@ -240,7 +258,7 @@ function Invoke-ProcessCommonCaseAsync {
                 $temp
             }
             
-            $jobs = $dataSet | ForEach-Object { 
+            $jobs = $dataSet | ForEach-Object {
                 $params = ($_, $config, $guid)
                 Start-ThreadJob -ThrottleLimit $(($dataSet | Measure-Object).Count) -ArgumentList $params -ScriptBlock $scriptBlock `
                     -InitializationScript $initScript
@@ -252,12 +270,10 @@ function Invoke-ProcessCommonCaseAsync {
             Write-Verbose "RESULT..." 
             $report | Select-Object | Format-Table  | Out-String | Write-Verbose
             Write-Host "# Test: $([datetime]::UtcNow - $dtStart)"
-            try {
-                #$scope = New-Object -TypeName System.Transactions.TransactionScope
-                
+            try {				
                 $report | ForEach-Object {
                     $item = $_ | ConvertTo-Json -Depth 2 | ConvertFrom-Json
-
+			
                     $query += "INSERT dbo.ServicesLog (JournalGuid, ServiceId, ServiceUrl, ServiceStatus) 
                             VALUES ('$Guid', $($item.Id), '$(if ($item.CheckType -eq "API") { $item.Object } else { $item.Object + ":" + $item.Port })', '$(if ($item.Status) { "OK"} else { "ERROR" })')
                     "                    
@@ -273,8 +289,7 @@ function Invoke-ProcessCommonCaseAsync {
                 $_.exception.message
             }
             finally {
-                #$scope.Complete();
-                #$scope.Dispose() 
+               
             }
             Invoke-DbaQuery -Query $query -SqlInstance $db -Database $config.Database -ErrorAction Stop
             Write-Host "# Update data: $([datetime]::UtcNow - $dtStart)"          
