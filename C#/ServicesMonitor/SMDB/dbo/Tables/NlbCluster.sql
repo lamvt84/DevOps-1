@@ -1,0 +1,8 @@
+﻿CREATE TABLE [dbo].[NlbCluster]
+(
+	[Id] INT NOT NULL IDENTITY(1,1) CONSTRAINT PK_NlbServiceMapping PRIMARY KEY CLUSTERED,
+	[ClusterName] VARCHAR(120), 
+	HostName VARCHAR(120),
+	NodeName VARCHAR(120),
+	CreatedTime DATETIMEOFFSET CONSTRAINT DF_NlbServiceMapping_CreatedTime DEFAULT SYSDATETIMEOFFSET()	
+)

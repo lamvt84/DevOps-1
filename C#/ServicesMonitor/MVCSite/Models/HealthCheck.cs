@@ -16,16 +16,13 @@ namespace MVCSite.Models
     public partial class HealthCheck
     {
         private string ConnectionString { get; }
-        private ExtendSettings ExtendSettings { get; set; }
-        public HealthCheck(IOptionsSnapshot<ExtendSettings> settings = null)
+        public HealthCheck()
         {
-            if (settings != null) ExtendSettings = settings.Value;
             ConnectionString = Startup.ConnectionString;
         }
 
         public async Task SendStatusChangedAlert(Guid jGuid, string listId, ExtendSettings extendSettings)
         {
-            ExtendSettings ??= extendSettings;
             var alertConfigId = 2;
             try
             {
@@ -48,8 +45,8 @@ namespace MVCSite.Models
 
                 var tasks = new List<Task>
                 {
-                    SendAlertEmail(jGuid, alertConfigId, serviceChangedList),
-                    SendAlertSms(alertConfigId)
+                    SendAlertEmail(jGuid, alertConfigId, serviceChangedList, extendSettings),
+                    SendAlertSms(alertConfigId, extendSettings)
                 };
 
                 await Task.WhenAll(tasks);
@@ -62,7 +59,6 @@ namespace MVCSite.Models
 
         public async Task SendAlert(Guid jGuid, ExtendSettings extendSettings)
         {
-            ExtendSettings ??= extendSettings;
             var alertConfigId = 1;
             try
             {
@@ -99,8 +95,8 @@ namespace MVCSite.Models
                     }
                     var tasks = new List<Task>
                     {
-                        SendAlertEmail(jGuid, alertConfigId, serviceErrorList),
-                        SendAlertSms(alertConfigId)
+                        SendAlertEmail(jGuid, alertConfigId, serviceErrorList, extendSettings),
+                        SendAlertSms(alertConfigId, extendSettings)
                     };
 
                     await Task.WhenAll(tasks);
@@ -112,7 +108,7 @@ namespace MVCSite.Models
             }
         }
 
-        private async Task SendAlertEmail(Guid jGuid, int alertConfigId, string serviceErrorList)
+        private async Task SendAlertEmail(Guid jGuid, int alertConfigId, string serviceErrorList, ExtendSettings extendSettings)
         {
             using var client = new HttpClient();
             try
@@ -137,13 +133,13 @@ namespace MVCSite.Models
 
                     using var stringContent = new StringContent(JsonConvert.SerializeObject(emailSetting), System.Text.Encoding.UTF8, "application/json");
                     //var response = await client.PostAsync(new Uri(ExtendSettings.SendMailUrl), stringContent);
-                    var response = await client.PostAsync(new Uri(ExtendSettings.SendMailUrl), stringContent);
+                    var response = await client.PostAsync(new Uri(extendSettings.SendMailUrl), stringContent);
                     var responseMessage = await response.Content.ReadAsStringAsync();
 
                     var alertLog = new AlertLog()
                     {
                         AlertType = "EMAIL",
-                        AlertUrl = ExtendSettings.SendMailUrl,
+                        AlertUrl = extendSettings.SendMailUrl,
                         RequestMessage = JsonConvert.SerializeObject(emailSetting),
                         ResponseMessage = responseMessage
                     };
@@ -156,7 +152,7 @@ namespace MVCSite.Models
             }
         }
 
-        private async Task SendAlertSms(int alertConfigId)
+        private async Task SendAlertSms(int alertConfigId, ExtendSettings extendSettings)
         {
             using var client = new HttpClient();
             try
@@ -177,13 +173,13 @@ namespace MVCSite.Models
                     };
 
                     using var stringContent = new StringContent(JsonConvert.SerializeObject(smsSetting), System.Text.Encoding.UTF8, "application/json");
-                    var response = await client.PostAsync(new Uri(ExtendSettings.SendSmsUrl), stringContent);
+                    var response = await client.PostAsync(new Uri(extendSettings.SendSmsUrl), stringContent);
                     var responseMessage = await response.Content.ReadAsStringAsync();
                     
                     var alertLog = new AlertLog()
                     {
                         AlertType = "SMS",
-                        AlertUrl = ExtendSettings.SendSmsUrl,
+                        AlertUrl = extendSettings.SendSmsUrl,
                         RequestMessage = JsonConvert.SerializeObject(smsSetting),
                         ResponseMessage = responseMessage
                     };

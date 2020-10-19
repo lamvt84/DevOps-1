@@ -1,14 +1,14 @@
 $manifest = @{
-    Path                = 'HealthCheck.psd1'
-    RootModule          = 'HealthCheck.psm1' 
+    Path                = 'NetworkLB.psd1'
+    RootModule          = 'NetworkLB.psm1' 
     Author              = 'Louis Vu'
     CompanyName         = 'IrisTech'
-    FunctionsToExport   = 'Invoke-HealthCheck'
+    FunctionsToExport   = 'Invoke-NetworkLoadBalancing'
     CmdletsToExport     = ''
     VariablesToExport   = ''
     AliasesToExport     = ''
     PowerShellVersion   = '5.0'
-    Tags                = 'HealthCheck', 'Troubleshooting', 'Testing'
+    Tags                = 'NetworkLoadBalancing', 'Troubleshooting', 'Testing'
 
 }
 New-ModuleManifest @manifest

@@ -105,4 +105,11 @@
     <Property Name="ParentElementType" Value="SqlTable" />
     <Property Name="NewName" Value="Tag" />
   </Operation>
+  <Operation Name="Rename Refactor" Key="21a6683c-8c23-40fa-8121-30895ed75273" ChangeDateTime="10/16/2020 09:31:12">
+    <Property Name="ElementName" Value="[dbo].[NlbCluster].[ClusterGroupName]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[NlbCluster]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="ClusterName" />
+  </Operation>
 </Operations>

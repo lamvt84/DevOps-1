@@ -2,9 +2,10 @@
 Param(    
     [Parameter(Mandatory = $False, ValueFromPipeline = $True)]    
     [array]
-    $Object
+    $Object    
 )
 $rootPath = (Split-Path $MyInvocation.MyCommand.Path)
+$config = Get-Content $rootPath\config.json | ConvertFrom-Json
 
 function Invoke-ProcessSpecialCase {
     [CmdletBinding()]
@@ -16,8 +17,7 @@ function Invoke-ProcessSpecialCase {
         $Object # ServiceId list
     )
     
-    Begin {
-        $config = Get-Content $rootPath\config.json | ConvertFrom-Json
+    Begin {        
         $guid = New-Guid
         Write-Host "Guid: $guid"
         
@@ -52,54 +52,35 @@ function Invoke-ProcessSpecialCase {
         $dtStart = [datetime]::UtcNow
         
         $dataSet = $list.data | Where-Object { $Object -contains $_.id -AND $_.specialCase -eq 1 -AND $_.enable -eq 1 } `
-                    | Select-Object Id, Url, groupTag, Status, @{Name = 'IpAddress'; Expression = { ($_.Url.Split("/")[2]).Split(":")[0] } }`
-                                            , @{Name='Port';Expression={($_.Url.Split("/")[2]).Split(":")[1]}}
+        | Select-Object Id, Url, groupTag, Status, NlbClusterId, @{Name = 'IpAddress'; Expression = { ($_.Url.Split("/")[2]).Split(":")[0] } }`
+            , @{Name = 'Port'; Expression = { ($_.Url.Split("/")[2]).Split(":")[1] } }
         
         Write-Host "# Init: $([datetime]::UtcNow - $dtStart)"
     }
     Process {        
-        if (($dataSet | Measure-Object).Count -gt 0)
-        {               
+        if (($dataSet | Measure-Object).Count -gt 0) {               
             $scriptBlock = [scriptblock] `
             {
-                param($data, $config, $guid)
-                $temp = "" | Select-Object Id, Object, Port, CheckType, Status, Notes, CurrStatus
-                try {   
-                    $response = switch ($data.groupTag) {
-                        "API" {
-                            Invoke-HealthCheck -Object $data.url -Api
-                            break
-                        }
-                        "TCP" {
-                            Invoke-HealthCheck -Object $data.IpAddress -Port $data.Port -Tcp
-                            break
-                        }
-                        "UDP" {
-                            Invoke-HealthCheck -Object $data.IpAddress -Port $data.Port -Udp
-                            break
-                        }
-                        default {                    
-                            Write-Verbose "Nothing to do"
-                            break
-                        }
-                    }                    
-                    
-                    $temp.Id = $data.Id
-                    $temp.CurrStatus = $data.Status
-                    $temp.Object = $response[0].Object
-                    $temp.Port = $response[0].Port    
-                    $temp.CheckType = $data.groupTag
-                    $temp.Status = $response[0].Status
-                    $temp.Notes = $response[0].Notes   
-                }
-                catch {
-                    Write-Verbose "$($Error[0]) = $($data.Url)"                    
-                }
+                param($data, $ref)
+                $temp = "" | Select-Object Id, Url, IpAddress, Port, Tag, Status, Notes, CurrStatus, NlbClusterId
+             
+                $response = Invoke-HealthCheck -Url $data.Url -IpAddress $data.IpAddress -Port $data.Port -Tag $data.groupTag -Verbose:$ref
+
+                $temp.Id = $data.Id
+                $temp.CurrStatus = $data.Status	
+                $temp.Url = $data.Url				
+                $temp.IpAddress = $data.IpAddress
+                $temp.Port = $data.Port   
+                $temp.Tag = $data.groupTag
+                $temp.NlbClusterId = $data.NlbClusterId				
+                $temp.Status = $response.Status
+                $temp.Notes = $response.Notes
+								
                 $temp
             }
             
             $jobs = $dataSet | ForEach-Object {
-                $params = ($_, $config, $guid)
+                $params = ($_, $VerbosePreference)
                 Start-ThreadJob -ThrottleLimit $(($dataSet | Measure-Object).Count) -ArgumentList $params -ScriptBlock $scriptBlock `
                     -InitializationScript $initScript
             }
@@ -107,23 +88,23 @@ function Invoke-ProcessSpecialCase {
             
             $report = Receive-Job -Job $jobs -Wait -AutoRemoveJob
             Write-Verbose "RESULT..."
-            $report | Select-Object | Format-Table  | Out-String | Write-Verbose
+            $report | Format-Table | Out-String -Stream | Where-Object { $_ -ne "" } | Write-Verbose
+
             Write-Host "# Test: $([datetime]::UtcNow - $dtStart)"
         }
     }
     End {
-        if (($dataSet | Measure-Object).Count -gt 0) 
-        {
+        if (($dataSet | Measure-Object).Count -gt 0) {
             Write-Host "Total time elapsed: $([datetime]::UtcNow - $dtStart)"
-            $uri = "{0}/api/UpdateHealthCheckSpecialCase?serviceId={1}&jGuid={2}&status=START&url=N" -f $config.RootUrl,$_.Id,$guid
+            $uri = "{0}/api/UpdateHealthCheckSpecialCase?serviceId={1}&jGuid={2}&status=START&url=N" -f $config.RootUrl, $_.Id, $guid
             Invoke-WebRequest -Method POST -Uri $uri -ContentType "application/json" | Out-Null  
             
             $report | ForEach-Object {
                 try {
                     
                     $uri = "{0}/api/UpdateHealthCheckSpecialCase?serviceId={1}&jGuid={2}&status={3}&url={4}" `
-                            -f $config.RootUrl,$_.Id,$guid,$(if ($_.Status) { "OK" } else { "ERROR" }),`
-                            $(if ($_.CheckType -eq "API") { $_.Object } else { $_.Object + ":" + $_.Port })
+                        -f $config.RootUrl, $_.Id, $guid, $(if ($_.Status) { "OK" } else { "ERROR" }), `
+                    $(if ($_.CheckType -eq "API") { $_.Object } else { $_.Object + ":" + $_.Port })
                 
                     Invoke-WebRequest -Method POST -Uri $uri -ContentType "application/json" | Out-Null
                     Write-Verbose $_.Id
@@ -133,15 +114,16 @@ function Invoke-ProcessSpecialCase {
                 catch {
                     Write-Verbose $Error[0]        
                 }
-                if ($_.Status -eq $False) { $errorCount += 1}
+                if ($_.Status -eq $False) { $errorCount += 1 }
             }
-            $uri = "{0}/api/UpdateHealthCheckSpecialCase?serviceId={1}&jGuid={2}&status=END&url=N" -f $config.RootUrl,$_.Id,$guid
+            $uri = "{0}/api/UpdateHealthCheckSpecialCase?serviceId={1}&jGuid={2}&status=END&url=N" -f $config.RootUrl, $_.Id, $guid
             Invoke-WebRequest -Method POST -Uri $uri -ContentType "application/json" | Out-Null 
 
             if ($errorCount -gt 0) {
                 try {
-                    $uri = "{0}/api/SendAlert?jGuid={1}" -f $config.RootUrl,$guid
-                    Invoke-WebRequest -Method POST -Uri $uri -ContentType "application/json" | Out-Null
+                    $uri = "{0}/api/SendAlert?jGuid={1}" -f $config.RootUrl, $guid
+                    Write-Host $uri
+                    Invoke-WebRequest -Method POST -Uri $uri -ContentType "application/json"
                 }
                 catch {
                     Write-Verbose $Error[0]   
@@ -161,16 +143,16 @@ function Invoke-ProcessSpecialCase {
 }
 
 function Invoke-ProcessCommonCaseAsync { 
-    Begin
-    {
-        # Init
-        $config = Get-Content $rootPath\config.json | ConvertFrom-Json
+    [cmdletbinding()]
+    param()
+    Begin {
+        # Init        
         $guid = New-Guid
         Write-Host "Guid: $guid"
 
         $db = Connect-DbaInstance -SqlInstance $config.SqlInstance
         
-        #$ErrorActionPreference = "SilentlyContinue"
+        $ErrorActionPreference = "SilentlyContinue"
         $errorCount = 0
         $listId = @()
         $initScript = [scriptblock]::Create("Import-Module $($config.RootModulePath)/HealthCheck")
@@ -197,13 +179,13 @@ function Invoke-ProcessCommonCaseAsync {
             Exit
         }
 
-        $query = "SELECT s.Id, s.Url, g.Tag, s.Status
+        $query = "SELECT s.Id, s.Url, g.Tag, s.Status, s.NlbClusterId
                 FROM dbo.[Services] s 
                     LEFT JOIN dbo.Groups g ON s.GroupId = g.Id                     
                 WHERE s.Enable = 1 AND s.SpecialCase = 0"
         $dataSet = Invoke-DbaQuery -Query $query -SqlInstance $db -Database $config.Database -ErrorAction Stop `
-                    | Select-Object Id, Url, Tag, Status, @{Name = 'IpAddress'; Expression = { ($_.Url.Split("/")[2]).Split(":")[0] } }`
-                                            , @{Name='Port';Expression={($_.Url.Split("/")[2]).Split(":")[1]}}
+        | Select-Object Id, Url, Tag, Status, NlbClusterId, @{Name = 'IpAddress'; Expression = { ($_.Url.Split("/")[2]).Split(":")[0] } }`
+            , @{Name = 'Port'; Expression = { ($_.Url.Split("/")[2]).Split(":")[1] } }
 
         $dataSet | Write-Verbose
         $dtStart = [datetime]::UtcNow
@@ -214,61 +196,41 @@ function Invoke-ProcessCommonCaseAsync {
 
         Write-Host "# Init: $([datetime]::UtcNow - $dtStart)"
         $query = ""
+        $ClusterServiceMapping = @()
     }
-    Process
-    {              
-        if (($dataSet | Measure-Object).Count -gt 0) 
-        {                
+    Process {              
+        if (($dataSet | Measure-Object).Count -gt 0) {                
             $scriptBlock = [scriptblock] `
             {  
-                param($data, $config, $guid)
-                $temp = "" | Select-Object Id, Object, Port, CheckType, Status, Notes, CurrStatus
-                            
-                try {                    
-                    $response = switch ($data.Tag) {
-                        "API" {
-                            Invoke-HealthCheck -Object $data.Url -Api
-                            break
-                        }
-                        "TCP" {
-                            Invoke-HealthCheck -Object $data.IpAddress -Port $data.Port -Tcp
-                            break
-                        }
-                        "UDP" {
-                            Invoke-HealthCheck -Object $data.IpAddress -Port $data.Port -Udp
-                            break
-                        }
-                        default {                    
-                            Write-Verbose "Nothing to do"
-                            break
-                        }
-                    } 
-                    
-                    $temp.Id = $data.Id
-                    $temp.CurrStatus = $data.Status
-                    $temp.Object = $response[0].Object
-                    $temp.Port = $response[0].Port    
-                    $temp.CheckType = $data.Tag
-                    $temp.Status = $response[0].Status
-                    $temp.Notes = $response[0].Notes   
-                }
-                catch {
-                    Write-Verbose "$($Error[0]) = $($data.Url)"                    
-                }                
+                param($data, $ref)
+                $temp = "" | Select-Object Id, Url, IpAddress, Port, Tag, Status, Notes, CurrStatus, NlbClusterId
+             
+                $response = Invoke-HealthCheck -Url $data.Url -IpAddress $data.IpAddress -Port $data.Port -Tag $data.Tag -Verbose:$ref
+
+                $temp.Id = $data.Id
+                $temp.CurrStatus = $data.Status	
+                $temp.Url = $data.Url				
+                $temp.IpAddress = $data.IpAddress
+                $temp.Port = $data.Port   
+                $temp.Tag = $data.Tag
+                $temp.NlbClusterId = $data.NlbClusterId				
+                $temp.Status = $response.Status
+                $temp.Notes = $response.Notes
+								
                 $temp
             }
             
             $jobs = $dataSet | ForEach-Object {
-                $params = ($_, $config, $guid)
+                $params = ($_, $VerbosePreference)
                 Start-ThreadJob -ThrottleLimit $(($dataSet | Measure-Object).Count) -ArgumentList $params -ScriptBlock $scriptBlock `
                     -InitializationScript $initScript
             }
-
+			
             Write-Verbose "Waiting for $(($jobs | Measure-Object).Count) jobs to complete..."
-            
             $report = Receive-Job -Job $jobs -Wait -AutoRemoveJob
             Write-Verbose "RESULT..." 
-            $report | Select-Object | Format-Table  | Out-String | Write-Verbose
+            $report | Format-Table | Out-String -Stream | Where-Object { $_ -ne "" } | Write-Verbose
+			
             Write-Host "# Test: $([datetime]::UtcNow - $dtStart)"
             try {				
                 $report | ForEach-Object {
@@ -281,7 +243,10 @@ function Invoke-ProcessCommonCaseAsync {
                     $query += "UPDATE dbo.Services SET Status = $(if ($item.Status) { 1 } else { 0 }), UpdatedTime = SYSDATETIMEOFFSET() WHERE Id = $($item.Id)
                     "                    
 
-                    if ($item.status -eq $False) { $errorCount += 1 }
+                    if ($item.status -eq $False) { 
+                        $errorCount += 1
+                        if (!$ClusterServiceMapping.Contains($item.NlbClusterId)) { $ClusterServiceMapping += $item.NlbClusterId }
+                    }
                     elseif ($item.CurrStatus -eq 0) { $listId += $item.Id }                     
                 }
             }
@@ -301,23 +266,101 @@ function Invoke-ProcessCommonCaseAsync {
         Write-Host "Total time elapsed: $([datetime]::UtcNow - $dtStart)"
         if ($errorCount -gt 0) {
             try {                
-                $uri = "{0}/api/SendAlert?jGuid={1}" -f $config.RootUrl,$guid
-                Invoke-WebRequest -Method POST -Uri $uri -ContentType "application/json" | Out-Null
+                $uri = "{0}/api/SendAlert?jGuid={1}" -f $config.RootUrl, $guid
+                Invoke-WebRequest -Method POST -Uri $uri -ContentType "application/json"
             }
             catch {
                 Write-Verbose $Error[0]   
             }    
         }
-        if (($listId | Measure-Object).Count -gt 0){            
+        if (($listId | Measure-Object).Count -gt 0) {            
             $uri = "{0}/api/SendStatusChangedAlert?jGuid={1}&listId={2}" -f $config.RootUrl, $guid, $($listId -join ",")
-            try{                
+            try {                
                 Invoke-WebRequest -Method POST -Uri $uri -ContentType "application/json" | Out-Null
             }
             catch {
                 Write-Verbose $Error[0]   
             }    
         }
+		
+		
+        Update-NLBClusterNodeState $ClusterServiceMapping
     }    
+}
+
+function Update-NLBClusterNodeState {
+    [CmdletBinding()]
+    param (
+        [Parameter(   
+            Mandatory = $False,   
+            ParameterSetName = '')]   
+        [Array]$NlbClusterIdSet
+    )
+    
+    begin {
+        # Checking module
+        $initScript = [scriptblock]::Create("Import-Module $($config.RootModulePath)/NetworkLB")
+        Write-Host $NlbClusterIdSet
+        $db = Connect-DbaInstance -SqlInstance $config.SqlInstance
+        $query = "SELECT * FROM dbo.NlbCluster";
+        $ClusterSet = Invoke-DbaQuery -Query $query -SqlInstance $db -Database $config.Database -ErrorAction Stop
+        $NlbClusterIdSet
+        if (!$ClusterSet) {
+            Write-Verbose "No cluster data"
+            Break
+        }
+        Write-Verbose $ClusterSet
+        $Report = @()
+    }
+    
+    process {
+        # Start Cluster node when all services are UP
+		
+        Write-Verbose "# Start Cluster node when all services are UP"
+        $scriptBlock = [scriptblock] `
+        {  
+            param($data, $ref)			
+            Invoke-NetworkLoadBalancing -HostName $data.HostName -NodeName $data.NodeName -Start -Verbose:$ref
+        }
+        
+        $jobs = $ClusterSet | Select-Object Id, ClusterName, HostName, NodeName | Where-Object { !$NlbClusterIdSet.Contains($_.Id) } | ForEach-Object {
+            $params = ($_, $VerbosePreference)
+            Start-ThreadJob -ThrottleLimit $(($ClusterSet | Measure-Object).Count) -ArgumentList $params -ScriptBlock $scriptBlock `
+                -InitializationScript $initScript
+        }
+
+        Write-Verbose "> Waiting for $(($jobs | Measure-Object).Count) jobs to complete..."
+		
+        $Response = Receive-Job -Job $jobs -Wait -AutoRemoveJob
+        Write-Verbose "> RESULT..." 
+        $Response | Format-Table | Out-String -Stream | Where-Object { $_ -ne "" } | Write-Verbose
+        $Report += $Response
+		
+        # Stop Cluster node when all services are UP
+        $Response = ""
+        Write-Verbose "# Stop Cluster node when all services are UP"      
+        $scriptBlock = [scriptblock] `
+        {  
+            param($data, $ref)			
+            Invoke-NetworkLoadBalancing -HostName $data.HostName -NodeName $data.NodeName -Stop -Verbose:$ref | Out-Null
+        }
+        $jobs = $ClusterSet | Select-Object Id, ClusterName, HostName, NodeName | Where-Object { $NlbClusterIdSet.Contains($_.Id) } | ForEach-Object {
+            $params = ($_, $VerbosePreference)
+            Start-ThreadJob -ThrottleLimit $(($ClusterSet | Measure-Object).Count) -ArgumentList $params -ScriptBlock $scriptBlock `
+                -InitializationScript $initScript
+        }
+
+        #Write-Verbose "> Waiting for $(($jobs | Measure-Object).Count) jobs to complete..."
+        
+        #$Response = Receive-Job -Job $jobs -Wait -AutoRemoveJob
+        Write-Verbose "> RESULT..." 
+        #$Response | Format-Table | Out-String -Stream | Where-Object { $_ -ne "" } | Write-Verbose
+        #$Report += $Response
+    }
+    
+    end {
+        #$Report
+    }
 }
 
 if ($Object) {    

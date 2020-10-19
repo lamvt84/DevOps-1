@@ -50,6 +50,6 @@ namespace MVCSite.Models
         Level2 = 300,
         Level3 = 900,
         Level4 = 3600,
-        Level5 = -1
+        Level5 = 9999
     }
 }
