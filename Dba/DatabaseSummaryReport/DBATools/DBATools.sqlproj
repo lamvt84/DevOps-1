@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -53,33 +53,40 @@
     <SSDTExists Condition="Exists('$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v$(VisualStudioVersion)\SSDT\Microsoft.Data.Tools.Schema.SqlTasks.targets')">True</SSDTExists>
     <VisualStudioVersion Condition="'$(SSDTExists)' == ''">11.0</VisualStudioVersion>
   </PropertyGroup>
-  <Import Condition="'$(SQLDBExtensionsRefPath)' != ''" Project="$(SQLDBExtensionsRefPath)\Microsoft.Data.Tools.Schema.SqlTasks.targets" />
-  <Import Condition="'$(SQLDBExtensionsRefPath)' == ''" Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v$(VisualStudioVersion)\SSDT\Microsoft.Data.Tools.Schema.SqlTasks.targets" />
+  <Import Condition="'$(NetCoreBuild)' != 'true' AND '$(SQLDBExtensionsRefPath)' != ''" Project="$(SQLDBExtensionsRefPath)\Microsoft.Data.Tools.Schema.SqlTasks.targets"/>
+  <Import Condition="'$(NetCoreBuild)' != 'true' AND '$(SQLDBExtensionsRefPath)' == ''" Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v$(VisualStudioVersion)\SSDT\Microsoft.Data.Tools.Schema.SqlTasks.targets"/>
   <ItemGroup>
-    <Folder Include="Properties" />
-    <Folder Include="dbo" />
-    <Folder Include="dbo\Store Procedures" />
-    <Folder Include="dbo\Tables" />
-    <Folder Include="script" />
+    <Folder Include="Properties"/>
+    <Folder Include="dbo"/>
+    <Folder Include="dbo\Store Procedures"/>
+    <Folder Include="dbo\Tables"/>
+    <Folder Include="script"/>
   </ItemGroup>
   <ItemGroup>
-    <Build Include="dbo\Store Procedures\Helper_LongPrint.sql" />
-    <Build Include="dbo\Store Procedures\sp_Blitz.sql" />
-    <Build Include="dbo\Store Procedures\sp_BlitzCache.sql" />
-    <Build Include="dbo\Store Procedures\sp_BlitzFirst.sql" />
-    <Build Include="dbo\Store Procedures\sp_BlitzIndex.sql" />
-    <Build Include="dbo\Store Procedures\sp_BlitzInMemoryOLTP.sql" />
-    <Build Include="dbo\Store Procedures\sp_BlitzWho.sql" />
-    <Build Include="dbo\Store Procedures\sp_WhoIsActive.sql" />
-    <Build Include="dbo\Store Procedures\CommandExecute.sql" />
-    <Build Include="dbo\Tables\CommandLog.sql" />
-    <Build Include="dbo\Store Procedures\DatabaseBackup.sql" />
-    <Build Include="dbo\Store Procedures\DatabaseIntegrityCheck.sql" />
-    <Build Include="dbo\Store Procedures\IndexOptimize.sql" />
-    <Build Include="dbo\Tables\Queue.sql" />
-    <Build Include="dbo\Tables\QueueDatabase.sql" />
+    <Build Include="dbo\Store Procedures\Helper_LongPrint.sql"/>
+    <Build Include="dbo\Store Procedures\sp_Blitz.sql"/>
+    <Build Include="dbo\Store Procedures\sp_BlitzCache.sql"/>
+    <Build Include="dbo\Store Procedures\sp_BlitzFirst.sql"/>
+    <Build Include="dbo\Store Procedures\sp_BlitzIndex.sql"/>
+    <Build Include="dbo\Store Procedures\sp_BlitzInMemoryOLTP.sql"/>
+    <Build Include="dbo\Store Procedures\sp_BlitzWho.sql"/>
+    <Build Include="dbo\Store Procedures\sp_WhoIsActive.sql"/>
+    <Build Include="dbo\Store Procedures\CommandExecute.sql"/>
+    <Build Include="dbo\Tables\CommandLog.sql"/>
+    <Build Include="dbo\Store Procedures\DatabaseBackup.sql"/>
+    <Build Include="dbo\Store Procedures\DatabaseIntegrityCheck.sql"/>
+    <Build Include="dbo\Store Procedures\IndexOptimize.sql"/>
+    <Build Include="dbo\Tables\Queue.sql"/>
+    <Build Include="dbo\Tables\QueueDatabase.sql"/>
   </ItemGroup>
   <ItemGroup>
-    <PostDeploy Include="script\Script.InitFK.sql" />
+    <PostDeploy Include="script\Script.InitFK.sql"/>
   </ItemGroup>
+  <Import Condition="'$(NetCoreBuild)' == 'true'" Project="$(NETCoreTargetsPath)\Microsoft.Data.Tools.Schema.SqlTasks.targets"/>
+  <ItemGroup>
+    <PackageReference Condition="'$(NetCoreBuild)' == 'true'" Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.0" PrivateAssets="All"/>
+  </ItemGroup>
+  <Target Name="AfterClean">
+    <Delete Files="$(BaseIntermediateOutputPath)\project.assets.json"/>
+  </Target>
 </Project>

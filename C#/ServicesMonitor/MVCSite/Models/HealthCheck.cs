@@ -26,7 +26,7 @@ namespace MVCSite.Models
             var alertConfigId = 2;
             try
             {
-                var alertConfig = await new AlertConfigImpl(ConnectionString).Get(alertConfigId);
+                var alertConfig = await new AlertConfigImpl(ConnectionString).Get(1);
                 if (alertConfig.PauseStatus == 0 && alertConfig.PausePeriod > (int)AlertRule.Level3) 
                     await new AlertConfigImpl(ConnectionString).UpdateWarningStatus(new AlertConfig()
                     {

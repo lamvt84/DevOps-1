@@ -1,0 +1,8 @@
+﻿CREATE SCHEMA [Core]
+GO
+CREATE SCHEMA [Ref]
+GO
+CREATE SCHEMA [Dataflow]
+GO
+CREATE SCHEMA [Staging]
+GO

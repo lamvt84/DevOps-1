@@ -1,0 +1,27 @@
+﻿CREATE TABLE [dbo].[OrdersInvoiceStaging]
+(
+	Source_Name	Varchar(20),
+	Batch_Id	int,
+	Action_Flag	varchar(1),
+	InvoiceOrderId	bigint,
+	TransactionId	bigint,
+	RefundTransactionId	bigint,
+	ServiceId	int,
+	BankId	int,
+	PaymentAppId	int,
+	PayType	tinyint,
+	UserId	int,
+	AccountName	varchar(30),
+	GrandAmount	numeric(28,12),
+	Amount	numeric(28,12),
+	Fee	numeric(28,12),
+	RelatedFee	numeric(28,12),
+	Description	nvarchar(250),
+	OrderStatus	smallint,
+	Currency	char(5),
+	DeviceType	tinyint,
+	ClientIP	nvarchar(15),
+	ConfirmUser	varchar(50),
+	CreatedTime	datetimeoffset,
+	EndTime	datetimeoffset
+)

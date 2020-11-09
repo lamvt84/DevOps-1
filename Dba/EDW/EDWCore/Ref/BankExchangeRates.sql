@@ -1,0 +1,16 @@
+﻿CREATE TABLE Ref.[BankExchangeRates]
+(
+	[Id] INT NOT NULL IDENTITY(1,1),
+	Source_Name	Varchar(20),
+	Batch_Id	int,
+	Created_Time	datetimeoffset,
+	Updated_Time	datetimeoffset,
+	Current_Flag	varchar(1),
+	Delete_Flag	varchar(1),
+	ExchangeRateId	int,
+	Currency	char(5),
+	Rate	numeric(28,12),
+	AppliedTime	datetimeoffset,
+	CreatedUser	varchar(30),
+	CreatedTime	datetimeoffset
+)

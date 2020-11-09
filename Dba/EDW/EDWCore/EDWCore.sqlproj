@@ -1,0 +1,101 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <Name>EDWCore</Name>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectVersion>4.1</ProjectVersion>
+    <ProjectGuid>{6b35c02b-6208-417a-ae31-5cd44cd835d5}</ProjectGuid>
+    <DSP>Microsoft.Data.Tools.Schema.Sql.Sql150DatabaseSchemaProvider</DSP>
+    <OutputType>Database</OutputType>
+    <RootPath>
+    </RootPath>
+    <RootNamespace>EDWCore</RootNamespace>
+    <AssemblyName>EDWCore</AssemblyName>
+    <ModelCollation>1033,CS</ModelCollation>
+    <DefaultFileStructure>BySchemaAndSchemaType</DefaultFileStructure>
+    <DeployToDatabase>True</DeployToDatabase>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetLanguage>CS</TargetLanguage>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <SqlServerVerification>False</SqlServerVerification>
+    <IncludeCompositeObjects>True</IncludeCompositeObjects>
+    <TargetDatabaseSet>True</TargetDatabaseSet>
+    <DefaultCollation>SQL_Latin1_General_CP1_CS_AS</DefaultCollation>
+    <PageVerify>CHECKSUM</PageVerify>
+    <ReadCommittedSnapshot>True</ReadCommittedSnapshot>
+    <ServiceBrokerOption>DisableBroker</ServiceBrokerOption>
+    <Recovery>SIMPLE</Recovery>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <OutputPath>bin\Release\</OutputPath>
+    <BuildScriptName>$(MSBuildProjectName).sql</BuildScriptName>
+    <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <DefineDebug>false</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <OutputPath>bin\Debug\</OutputPath>
+    <BuildScriptName>$(MSBuildProjectName).sql</BuildScriptName>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <DefineDebug>true</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">11.0</VisualStudioVersion>
+    <!-- Default to the v11.0 targets path if the targets file for the current VS version is not found -->
+    <SSDTExists Condition="Exists('$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v$(VisualStudioVersion)\SSDT\Microsoft.Data.Tools.Schema.SqlTasks.targets')">True</SSDTExists>
+    <VisualStudioVersion Condition="'$(SSDTExists)' == ''">11.0</VisualStudioVersion>
+  </PropertyGroup>
+  <Import Condition="'$(SQLDBExtensionsRefPath)' != ''" Project="$(SQLDBExtensionsRefPath)\Microsoft.Data.Tools.Schema.SqlTasks.targets" />
+  <Import Condition="'$(SQLDBExtensionsRefPath)' == ''" Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v$(VisualStudioVersion)\SSDT\Microsoft.Data.Tools.Schema.SqlTasks.targets" />
+  <ItemGroup>
+    <Folder Include="Properties" />
+    <Folder Include="Scripts" />
+    <Folder Include="Core" />
+    <Folder Include="Ref" />
+    <Folder Include="Stored Procedures" />
+    <Folder Include="dbo" />
+  </ItemGroup>
+  <ItemGroup>
+    <Build Include="Scripts\Schemas.sql" />
+    <Build Include="Core\FactOrdersInvoice.sql" />
+    <Build Include="Core\DimBankAccounts.sql" />
+    <Build Include="Core\DimAccounts.sql" />
+    <Build Include="Core\DimAccountsSystem.sql" />
+    <Build Include="Core\DimUsers.sql" />
+    <Build Include="Core\FactTransactions.sql" />
+    <Build Include="Core\FactTransactionsReceipt.sql" />
+    <Build Include="Core\FactTransactionsSystem.sql" />
+    <Build Include="Ref\BankExchangeRates.sql" />
+    <Build Include="Ref\Banks.sql" />
+    <Build Include="Ref\BanksPartnerChannels.sql" />
+    <Build Include="Ref\PaymentAppsButton.sql" />
+    <Build Include="Ref\PaymentAppsMobile.sql" />
+    <Build Include="Ref\PaymentAppsWebsite.sql" />
+    <Build Include="Ref\TransactionsServiceFees.sql" />
+    <Build Include="Ref\TransactionsService.sql" />
+    <Build Include="Ref\UsersProfileAttributesDict.sql" />
+    <Build Include="Ref\UsersProfileLocations.sql" />
+    <Build Include="Stored Procedures\Dataflow.SyncTransaction.sql" />
+    <Build Include="Stored Procedures\Dataflow.SyncTransactionReceipt.sql" />
+    <Build Include="Stored Procedures\Dataflow.SyncTransactionSystem.sql" />
+    <Build Include="dbo\SyncSource.sql" />
+    <Build Include="dbo\Batch.sql" />
+    <Build Include="Stored Procedures\Staging.TransactionsData.sql" />
+    <Build Include="dbo\SyncProcMapping.sql" />
+    <Build Include="Stored Procedures\Staging.TransactionsSystemData.sql" />
+    <Build Include="Stored Procedures\Staging.TransactionsReceiptData.sql" />
+    <Build Include="Stored Procedures\Staging.ProcessTransactionData.sql" />
+  </ItemGroup>
+</Project>

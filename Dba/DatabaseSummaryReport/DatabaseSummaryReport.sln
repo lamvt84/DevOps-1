@@ -7,6 +7,8 @@ Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "DBATools", "DBATools\DBAToo
 EndProject
 Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "SummaryReportDB", "SummaryReportDB\SummaryReportDB.sqlproj", "{5EB21F52-676E-4B1A-827A-86FA15219D34}"
 EndProject
+Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "DataWarehouse", "DataWarehouse\DataWarehouse.sqlproj", "{129FD366-688C-4366-AC2E-5D19CC681385}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -25,6 +27,12 @@ Global
 		{5EB21F52-676E-4B1A-827A-86FA15219D34}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5EB21F52-676E-4B1A-827A-86FA15219D34}.Release|Any CPU.Build.0 = Release|Any CPU
 		{5EB21F52-676E-4B1A-827A-86FA15219D34}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{129FD366-688C-4366-AC2E-5D19CC681385}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{129FD366-688C-4366-AC2E-5D19CC681385}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{129FD366-688C-4366-AC2E-5D19CC681385}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{129FD366-688C-4366-AC2E-5D19CC681385}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{129FD366-688C-4366-AC2E-5D19CC681385}.Release|Any CPU.Build.0 = Release|Any CPU
+		{129FD366-688C-4366-AC2E-5D19CC681385}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
