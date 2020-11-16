@@ -6,35 +6,35 @@ BEGIN
     DECLARE @RecvReqMsgName sysname;
     DECLARE @ServiceName VARCHAR(512) = '//WalletTransaction/Service/Target'
 
-    BEGIN TRY
-        BEGIN TRANSACTION 
-            WAITFOR
-            ( RECEIVE TOP(1)
-                @RecvReqDlgHandle = conversation_handle,
-                @RecvReqMsg = message_body,
-                @RecvReqMsgName = message_type_name
-              FROM [dbo].[//WalletTransaction/Queue/Target]
-            ), TIMEOUT 1000;
-            IF NOT EXISTS (SELECT 1 FROM dbo.BrokerConversation WHERE ServiceName = @ServiceName)
-                INSERT INTO [dbo].[BrokerConversation] VALUES (@RecvReqDlgHandle, @ServiceName)
-            IF @RecvReqMsg IS NOT NULL 
-                INSERT [dbo].[BrokerMessages] (ConversationHandler, MessageTypeName, MessageBody)
-	                SELECT @RecvReqDlgHandle, @RecvReqMsgName, @RecvReqMsg
-        COMMIT
+BEGIN TRY
+BEGIN TRANSACTION 
+    WAITFOR
+    ( RECEIVE TOP(1)
+        @RecvReqDlgHandle = conversation_handle,
+        @RecvReqMsg = message_body,
+        @RecvReqMsgName = message_type_name
+        FROM [dbo].[//WalletTransaction/Queue/Target]
+    ), TIMEOUT 1000;
+    IF NOT EXISTS (SELECT 1 FROM dbo.BrokerConversation WHERE ServiceName = @ServiceName)
+        INSERT INTO [dbo].[BrokerConversation] VALUES (@RecvReqDlgHandle, @ServiceName)
+    IF @RecvReqMsg IS NOT NULL 
+        INSERT [dbo].[BrokerMessages] (ConversationHandler, MessageTypeName, MessageBody)
+	        SELECT @RecvReqDlgHandle, @RecvReqMsgName, @RecvReqMsg
+COMMIT
 
         
-        IF @RecvReqMsgName = '//WalletTransaction/Transactions/Request'
-            EXEC [EDWCore].Dataflow.SyncTransaction
-                @MessageBody = @RecvReqMsg
-        IF @RecvReqMsgName = '//WalletTransaction/TransactionsReceipt/Request'
-            EXEC [EDWCore].Dataflow.SyncTransactionReceipt
-                @MessageBody = @RecvReqMsg
-        IF @RecvReqMsgName = '//WalletTransaction/TransactionsSystem/Request'
-            EXEC [EDWCore].Dataflow.SyncTransactionSystem
-                @MessageBody = @RecvReqMsg
-        IF @RecvReqMsgName = 'http://schemas.microsoft.com/SQL/ServiceBroker/EndDialog'
-            END CONVERSATION @RecvReqDlgHandle
-    END TRY
+IF @RecvReqMsgName = '//WalletTransaction/Transactions/Request'
+    EXEC [EDWCore].Dataflow.SyncTransaction
+        @MessageBody = @RecvReqMsg
+IF @RecvReqMsgName = '//WalletTransaction/TransactionsReceipt/Request'
+    EXEC [EDWCore].Dataflow.SyncTransactionReceipt
+        @MessageBody = @RecvReqMsg
+IF @RecvReqMsgName = '//WalletTransaction/TransactionsSystem/Request'
+    EXEC [EDWCore].Dataflow.SyncTransactionSystem
+        @MessageBody = @RecvReqMsg
+IF @RecvReqMsgName = 'http://schemas.microsoft.com/SQL/ServiceBroker/EndDialog'
+    END CONVERSATION @RecvReqDlgHandle
+END TRY
     BEGIN CATCH
         IF XACT_STATE() = -1
             ROLLBACK TRANSACTION
