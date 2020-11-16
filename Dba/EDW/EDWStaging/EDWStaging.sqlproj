@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -56,39 +56,46 @@
     <SSDTExists Condition="Exists('$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v$(VisualStudioVersion)\SSDT\Microsoft.Data.Tools.Schema.SqlTasks.targets')">True</SSDTExists>
     <VisualStudioVersion Condition="'$(SSDTExists)' == ''">11.0</VisualStudioVersion>
   </PropertyGroup>
-  <Import Condition="'$(SQLDBExtensionsRefPath)' != ''" Project="$(SQLDBExtensionsRefPath)\Microsoft.Data.Tools.Schema.SqlTasks.targets" />
-  <Import Condition="'$(SQLDBExtensionsRefPath)' == ''" Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v$(VisualStudioVersion)\SSDT\Microsoft.Data.Tools.Schema.SqlTasks.targets" />
+  <Import Condition="'$(NetCoreBuild)' != 'true' AND '$(SQLDBExtensionsRefPath)' != ''" Project="$(SQLDBExtensionsRefPath)\Microsoft.Data.Tools.Schema.SqlTasks.targets"/>
+  <Import Condition="'$(NetCoreBuild)' != 'true' AND '$(SQLDBExtensionsRefPath)' == ''" Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v$(VisualStudioVersion)\SSDT\Microsoft.Data.Tools.Schema.SqlTasks.targets"/>
   <ItemGroup>
-    <Folder Include="Properties" />
-    <Folder Include="dbo" />
+    <Folder Include="Properties"/>
+    <Folder Include="dbo"/>
   </ItemGroup>
   <ItemGroup>
-    <Build Include="dbo\UsersStaging.sql" />
-    <Build Include="dbo\UsersAuthenDevicesStaging.sql" />
-    <Build Include="dbo\UsersProfileStaging.sql" />
-    <Build Include="dbo\UsersProfileVerificationStaging.sql" />
-    <Build Include="dbo\UsersSecureConfigStaging.sql" />
-    <Build Include="dbo\UsersAuthStaging.sql" />
-    <Build Include="dbo\AccountsStaging.sql" />
-    <Build Include="dbo\AccountsSecondaryStaging.sql" />
-    <Build Include="dbo\AccountsSystemStaging.sql" />
-    <Build Include="dbo\TransactionsStaging.sql" />
-    <Build Include="dbo\TransactionsSystemStaging.sql" />
-    <Build Include="dbo\TransactionsReceiptStaging.sql" />
-    <Build Include="dbo\BankExchangeRatesStaging.sql" />
-    <Build Include="dbo\BanksStaging.sql" />
-    <Build Include="dbo\BanksPartnerChannelsStaging.sql" />
-    <Build Include="dbo\PaymentAppsButtonStaging.sql" />
-    <Build Include="dbo\PaymentAppsMobileStaging.sql" />
-    <Build Include="dbo\PaymentAppsWebsiteStaging.sql" />
-    <Build Include="dbo\TransactionsServiceFeesStaging.sql" />
-    <Build Include="dbo\TransactionsServiceStaging.sql" />
-    <Build Include="dbo\UsersProfileAttributesDictStaging.sql" />
-    <Build Include="dbo\UsersProfileLocationsStaging.sql" />
-    <Build Include="dbo\BankAccountsStaging.sql" />
-    <Build Include="dbo\BankAccountsSubValidationStaging.sql" />
-    <Build Include="dbo\OrdersInvoiceStaging.sql" />
-    <Build Include="dbo\OrdersInvoiceBankingStaging.sql" />
-    <Build Include="dbo\OrdersInvoicePaymentStaging.sql" />
+    <Build Include="dbo\UsersStaging.sql"/>
+    <Build Include="dbo\UsersAuthenDevicesStaging.sql"/>
+    <Build Include="dbo\UsersProfileStaging.sql"/>
+    <Build Include="dbo\UsersProfileVerificationStaging.sql"/>
+    <Build Include="dbo\UsersSecureConfigStaging.sql"/>
+    <Build Include="dbo\UsersAuthStaging.sql"/>
+    <Build Include="dbo\AccountsStaging.sql"/>
+    <Build Include="dbo\AccountsSecondaryStaging.sql"/>
+    <Build Include="dbo\AccountsSystemStaging.sql"/>
+    <Build Include="dbo\TransactionsStaging.sql"/>
+    <Build Include="dbo\TransactionsSystemStaging.sql"/>
+    <Build Include="dbo\TransactionsReceiptStaging.sql"/>
+    <Build Include="dbo\BankExchangeRatesStaging.sql"/>
+    <Build Include="dbo\BanksStaging.sql"/>
+    <Build Include="dbo\BanksPartnerChannelsStaging.sql"/>
+    <Build Include="dbo\PaymentAppsButtonStaging.sql"/>
+    <Build Include="dbo\PaymentAppsMobileStaging.sql"/>
+    <Build Include="dbo\PaymentAppsWebsiteStaging.sql"/>
+    <Build Include="dbo\TransactionsServiceFeesStaging.sql"/>
+    <Build Include="dbo\TransactionsServiceStaging.sql"/>
+    <Build Include="dbo\UsersProfileAttributesDictStaging.sql"/>
+    <Build Include="dbo\UsersProfileLocationsStaging.sql"/>
+    <Build Include="dbo\BankAccountsStaging.sql"/>
+    <Build Include="dbo\BankAccountsSubValidationStaging.sql"/>
+    <Build Include="dbo\OrdersInvoiceStaging.sql"/>
+    <Build Include="dbo\OrdersInvoiceBankingStaging.sql"/>
+    <Build Include="dbo\OrdersInvoicePaymentStaging.sql"/>
   </ItemGroup>
+  <Import Condition="'$(NetCoreBuild)' == 'true'" Project="$(NETCoreTargetsPath)\Microsoft.Data.Tools.Schema.SqlTasks.targets"/>
+  <ItemGroup>
+    <PackageReference Condition="'$(NetCoreBuild)' == 'true'" Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.0" PrivateAssets="All"/>
+  </ItemGroup>
+  <Target Name="AfterClean">
+    <Delete Files="$(BaseIntermediateOutputPath)\project.assets.json"/>
+  </Target>
 </Project>

@@ -1,18 +1,18 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <Name>EDWTargetSB</Name>
+    <Name>EDWInitiatorSB</Name>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectVersion>4.1</ProjectVersion>
-    <ProjectGuid>{332f4023-094b-481e-86b4-f1283b5ac972}</ProjectGuid>
+    <ProjectGuid>{3d3d3dac-d0bd-4317-bc4c-98811f35f9aa}</ProjectGuid>
     <DSP>Microsoft.Data.Tools.Schema.Sql.Sql150DatabaseSchemaProvider</DSP>
     <OutputType>Database</OutputType>
     <RootPath>
     </RootPath>
-    <RootNamespace>EDWTargetSB</RootNamespace>
-    <AssemblyName>EDWTargetSB</AssemblyName>
+    <RootNamespace>EDWInitiatorSB</RootNamespace>
+    <AssemblyName>EDWInitiatorSB</AssemblyName>
     <ModelCollation>1033,CS</ModelCollation>
     <DefaultFileStructure>BySchemaAndSchemaType</DefaultFileStructure>
     <DeployToDatabase>True</DeployToDatabase>
@@ -27,6 +27,7 @@
     <PageVerify>CHECKSUM</PageVerify>
     <ReadCommittedSnapshot>True</ReadCommittedSnapshot>
     <ServiceBrokerOption>EnableBroker</ServiceBrokerOption>
+    <GenerateCreateScript>False</GenerateCreateScript>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <OutputPath>bin\Release\</OutputPath>
@@ -57,45 +58,53 @@
     <SSDTExists Condition="Exists('$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v$(VisualStudioVersion)\SSDT\Microsoft.Data.Tools.Schema.SqlTasks.targets')">True</SSDTExists>
     <VisualStudioVersion Condition="'$(SSDTExists)' == ''">11.0</VisualStudioVersion>
   </PropertyGroup>
-  <Import Condition="'$(NetCoreBuild)' != 'true' AND '$(SQLDBExtensionsRefPath)' != ''" Project="$(SQLDBExtensionsRefPath)\Microsoft.Data.Tools.Schema.SqlTasks.targets"/>
-  <Import Condition="'$(NetCoreBuild)' != 'true' AND '$(SQLDBExtensionsRefPath)' == ''" Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v$(VisualStudioVersion)\SSDT\Microsoft.Data.Tools.Schema.SqlTasks.targets"/>
+  <Import Condition="'$(SQLDBExtensionsRefPath)' != ''" Project="$(SQLDBExtensionsRefPath)\Microsoft.Data.Tools.Schema.SqlTasks.targets" />
+  <Import Condition="'$(SQLDBExtensionsRefPath)' == ''" Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v$(VisualStudioVersion)\SSDT\Microsoft.Data.Tools.Schema.SqlTasks.targets" />
   <ItemGroup>
-    <Folder Include="Properties"/>
-    <Folder Include="Config"/>
-    <Folder Include="Scripts"/>
-    <Folder Include="Tables"/>
-    <Folder Include="Stored Procedures"/>
+    <Folder Include="Properties" />
+    <Folder Include="Config" />
+    <Folder Include="Scripts" />
+    <Folder Include="Stored Procedures" />
+    <Folder Include="Tables" />
+    <Folder Include="Scripts\Wallet.Account" />
+    <Folder Include="Scripts\Wallet.Transaction" />
   </ItemGroup>
   <ItemGroup>
-    <Build Include="Config\Certificate.sql"/>
-    <Build Include="Config\Contract.sql"/>
-    <Build Include="Config\EndPoint.sql"/>
-    <Build Include="Config\MasterKey.sql"/>
-    <Build Include="Config\MessageType.sql"/>
-    <Build Include="Config\Queue.sql"/>
-    <Build Include="Config\RemoteServiceBinding.sql"/>
-    <Build Include="Config\Service.sql"/>
-    <Build Include="Config\User.sql"/>
-    <Build Include="Tables\BrokerMessages.sql"/>
-    <Build Include="Tables\ErrorLog.sql"/>
-    <Build Include="Tables\BrokerConversation.sql"/>
-    <Build Include="Stored Procedures\sp_ProcessAsyncMessages_TransactionQueue.sql"/>
-    <Build Include="Stored Procedures\sp_ProcessAsyncMessages_TransactionBatch.sql"/>
+    <Build Include="Config\Certificate.sql" />
+    <Build Include="Config\Contract.sql" />
+    <Build Include="Config\EndPoint.sql" />
+    <Build Include="Config\Queue.sql" />
+    <Build Include="Config\Service.sql" />
+    <Build Include="Config\RemoteServiceBinding.sql" />
+    <Build Include="Tables\BrokerConversation.sql" />
+    <Build Include="Tables\ErrorLog.sql" />
+    <Build Include="Stored Procedures\sp_SendMessage_Accounts.sql" />
+    <Build Include="Stored Procedures\sp_SendMessage_Users.sql" />
+    <Build Include="Stored Procedures\sp_SendMessage_Transactions.sql" />
+    <Build Include="Stored Procedures\sp_SendMessage_References.sql" />
+    <Build Include="Tables\BrokerMessages.sql" />
+    <Build Include="Tables\WAccount_UsersAuth.sql" />
+    <None Include="Scripts\Wallet.Account\tr_Accounts_IUD.sql" />
+    <None Include="Scripts\Wallet.Account\tr_Users_IUD.sql" />
+    <None Include="Scripts\Wallet.Account\tr_UsersAuthDevices_IUD.sql" />
+    <None Include="Scripts\Wallet.Account\tr_UsersProfile_IUD.sql" />
+    <None Include="Scripts\Wallet.Account\tr_UsersProfileVerification_IUD.sql" />
+    <None Include="Scripts\Wallet.Account\tr_UsersSecureConfig_IUD.sql" />
+    <None Include="Scripts\Wallet.Transaction\tr_Transactions_IUD.sql" />
+    <None Include="Scripts\Wallet.Transaction\tr_TransactionsReceipt_IUD.sql" />
+    <None Include="Scripts\Wallet.Transaction\tr_TransactionsSystem_IUD_.sql" />
+    <Build Include="Tables\SourceBatchTable.sql" />
+    <Build Include="Stored Procedures\sp_SendMessage_Batch.sql" />
   </ItemGroup>
   <ItemGroup>
-    <PostDeploy Include="Scripts\Script.PostDeployment.sql"/>
+    <Build Include="Config\MasterKey.sql" />
+    <Build Include="Config\MessageType.sql" />
+    <Build Include="Config\User.sql" />
   </ItemGroup>
   <ItemGroup>
-    <PreDeploy Include="Scripts\Script.PreDeployment.sql"/>
+    <PreDeploy Include="Scripts\Script.PreDeployment.sql" />
   </ItemGroup>
   <ItemGroup>
-    <RefactorLog Include="EDWTargetSB.refactorlog"/>
+    <PostDeploy Include="Scripts\Script.PostDeployment.sql" />
   </ItemGroup>
-  <Import Condition="'$(NetCoreBuild)' == 'true'" Project="$(NETCoreTargetsPath)\Microsoft.Data.Tools.Schema.SqlTasks.targets"/>
-  <ItemGroup>
-    <PackageReference Condition="'$(NetCoreBuild)' == 'true'" Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.0" PrivateAssets="All"/>
-  </ItemGroup>
-  <Target Name="AfterClean">
-    <Delete Files="$(BaseIntermediateOutputPath)\project.assets.json"/>
-  </Target>
 </Project>

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -57,45 +57,38 @@
     <SSDTExists Condition="Exists('$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v$(VisualStudioVersion)\SSDT\Microsoft.Data.Tools.Schema.SqlTasks.targets')">True</SSDTExists>
     <VisualStudioVersion Condition="'$(SSDTExists)' == ''">11.0</VisualStudioVersion>
   </PropertyGroup>
-  <Import Condition="'$(NetCoreBuild)' != 'true' AND '$(SQLDBExtensionsRefPath)' != ''" Project="$(SQLDBExtensionsRefPath)\Microsoft.Data.Tools.Schema.SqlTasks.targets"/>
-  <Import Condition="'$(NetCoreBuild)' != 'true' AND '$(SQLDBExtensionsRefPath)' == ''" Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v$(VisualStudioVersion)\SSDT\Microsoft.Data.Tools.Schema.SqlTasks.targets"/>
+  <Import Condition="'$(SQLDBExtensionsRefPath)' != ''" Project="$(SQLDBExtensionsRefPath)\Microsoft.Data.Tools.Schema.SqlTasks.targets" />
+  <Import Condition="'$(SQLDBExtensionsRefPath)' == ''" Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v$(VisualStudioVersion)\SSDT\Microsoft.Data.Tools.Schema.SqlTasks.targets" />
   <ItemGroup>
-    <Folder Include="Properties"/>
-    <Folder Include="Config"/>
-    <Folder Include="Scripts"/>
-    <Folder Include="Tables"/>
-    <Folder Include="Stored Procedures"/>
+    <Folder Include="Properties" />
+    <Folder Include="Config" />
+    <Folder Include="Scripts" />
+    <Folder Include="Tables" />
+    <Folder Include="Stored Procedures" />
   </ItemGroup>
   <ItemGroup>
-    <Build Include="Config\Certificate.sql"/>
-    <Build Include="Config\Contract.sql"/>
-    <Build Include="Config\EndPoint.sql"/>
-    <Build Include="Config\MasterKey.sql"/>
-    <Build Include="Config\MessageType.sql"/>
-    <Build Include="Config\Queue.sql"/>
-    <Build Include="Config\RemoteServiceBinding.sql"/>
-    <Build Include="Config\Service.sql"/>
-    <Build Include="Config\User.sql"/>
-    <Build Include="Tables\BrokerMessages.sql"/>
-    <Build Include="Tables\ErrorLog.sql"/>
-    <Build Include="Tables\BrokerConversation.sql"/>
-    <Build Include="Stored Procedures\sp_ProcessAsyncMessages_TransactionQueue.sql"/>
-    <Build Include="Stored Procedures\sp_ProcessAsyncMessages_TransactionBatch.sql"/>
+    <Build Include="Config\Certificate.sql" />
+    <Build Include="Config\Contract.sql" />
+    <Build Include="Config\EndPoint.sql" />
+    <Build Include="Config\MasterKey.sql" />
+    <Build Include="Config\MessageType.sql" />
+    <Build Include="Config\Queue.sql" />
+    <Build Include="Config\RemoteServiceBinding.sql" />
+    <Build Include="Config\Service.sql" />
+    <Build Include="Config\User.sql" />
+    <Build Include="Tables\BrokerMessages.sql" />
+    <Build Include="Tables\ErrorLog.sql" />
+    <Build Include="Tables\BrokerConversation.sql" />
+    <Build Include="Stored Procedures\sp_ProcessAsyncMessages_TransactionQueue.sql" />
+    <Build Include="Stored Procedures\sp_ProcessAsyncMessages_TransactionBatch.sql" />
   </ItemGroup>
   <ItemGroup>
-    <PostDeploy Include="Scripts\Script.PostDeployment.sql"/>
+    <PostDeploy Include="Scripts\Script.PostDeployment.sql" />
   </ItemGroup>
   <ItemGroup>
-    <PreDeploy Include="Scripts\Script.PreDeployment.sql"/>
+    <PreDeploy Include="Scripts\Script.PreDeployment.sql" />
   </ItemGroup>
   <ItemGroup>
-    <RefactorLog Include="EDWTargetSB.refactorlog"/>
+    <RefactorLog Include="EDWTargetSB.refactorlog" />
   </ItemGroup>
-  <Import Condition="'$(NetCoreBuild)' == 'true'" Project="$(NETCoreTargetsPath)\Microsoft.Data.Tools.Schema.SqlTasks.targets"/>
-  <ItemGroup>
-    <PackageReference Condition="'$(NetCoreBuild)' == 'true'" Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.0" PrivateAssets="All"/>
-  </ItemGroup>
-  <Target Name="AfterClean">
-    <Delete Files="$(BaseIntermediateOutputPath)\project.assets.json"/>
-  </Target>
 </Project>

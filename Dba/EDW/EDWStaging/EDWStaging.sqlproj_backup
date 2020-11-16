@@ -1,18 +1,18 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <Name>EDWTargetSB</Name>
+    <Name>EDWStaging</Name>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectVersion>4.1</ProjectVersion>
-    <ProjectGuid>{332f4023-094b-481e-86b4-f1283b5ac972}</ProjectGuid>
+    <ProjectGuid>{b8bebce2-fc2b-4500-aa52-b286c279d5d9}</ProjectGuid>
     <DSP>Microsoft.Data.Tools.Schema.Sql.Sql150DatabaseSchemaProvider</DSP>
     <OutputType>Database</OutputType>
     <RootPath>
     </RootPath>
-    <RootNamespace>EDWTargetSB</RootNamespace>
-    <AssemblyName>EDWTargetSB</AssemblyName>
+    <RootNamespace>EDWStaging</RootNamespace>
+    <AssemblyName>EDWStaging</AssemblyName>
     <ModelCollation>1033,CS</ModelCollation>
     <DefaultFileStructure>BySchemaAndSchemaType</DefaultFileStructure>
     <DeployToDatabase>True</DeployToDatabase>
@@ -24,9 +24,8 @@
     <TargetDatabaseSet>True</TargetDatabaseSet>
     <DefaultCollation>SQL_Latin1_General_CP1_CS_AS</DefaultCollation>
     <Recovery>SIMPLE</Recovery>
-    <PageVerify>CHECKSUM</PageVerify>
     <ReadCommittedSnapshot>True</ReadCommittedSnapshot>
-    <ServiceBrokerOption>EnableBroker</ServiceBrokerOption>
+    <PageVerify>CHECKSUM</PageVerify>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <OutputPath>bin\Release\</OutputPath>
@@ -57,45 +56,39 @@
     <SSDTExists Condition="Exists('$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v$(VisualStudioVersion)\SSDT\Microsoft.Data.Tools.Schema.SqlTasks.targets')">True</SSDTExists>
     <VisualStudioVersion Condition="'$(SSDTExists)' == ''">11.0</VisualStudioVersion>
   </PropertyGroup>
-  <Import Condition="'$(NetCoreBuild)' != 'true' AND '$(SQLDBExtensionsRefPath)' != ''" Project="$(SQLDBExtensionsRefPath)\Microsoft.Data.Tools.Schema.SqlTasks.targets"/>
-  <Import Condition="'$(NetCoreBuild)' != 'true' AND '$(SQLDBExtensionsRefPath)' == ''" Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v$(VisualStudioVersion)\SSDT\Microsoft.Data.Tools.Schema.SqlTasks.targets"/>
+  <Import Condition="'$(SQLDBExtensionsRefPath)' != ''" Project="$(SQLDBExtensionsRefPath)\Microsoft.Data.Tools.Schema.SqlTasks.targets" />
+  <Import Condition="'$(SQLDBExtensionsRefPath)' == ''" Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v$(VisualStudioVersion)\SSDT\Microsoft.Data.Tools.Schema.SqlTasks.targets" />
   <ItemGroup>
-    <Folder Include="Properties"/>
-    <Folder Include="Config"/>
-    <Folder Include="Scripts"/>
-    <Folder Include="Tables"/>
-    <Folder Include="Stored Procedures"/>
+    <Folder Include="Properties" />
+    <Folder Include="dbo" />
   </ItemGroup>
   <ItemGroup>
-    <Build Include="Config\Certificate.sql"/>
-    <Build Include="Config\Contract.sql"/>
-    <Build Include="Config\EndPoint.sql"/>
-    <Build Include="Config\MasterKey.sql"/>
-    <Build Include="Config\MessageType.sql"/>
-    <Build Include="Config\Queue.sql"/>
-    <Build Include="Config\RemoteServiceBinding.sql"/>
-    <Build Include="Config\Service.sql"/>
-    <Build Include="Config\User.sql"/>
-    <Build Include="Tables\BrokerMessages.sql"/>
-    <Build Include="Tables\ErrorLog.sql"/>
-    <Build Include="Tables\BrokerConversation.sql"/>
-    <Build Include="Stored Procedures\sp_ProcessAsyncMessages_TransactionQueue.sql"/>
-    <Build Include="Stored Procedures\sp_ProcessAsyncMessages_TransactionBatch.sql"/>
+    <Build Include="dbo\UsersStaging.sql" />
+    <Build Include="dbo\UsersAuthenDevicesStaging.sql" />
+    <Build Include="dbo\UsersProfileStaging.sql" />
+    <Build Include="dbo\UsersProfileVerificationStaging.sql" />
+    <Build Include="dbo\UsersSecureConfigStaging.sql" />
+    <Build Include="dbo\UsersAuthStaging.sql" />
+    <Build Include="dbo\AccountsStaging.sql" />
+    <Build Include="dbo\AccountsSecondaryStaging.sql" />
+    <Build Include="dbo\AccountsSystemStaging.sql" />
+    <Build Include="dbo\TransactionsStaging.sql" />
+    <Build Include="dbo\TransactionsSystemStaging.sql" />
+    <Build Include="dbo\TransactionsReceiptStaging.sql" />
+    <Build Include="dbo\BankExchangeRatesStaging.sql" />
+    <Build Include="dbo\BanksStaging.sql" />
+    <Build Include="dbo\BanksPartnerChannelsStaging.sql" />
+    <Build Include="dbo\PaymentAppsButtonStaging.sql" />
+    <Build Include="dbo\PaymentAppsMobileStaging.sql" />
+    <Build Include="dbo\PaymentAppsWebsiteStaging.sql" />
+    <Build Include="dbo\TransactionsServiceFeesStaging.sql" />
+    <Build Include="dbo\TransactionsServiceStaging.sql" />
+    <Build Include="dbo\UsersProfileAttributesDictStaging.sql" />
+    <Build Include="dbo\UsersProfileLocationsStaging.sql" />
+    <Build Include="dbo\BankAccountsStaging.sql" />
+    <Build Include="dbo\BankAccountsSubValidationStaging.sql" />
+    <Build Include="dbo\OrdersInvoiceStaging.sql" />
+    <Build Include="dbo\OrdersInvoiceBankingStaging.sql" />
+    <Build Include="dbo\OrdersInvoicePaymentStaging.sql" />
   </ItemGroup>
-  <ItemGroup>
-    <PostDeploy Include="Scripts\Script.PostDeployment.sql"/>
-  </ItemGroup>
-  <ItemGroup>
-    <PreDeploy Include="Scripts\Script.PreDeployment.sql"/>
-  </ItemGroup>
-  <ItemGroup>
-    <RefactorLog Include="EDWTargetSB.refactorlog"/>
-  </ItemGroup>
-  <Import Condition="'$(NetCoreBuild)' == 'true'" Project="$(NETCoreTargetsPath)\Microsoft.Data.Tools.Schema.SqlTasks.targets"/>
-  <ItemGroup>
-    <PackageReference Condition="'$(NetCoreBuild)' == 'true'" Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.0" PrivateAssets="All"/>
-  </ItemGroup>
-  <Target Name="AfterClean">
-    <Delete Files="$(BaseIntermediateOutputPath)\project.assets.json"/>
-  </Target>
 </Project>
