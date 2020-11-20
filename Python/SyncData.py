@@ -1,3 +1,4 @@
+import psycopg2 as psy
 import pandas as pd
 import pyodbc
 import csv
@@ -42,3 +43,9 @@ with engine.connect() as conn:
 print(df1)
 #df.to_sql('Users', engine, method=psql_insert_copy)
 #df.to_sql('users', con=engine, if_exists='replace', method=psql_insert_copy)
+
+
+pg_conn = psy.connect(
+    "host=localhost dbname=stackoverflow user=postgres password=Hh010898@@")
+cur = pg_conn.cursor()
+cur.execute('SELECT * FROM public.users')
