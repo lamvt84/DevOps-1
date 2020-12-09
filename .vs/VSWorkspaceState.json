@@ -1,13 +1,6 @@
 {
   "ExpandedNodes": [
-    "",
-    "\\C#",
-    "\\C#\\ServicesMonitor",
-    "\\C#\\ServicesMonitor\\MVCSite",
-    "\\C#\\ServicesMonitor\\TaskSchedule",
-    "\\C#\\ServicesMonitor\\TaskSchedule\\Modules",
-    "\\Powershell",
-    "\\Powershell\\Training"
+    ""
   ],
   "PreviewInSolutionExplorer": false
 }
