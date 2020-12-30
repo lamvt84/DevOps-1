@@ -1,33 +1,196 @@
-CREATE OR ALTER PROCEDURE dbo.sp_WaitStats_Collect
+USE [EventMonitoring]
+GO
+
+DROP TABLE IF EXISTS dbo.WaitCategories
+DROP TABLE IF EXISTS dbo.WaitStats
+
+CREATE TABLE dbo.WaitCategories
+(
+    wait_type NVARCHAR(60) PRIMARY KEY CLUSTERED,
+    wait_category NVARCHAR(128) NOT NULL,
+    ignoratble BIT DEFAULT 0
+);
+GO
+
+CREATE TABLE dbo.WaitStats(    
+    pass TINYINT,
+    sample_time DATETIMEOFFSET,
+    server_name NVARCHAR(50),
+    wait_type NVARCHAR(60) INDEX IX_WaitType CLUSTERED,
+    wait_time_s NUMERIC(12, 1),
+    wait_time_per_core_s DECIMAL(18, 1),
+    signal_wait_time_s NUMERIC(12, 1),
+    signal_wait_percent NUMERIC(4, 1),
+    wait_count bigint
+);
+GO
+
+CREATE OR ALTER PROCEDURE dbo.sp_WaitStats_Report
     @ServerName sysname = @@SERVERNAME
 AS
 BEGIN
-    --IF (@Seconds <= 0) RETURN
-    IF (@ServerName IS NULL)
-        SET @ServerName = @@SERVERNAME
-
-    IF OBJECT_ID('tempdb..##WaitCategories') IS NULL
+    IF NOT EXISTS (SELECT 1/0 FROM dbo.WaitStats WHERE pass = 1)
     BEGIN
-        CREATE TABLE ##WaitCategories
-        (
-            WaitType NVARCHAR(60) PRIMARY KEY CLUSTERED,
-            WaitCategory NVARCHAR(128) NOT NULL,
-            Ignorable BIT
-                DEFAULT 0
-        );
+        WITH cte_WaitStats AS (
+            SELECT x.wait_type,
+            SUM(x.sum_wait_time_ms) AS sum_wait_time_ms,
+            SUM(x.sum_signal_wait_time_ms) AS sum_signal_wait_time_ms,
+            SUM(x.sum_waiting_tasks) AS sum_waiting_tasks
+            FROM
+            (
+                SELECT owt.wait_type,
+                    SUM(owt.wait_duration_ms) OVER (PARTITION BY owt.wait_type, owt.session_id) AS sum_wait_time_ms,
+                    0 AS sum_signal_wait_time_ms,
+                    0 AS sum_waiting_tasks
+                FROM sys.dm_os_waiting_tasks owt
+                WHERE owt.session_id > 50
+                    AND owt.wait_duration_ms >= 0
+                UNION ALL
+                SELECT os.wait_type,
+                    SUM(os.wait_time_ms) OVER (PARTITION BY os.wait_type) AS sum_wait_time_ms,
+                    SUM(os.signal_wait_time_ms) OVER (PARTITION BY os.wait_type) AS sum_signal_wait_time_ms,
+                    SUM(os.waiting_tasks_count) OVER (PARTITION BY os.wait_type) AS sum_waiting_tasks
+                FROM sys.dm_os_wait_stats os
+            ) x	
+            GROUP BY x.wait_type
+        )
+        INSERT dbo.WaitStats (
+            [pass]
+            ,[sample_time]
+            ,[server_name]
+            ,[wait_type]
+            ,[wait_time_s]
+            ,[wait_time_per_core_s]
+            ,[signal_wait_time_s]
+            ,[signal_wait_percent]
+            ,[wait_count]            
+        )
+        SELECT 1,
+            SYSDATETIMEOFFSET(),
+            @@SERVERNAME,
+            wc.wait_type,
+            COALESCE(c.wait_time_s, 0),
+            COALESCE(CAST((CAST(ws.sum_wait_time_ms AS MONEY)) / 1000.0 / cores.cpu_count AS DECIMAL(18, 1)), 0),
+            COALESCE(c.signal_wait_time_s, 0),
+            COALESCE(
+                CASE
+                    WHEN c.wait_time_s > 0 THEN
+                        CAST(100. * (c.signal_wait_time_s / c.wait_time_s) AS NUMERIC(4, 1))
+                    ELSE
+                        0
+                END, 0),
+            COALESCE(ws.sum_waiting_tasks, 0)            
+        FROM dbo.WaitCategories wc
+            LEFT JOIN cte_WaitStats ws ON wc.wait_type = ws.wait_type AND ws.sum_waiting_tasks > 0
+            CROSS APPLY
+            (
+                SELECT SUM(1) AS cpu_count
+                FROM sys.dm_os_schedulers
+                WHERE status = 'VISIBLE ONLINE'
+                    AND is_online = 1
+            ) AS cores
+            CROSS APPLY
+            (
+                SELECT CAST(ws.sum_wait_time_ms / 1000. AS NUMERIC(12, 1)) AS wait_time_s,
+                    CAST(ws.sum_signal_wait_time_ms / 1000. AS NUMERIC(12, 1)) AS signal_wait_time_s
+            ) AS c;
+        
+        WAITFOR DELAY '00:00:05';
     END;
 
-    IF 527 <>
-    (
-        SELECT COALESCE(SUM(1), 0) FROM ##WaitCategories
-    )
-    BEGIN
-        TRUNCATE TABLE ##WaitCategories;
-        INSERT INTO ##WaitCategories
+    WITH cte_WaitStats AS (
+        SELECT x.wait_type,
+        SUM(x.sum_wait_time_ms) AS sum_wait_time_ms,
+        SUM(x.sum_signal_wait_time_ms) AS sum_signal_wait_time_ms,
+        SUM(x.sum_waiting_tasks) AS sum_waiting_tasks
+        FROM
         (
-            WaitType,
-            WaitCategory,
-            Ignorable
+            SELECT owt.wait_type,
+                SUM(owt.wait_duration_ms) OVER (PARTITION BY owt.wait_type, owt.session_id) AS sum_wait_time_ms,
+                0 AS sum_signal_wait_time_ms,
+                0 AS sum_waiting_tasks
+            FROM sys.dm_os_waiting_tasks owt
+            WHERE owt.session_id > 50
+                AND owt.wait_duration_ms >= 0
+            UNION ALL
+            SELECT os.wait_type,
+                SUM(os.wait_time_ms) OVER (PARTITION BY os.wait_type) AS sum_wait_time_ms,
+                SUM(os.signal_wait_time_ms) OVER (PARTITION BY os.wait_type) AS sum_signal_wait_time_ms,
+                SUM(os.waiting_tasks_count) OVER (PARTITION BY os.wait_type) AS sum_waiting_tasks
+            FROM sys.dm_os_wait_stats os
+        ) x	
+	    GROUP BY x.wait_type
+    )
+    INSERT dbo.WaitStats (
+        [pass]
+        ,[sample_time]
+        ,[server_name]
+        ,[wait_type]
+        ,[wait_time_s]
+        ,[wait_time_per_core_s]
+        ,[signal_wait_time_s]
+        ,[signal_wait_percent]
+        ,[wait_count]
+    )
+    SELECT 2,
+        SYSDATETIMEOFFSET(),
+        @@SERVERNAME,
+        wc.wait_type,
+        COALESCE(c.wait_time_s, 0),
+        COALESCE(CAST((CAST(ws.sum_wait_time_ms AS MONEY)) / 1000.0 / cores.cpu_count AS DECIMAL(18, 1)), 0),
+        COALESCE(c.signal_wait_time_s, 0),
+		COALESCE(
+			CASE
+				WHEN c.wait_time_s > 0 THEN
+					CAST(100. * (c.signal_wait_time_s / c.wait_time_s) AS NUMERIC(4, 1))
+				ELSE
+					0
+			END, 0),
+        COALESCE(ws.sum_waiting_tasks, 0)
+    FROM dbo.WaitCategories wc
+        LEFT JOIN cte_WaitStats ws ON wc.wait_type = ws.wait_type AND ws.sum_waiting_tasks > 0
+		CROSS APPLY
+		(
+			SELECT SUM(1) AS cpu_count
+			FROM sys.dm_os_schedulers
+			WHERE status = 'VISIBLE ONLINE'
+				AND is_online = 1
+		) AS cores
+		CROSS APPLY
+		(
+			SELECT CAST(ws.sum_wait_time_ms / 1000. AS NUMERIC(12, 1)) AS wait_time_s,
+				CAST(ws.sum_signal_wait_time_ms / 1000. AS NUMERIC(12, 1)) AS signal_wait_time_s
+		) AS c;
+    
+    SELECT ws2.server_name,
+        ws2.sample_time,
+        COALESCE(wc.wait_type, 'Other') wait_type,
+        COALESCE(wc.wait_category, 'Other') wait_category,
+        COALESCE(ws2.wait_time_s - ws1.wait_time_s, 0) wait_time_s,
+        COALESCE(ws2.wait_time_per_core_s - ws1.wait_time_per_core_s, 0) wait_time_per_core_s,
+        COALESCE(ws2.signal_wait_time_s - ws1.signal_wait_time_s, 0) signal_wait_time_s,
+        COALESCE(ws2.signal_wait_percent - ws1.signal_wait_percent, 0) signal_wait_percent,        
+        COALESCE(ws2.wait_count - ws1.wait_count, 0) wait_count,        
+        CASE WHEN ws2.wait_count > ws1.wait_count THEN COALESCE(CAST((ws2.wait_time_s - ws1.wait_time_s) * 1000. / (1.0 * (ws2.wait_count - ws1.wait_count)) AS NUMERIC(12, 1)), 0) 
+			ELSE 0 END avg_wait_per_ms
+    FROM dbo.WaitStats ws2
+        LEFT OUTER JOIN dbo.WaitStats ws1
+            ON ws2.wait_type = ws1.wait_type
+        LEFT JOIN dbo.WaitCategories wc ON ws2.wait_type = wc.wait_type
+    WHERE ws1.pass = 1
+        AND ws2.pass = 2;
+
+    DELETE FROM dbo.WaitStats WHERE pass = 1;
+    UPDATE dbo.WaitStats SET pass = 1 WHERE pass = 2;
+END
+GO
+
+
+INSERT INTO dbo.WaitCategories
+        (
+            wait_type,
+            wait_category,
+            ignoratble
         )
         VALUES
         ('ASYNC_IO_COMPLETION', 'Other Disk IO', 0),
@@ -558,62 +721,4 @@ BEGIN
         ('XE_DISPATCHER_WAIT', 'Idle', 0),
         ('XE_LIVE_TARGET_TVF', 'Other', 0),
         ('XE_TIMER_EVENT', 'Idle', 0)
-    END;
 
-    ;WITH cte_WaitStats AS (
-        SELECT ws.wait_type,
-            c.wait_time_s,
-            CAST((CAST(ws.sum_wait_time_ms AS MONEY)) / 1000.0 / cores.cpu_count AS DECIMAL(18, 1)) AS wait_time_per_core_s,
-            c.signal_wait_time_s,
-            CASE
-                WHEN c.wait_time_s > 0 THEN
-                    CAST(100. * (c.signal_wait_time_s / c.wait_time_s) AS NUMERIC(4, 1))
-                ELSE
-                    0
-            END AS signal_wait_percent,
-            ws.sum_waiting_tasks AS wait_count,
-            CAST(ws.sum_wait_time_ms / (1.0 * (ws.sum_waiting_tasks)) AS NUMERIC(12, 1)) avg_wait_per_ms
-        FROM 
-            (
-            SELECT os.wait_type,
-                SUM(os.wait_time_ms) OVER (PARTITION BY os.wait_type) AS sum_wait_time_ms,
-                SUM(os.signal_wait_time_ms) OVER (PARTITION BY os.wait_type) AS sum_signal_wait_time_ms,
-                SUM(os.waiting_tasks_count) OVER (PARTITION BY os.wait_type) AS sum_waiting_tasks
-                FROM sys.dm_os_wait_stats os
-                WHERE os.waiting_tasks_count > 0
-                    AND EXISTS
-                    (
-                        SELECT 1 / 0
-                        FROM ##WaitCategories AS wc
-                        WHERE wc.WaitType = os.wait_type
-                    )   
-            ) ws
-            CROSS APPLY
-            (
-                SELECT SUM(1) AS cpu_count
-                FROM sys.dm_os_schedulers
-                WHERE status = 'VISIBLE ONLINE'
-                    AND is_online = 1
-            ) AS cores
-            CROSS APPLY
-            (
-                SELECT CAST(ws.sum_wait_time_ms / 1000. AS NUMERIC(12, 1)) AS wait_time_s,
-                    CAST(ws.sum_signal_wait_time_ms / 1000. AS NUMERIC(12, 1)) AS signal_wait_time_s
-            ) AS c
-    )
-    SELECT @ServerName AS server_name,
-        SYSDATETIMEOFFSET() AS sample_time,
-        0 second_sample,
-        wcat.WaitType wait_type,
-        wcat.WaitCategory wait_category,
-        COALESCE(ws.wait_time_s, 0) wait_time_s,
-        COALESCE(ws.wait_time_per_core_s, 0) wait_time_per_core_s,
-        COALESCE(ws.signal_wait_time_s, 0) signal_wait_time_s,
-        COALESCE(ws.signal_wait_percent, 0) signal_wait_percent,
-        
-        COALESCE(ws.wait_count, 0) wait_count,
-        COALESCE(ws.avg_wait_per_ms, 0) avg_wait_per_ms
-    FROM ##WaitCategories wcat
-        LEFT OUTER JOIN cte_WaitStats ws
-            ON wcat.WaitType = ws.wait_type;
-END
