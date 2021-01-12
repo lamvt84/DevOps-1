@@ -22,11 +22,11 @@ WHERE article_id IN
       )
 
 -- To identify the command with the problem.
+-- Can remove @command_id for whole command in 1 transaction
 EXEC sp_browsereplcmds @xact_seqno_start = '0x00032F6B0000084B000300000000',
                        @xact_seqno_end = '0x00032F6B0000084B000300000000',
                        @publisher_database_id = 18,
                        @command_id = 1
-
 
 -- Delete the command from MSRepl_commands using the xact_seqno and command_id
 SELECT *

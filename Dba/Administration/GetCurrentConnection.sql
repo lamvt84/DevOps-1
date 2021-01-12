@@ -1,4 +1,4 @@
- SELECT 
+SELECT 
 		DB_NAME(database_id) as [DB],
       s.host_name, 
 	  s.original_login_name,
