@@ -1,0 +1,33 @@
+{
+    "backup_config" : {
+        "sql_instance" : "CLUSTER-LAMVT\\SQL2019",
+        "sql_backup_dir" : "E:\\Database Backup\\2019",    
+        "sql_login" : "lamvt",
+        "sql_password" : "lamvt",    
+        "cert_name" : "BackupCert",
+        "cert_algorithm" : "AES256",
+        "databases" : ["DBATools1","ReplicationDB"]
+    },
+    "history_config" : {
+        "sql_instance" : "CLUSTER-LAMVT\\SQL2019",
+        "sql_login" : "lamvt",
+        "sql_password" : "lamvt",
+        "database" : "ReplicationDB"
+    },
+    "ftp_config" : {
+        "server_url" : "",
+        "port" : 21,
+        "user" : "",
+        "pass" : ""
+    },
+    "mail_config" : {
+        "from" : "monitor@citigo.com.vn",
+        "to" : "lam.vt@citigo.com.vn",
+        "subject" : "[ERROR] Database Backup",
+        "body" : "Database backup error<br/>- Database: {1}<br /> -Message: {2} <br />",
+        "server" : "email-smtp.us-east-1.amazonaws.com",
+        "port" : 587,
+        "user" : "AKIAU73DY3VSOUGNIIL6",
+        "pass" : "BGLoK7vhmSLx9syyuqKYrZZ87sijcbHl3ACqh6sRf0G0"
+    }
+}

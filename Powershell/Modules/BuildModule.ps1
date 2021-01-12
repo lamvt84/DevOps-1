@@ -1,14 +1,14 @@
 $manifest = @{
-    Path                = 'NetworkLB.psd1'
-    RootModule          = 'NetworkLB.psm1' 
+    Path                = 'BackupDatabase.psd1'
+    RootModule          = 'BackupDatabase.psm1' 
     Author              = 'Louis Vu'
-    CompanyName         = 'IrisTech'
-    FunctionsToExport   = 'Invoke-NetworkLoadBalancing'
+    CompanyName         = 'Citigo'
+    FunctionsToExport   = 'Invoke-BackupSQLDatabase'
     CmdletsToExport     = ''
     VariablesToExport   = ''
     AliasesToExport     = ''
     PowerShellVersion   = '5.0'
-    Tags                = 'NetworkLoadBalancing', 'Troubleshooting', 'Testing'
+    Tags                = 'SQLBackup'
 
 }
 New-ModuleManifest @manifest
