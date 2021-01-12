@@ -1,8 +1,20 @@
 # Backup Database: Encryption and Compression
 
+Table of contents
+=================
 
-
-[TOC]
+<!--ts-->   
+   * [Table of contents](#table-of-contents)
+   * [Installation](#Benefit)
+   * [Usage](#usage)
+      * [Encryption](#Encryption)
+      * [Compression](#Compression)     
+   * [Compare with 7zip](#Compare-with-7zip)
+   * [Certificate Installation](#Certificate-Installation)
+   * [Docker](#docker)
+     * [Local](#local)
+     * [Public](#public)
+<!--te-->
 
 ### Benefit
 
