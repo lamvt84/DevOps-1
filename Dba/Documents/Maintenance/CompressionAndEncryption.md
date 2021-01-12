@@ -1,7 +1,4 @@
 # Backup Database: Encryption and Compression
-
-Table of contents
-=================
 <!--ts-->   
    * [Benefit](#Benefit)  
    * [Compare with 7zip](#Compare-with-7zip)
