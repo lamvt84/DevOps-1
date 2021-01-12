@@ -2,9 +2,7 @@
 
 Table of contents
 =================
-
 <!--ts-->   
-   * [Table of contents](#table-of-contents)
    * [Benefit](#Benefit)  
    * [Compare with 7zip](#Compare-with-7zip)
    * [Certificate Installation](#Certificate-Installation)
