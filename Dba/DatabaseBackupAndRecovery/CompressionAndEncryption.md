@@ -1,5 +1,4 @@
-Backup Database: Encryption and Compression
-=================
+# Backup Database: Encryption and Compression
 <!--ts-->   
    * [Benefit](#Benefit)  
    * [Compare with 7zip](#Compare-with-7zip)
