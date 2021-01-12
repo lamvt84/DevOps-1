@@ -1,4 +1,4 @@
-Table of contents
+Backup Database: Encryption and Compression
 =================
 <!--ts-->   
    * [Benefit](#Benefit)  
