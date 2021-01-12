@@ -21,13 +21,13 @@
         "pass" : ""
     },
     "mail_config" : {
-        "from" : "monitor@citigo.com.vn",
-        "to" : "lam.vt@citigo.com.vn",
-        "subject" : "[ERROR] Database Backup",
-        "body" : "Database backup error<br/>- Database: {1}<br /> -Message: {2} <br />",
-        "server" : "email-smtp.us-east-1.amazonaws.com",
-        "port" : 587,
-        "user" : "AKIAU73DY3VSOUGNIIL6",
-        "pass" : "BGLoK7vhmSLx9syyuqKYrZZ87sijcbHl3ACqh6sRf0G0"
+        "from" : "",
+        "to" : "",
+        "subject" : "",
+        "body" : "",
+        "server" : "",
+        "port" : "",
+        "user" : "",
+        "pass" : ""
     }
 }
