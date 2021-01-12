@@ -5,15 +5,12 @@ Table of contents
 
 <!--ts-->   
    * [Table of contents](#table-of-contents)
-   * [Installation](#Benefit)
-   * [Usage](#usage)
-      * [Encryption](#Encryption)
-      * [Compression](#Compression)     
+   * [Benefit](#Benefit)  
    * [Compare with 7zip](#Compare-with-7zip)
    * [Certificate Installation](#Certificate-Installation)
-   * [Docker](#docker)
-     * [Local](#local)
-     * [Public](#public)
+   * [Backup Database](#Backup-Database)
+   * [Restore Database](#Restore-Database)
+   * [Troubleshoot](#Troubleshoot)
 <!--te-->
 
 ### Benefit
