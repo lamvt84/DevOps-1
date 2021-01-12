@@ -1,5 +1,3 @@
-# Backup Database: Encryption and Compression
-
 Table of contents
 =================
 <!--ts-->   
