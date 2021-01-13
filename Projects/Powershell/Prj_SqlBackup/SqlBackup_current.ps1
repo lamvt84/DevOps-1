@@ -29,6 +29,7 @@ $historyConfig = $Config.history_config
 $mailConfig = $Config.mail_config
 $ftpConfig = $Config.ftp_config
 
+
 # Backup split multi files
 $ReplaceInName = $false
 $FileCount = 1 # count of files
@@ -118,33 +119,28 @@ $Response | ForEach-Object {
         #}
 
 		$HashFile = (Get-FileHash $_.Detail.BackupPath -Algorithm MD5).Hash
-		$start_date = [System.DateTimeOffset]::Now.DateTime		
 		
+		$start_date = [System.DateTimeOffset]::Now.DateTime	
 		$RemoteFile = "ftp://{0}:{1}@{2}/{3}" -F $ftpConfig.user, $ftpConfig.pass, $ftpConfig.server, $_.Detail.BackupFile
-		$Result = "" | Select-Object Error, Detail
-		try {
-			$webclient = New-Object System.Net.WebClient
-			$uri = New-Object System.Uri($RemoteFile)
-			$webclient.UploadFile($uri, $_.Detail.BackupPath)
-			$Result.Error = 0
-			$Result.Detail = $null
-		}
-		catch {
-			$Result.Error = 1
-			$Result.Detail = $_.Exception.Message
-		}				
-
-		#$Result = Move-FTP -Username $ftpConfig.user -Password $ftpConfig.pass -LocalFile $_.Detail.BackupPath -RemoteFile $RemoteFile
+		$uploadResult = Move-FTP -LocalFile $_.Detail.BackupPath -RemoteFile $RemoteFile
 		$end_date = [System.DateTimeOffset]::Now.DateTime
 		
-		if ($Result.Error -eq 0) {			
-			try {
-				Remove-Item $_.Detail.BackupPath | Out-Null
-				$deleted = [System.DateTimeOffset]::Now.DateTime				
+		if ($uploadResult.Error -eq 0) {		
+			$verifyResult = Get-FileSize -RemoteFile $RemoteFile
+			if (($verifyResult.Error -eq 0) -and ($verifyResult.Detail = (Get-Item $_.Detail.BackupPath).Length)) {			
+				try {
+					$verify_file_size = $True
+					Remove-Item $_.Detail.BackupPath | Out-Null
+					$deleted = [System.DateTimeOffset]::Now.DateTime							
+				}
+				catch {
+					Write-Verbose "Delete file error"
+					$deleted = $null
+				}
 			}
-			catch {
-				Write-Verbose "Delete file error"
+			else {
 				$deleted = $null
+				$verify_file_size = $Frue
 			}
 		}
 		
@@ -156,14 +152,15 @@ $Response | ForEach-Object {
 			backup_file_hash = $HashFile
 			backup_start_date = $_.Detail.Start
 			backup_end_date = $_.Detail.End
-			ftp_upload_start_date = if ($Result.Error -eq 0) { $start_date } else { $null }
-			ftp_upload_end_date = if ($Result.Error -eq 0) { $end_date } else { $null }
+			ftp_upload_start_date = if ($uploadResult.Error -eq 0) { $start_date } else { $null }
+			ftp_upload_end_date = if ($uploadResult.Error -eq 0) { $end_date } else { $null }
 			is_notification = 0
 			status = $_.Error
-			error_message = if ($Result.Error -ne 0) { $Result.Detail } else { $null }
-			ftp_status = $Result.Error
+			error_message = if ($uploadResult.Error -ne 0) { $uploadResult.Detail } else { $null }
+			ftp_status = $uploadResult.Error
 			ftp_file_path = "ftp://{0}@{1}/{2}" -F $ftpConfig.user, $ftpConfig.server, $_.Detail.BackupFile
 			deleted_time = $deleted
+			verify_file_size = $verify_file_size
 		}		
 	}
 	else {
@@ -183,6 +180,7 @@ $Response | ForEach-Object {
 			ftp_status = $null
 			ftp_file_path = $null
 			deleted_time = $null
+			verify_file_size = $null
 		}
 	}
 	Invoke-DbaQuery @params -SqlParameters $QueryParameters -ErrorAction Stop | Out-Null
