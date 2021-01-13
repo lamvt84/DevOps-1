@@ -18,5 +18,5 @@ When data changes, MSSQL creates a conversation between Core Initiator Service B
 
 A scheduled job (daily, hourly, delta) that will build a batch of data and send from Core to DWH Staging and re-synchronize with current data in DWH
 
-![Architect](https://github.com/LouisVu84/DevOps/blob/master/Dba/EDW/Doc/Flow.PNG)
+![Architect](https://github.com/LouisVu84/DevOps/blob/master/Documents/DataWarehouse/Flow.PNG)
 
