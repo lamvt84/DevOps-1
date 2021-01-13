@@ -1,9 +1,7 @@
 # Double Entry Accounting System
 
 <!--ts-->
-
-[TOC]
-
+\* [DEFINITION](#DEFINITION)
 <!--te-->
 
 ### DEFINITION
