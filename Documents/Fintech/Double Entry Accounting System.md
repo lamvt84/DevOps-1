@@ -57,20 +57,23 @@ Các nghiệp vụ được mô tả bao gồm
 -	Ngày 02/09/2020, khách hàng A nạp vào hệ thống 1.000.000. 
 -	Hệ thống thực hiện ghi có cho tài khoản A số tiền 1.000.000 và ghi nợ vào tài khoản CASH của ví số tiền 1.000.000
 -	Thông tin trạng thái tài khoản:
+
   ![image-20210113145110846](https://github.com/LouisVu84/DevOps/blob/master/Documents/Fintech/image-20210113145110846.png)
   
 - Sổ cái ghi nhận:
-  ![image-20210113145129368](https://github.com/LouisVu84/DevOps/blob/master/Documents/Fintech/image-20210113145129368.png)
-  
+
+  ![image-20210113145129368](https://github.com/LouisVu84/DevOps/blob/master/Documents/Fintech/image-20210113145129368.png)  
 
 ##### Internal payment without fee
 
 - Ngày 05/09/2020, khách hàng A thực hiện thanh toán hóa đơn mệnh giá 200.000.
 - Hệ thống thực hiện ghi nợ vào tài khoản A 200.000 và ghi có vào tài khoản CASH 200.000
 - Hệ thống thực hiện ghi nợ vào tài khoản CASH 200.000 và ghi có vào tài khoản PAYMENT của ví 200.000
+
   ![image-20210113145156821](https://github.com/LouisVu84/DevOps/blob/master/Documents/Fintech/image-20210113145156821.png)
   
 - Sổ cái ghi nhận:
+
   ![image-20210113145242622](https://github.com/LouisVu84/DevOps/blob/master/Documents/Fintech/image-20210113145242622.png)
   
 
@@ -80,9 +83,11 @@ Các nghiệp vụ được mô tả bao gồm
 - Hệ thống thực hiện ghi có cho tài khoản B số tiền 310.000 và ghi nợ vào tài khoản CASH của ví số tiền 310.000
 - Hệ thống thực hiện ghi nợ vào tài khoản B 300.000 và ghi có vào tài khoản CASH 300.000, ghi có vào tài khoản FEE 10.000
 - Hệ thống thực hiện ghi nợ vào tài khoản CASH 300.000 và ghi có vào tài khoản PAYMENT 300.000
+
   ![image-20210113145251585](https://github.com/LouisVu84/DevOps/blob/master/Documents/Fintech/image-20210113145251585.png)
   
 - Sổ cái ghi nhận:
+
   ![image-20210113145259537](https://github.com/LouisVu84/DevOps/blob/master/Documents/Fintech/image-20210113145259537.png)
   
 
