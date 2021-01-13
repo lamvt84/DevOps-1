@@ -4,13 +4,11 @@
 
 <!--ts-->  
 
-  \* [Installation](#Installation) 
-
-* [Table](#**Table**) 
-* [Stored Procedure](#**Stored Procedure**) 
-* [Initialize Wait Categories](#**Initialize Wait Categories**) 
-
-  \* [Operation](#Operation)
+* [Installation](#Installation) 
+  * [Table](#Table) 
+  * [Stored Procedure](#Stored-Procedure) 
+  * [Initialize Wait Categories](#Initialize-Wait-Categories) 
+* [Operation](#Operation)
 
 <!--te-->
 
