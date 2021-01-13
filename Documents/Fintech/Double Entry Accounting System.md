@@ -1,14 +1,14 @@
 # Double Entry Accounting System
 
 <!--ts-->
-\* [DEFINITION](#DEFINITION)
-\* [SCOPE](#SCOPE)
-\* [OBJECT](#OBJECT)
-\* [DESCRIPTION](#DESCRIPTION)
-   \* [Deposit](#Deposit)
-   \* [Internal payment without fee](#Internal payment without fee)
-   \* [External payment with fee](#External payment with fee)
-\* [BUSINESS FLOW](#BUSINESS FLOW)
+* [DEFINITION](#DEFINITION)
+* [SCOPE](#SCOPE)
+* [OBJECT](#OBJECT)
+* [DESCRIPTION](#DESCRIPTION)
+   * [Deposit](#Deposit)
+   * [Internal payment without fee](#Internal-payment-without-fee)
+   * [External payment with fee](#External-payment-with-fee)
+* [BUSINESS FLOW](#BUSINESS-FLOW)
 <!--te-->
 
 ### DEFINITION
@@ -58,11 +58,11 @@ Các nghiệp vụ được mô tả bao gồm
 -	Hệ thống thực hiện ghi có cho tài khoản A số tiền 1.000.000 và ghi nợ vào tài khoản CASH của ví số tiền 1.000.000
 -	Thông tin trạng thái tài khoản:
 
-![image-20210113145110846](E:\Repositories\Github\DevOps\Documents\Fintech\image-20210113145110846.png)
+![image-20210113145110846](https://github.com/LouisVu84/DevOps/blob/master/Documents/Fintech/image-20210113145110846.png)
 
 - Sổ cái ghi nhận:
 
-  <img src="E:\Repositories\Github\DevOps\Documents\Fintech\image-20210113145129368.png" alt="image-20210113145129368"  />
+  <img src="https://github.com/LouisVu84/DevOps/blob/master/Documents/Fintech/" alt="image-20210113145129368"  />
 
 ##### Internal payment without fee
 
