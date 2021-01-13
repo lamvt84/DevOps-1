@@ -2,6 +2,13 @@
 
 <!--ts-->
 \* [DEFINITION](#DEFINITION)
+\* [SCOPE](#SCOPE)
+\* [OBJECT](#OBJECT)
+\* [DESCRIPTION](#DESCRIPTION)
+   \* [Deposit](#Deposit)
+   \* [Internal payment without fee](#Internal payment without fee)
+   \* [External payment with fee](#External payment with fee)
+\* [BUSINESS FLOW](#BUSINESS FLOW)
 <!--te-->
 
 ### DEFINITION
