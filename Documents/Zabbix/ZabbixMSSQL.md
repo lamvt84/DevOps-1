@@ -53,7 +53,3 @@ Macro
 * Modify others options based on your need 
 
 Finally, click Add to create a new host and wait for some minutes until zabbix updates server information
-
-
-
- *docker run -e "ACCEPT_EULA=Y" -e "SA_PASSWORD=Hh010898@@" -p 6699:1433 -d mcr.microsoft.com/mssql/server:2019-latest*
