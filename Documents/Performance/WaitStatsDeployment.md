@@ -14,7 +14,7 @@
 
 ### Installation
 
-**Table**
+#### *Table*
 
 ```sql
 CREATE TABLE dbo.WaitCategories
@@ -39,7 +39,7 @@ CREATE TABLE dbo.WaitStats(
 GO
 ```
 
-**Stored Procedure**
+#### *Stored Procedure*
 
 ```sql
 CREATE OR ALTER PROCEDURE [dbo].[sp_WaitStats_Report]
@@ -206,7 +206,7 @@ END
 GO
 ```
 
-**Initialize Wait Categories**
+#### *Initialize Wait Categories*
 
 ```sql
 INSERT INTO dbo.WaitCategories
