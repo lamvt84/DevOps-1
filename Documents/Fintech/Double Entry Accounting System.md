@@ -93,4 +93,4 @@ Các nghiệp vụ được mô tả bao gồm
 
 ### BUSINESS FLOW
 
--	Nội dung trong file DE.pdf
+-	Nội dung trong file [Flow](https://github.com/LouisVu84/DevOps/blob/master/Documents/Fintech/DE.pdf)
