@@ -1,4 +1,4 @@
-### Get long running queries
+### Find long running queries
 
 ```sql
 SELECT TOP (50)

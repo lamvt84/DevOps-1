@@ -1,4 +1,4 @@
-### Get current queries having waits
+### Find current queries having waits
 
 ```sql
 SELECT [er].[session_id],
