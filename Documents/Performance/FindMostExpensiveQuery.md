@@ -1,4 +1,4 @@
-### Find long running queries
+### Find most expensive queries
 
 ```sql
 SELECT TOP (50)
@@ -11,13 +11,14 @@ SELECT TOP (50)
        (qs.total_elapsed_time / qs.execution_count) / 1000.0 AS [Avg Elapsed Time in ms],
        qs.creation_time AS [Creation Time],
        t.TEXT AS [Complete Query Text],
+       convert(xml,'<xml><![CDATA[' + cast(t.TEXT as varchar(max)) + ']]></xml>') [Full Query XML],
        qp.query_plan AS [Query Plan]
 FROM sys.dm_exec_query_stats AS qs WITH (NOLOCK)
     CROSS APPLY sys.dm_exec_sql_text(plan_handle) AS t
     CROSS APPLY sys.dm_exec_query_plan(plan_handle) AS qp
 WHERE t.dbid = DB_ID()
-ORDER BY qs.execution_count DESC
-OPTION (RECOMPILE); -- for frequently ran query
+AND qs.last_execution_time > '2020-01-14 10:00:00'
+ORDER BY qs.execution_count DESC OPTION (RECOMPILE); -- for frequently ran query
 -- ORDER BY [Avg Logical Reads in ms] DESC OPTION (RECOMPILE);-- for High Disk Reading query
 -- ORDER BY [Avg Worker Time in ms] DESC OPTION (RECOMPILE);-- for High CPU query
 -- ORDER BY [Avg Elapsed Time in ms] DESC OPTION (RECOMPILE);-- for Long Running query

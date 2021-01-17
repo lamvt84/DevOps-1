@@ -44,7 +44,7 @@ function Move-FTP {
 		$Warning.Detail = $null
 	}
 	catch {
-		$Warning.Error = 1
+		$Warning.Error = -1
 		$Warning.Detail = $_.Exception.Message
 	}	
 	$Warning	
@@ -94,7 +94,7 @@ function Get-FileSize{
 		$Warning.Detail = $Status
 	}
 	catch {
-		$Warning.Error = 1
+		$Warning.Error = -2
 		$Warning.Detail = $_.Exception.Message
 	}
 	$Warning
