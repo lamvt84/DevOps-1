@@ -151,7 +151,7 @@ function Invoke-BackupSQLDatabase {
         #     ErrorVariable = 'RestoreError'
         # }      
         try {
-            $BackupPath = "{0}\{1}" -f $SqlBackupDir, $_		
+            $BackupPath = "{0}\{1}" -f $SqlBackupDir, ($DbName | Select-Object -First 1)		
     
             if (!(Test-Path $BackupPath -PathType Container)) {  
                 New-Item -ItemType Directory -Force -Path $BackupPath | Out-Null
@@ -160,10 +160,10 @@ function Invoke-BackupSQLDatabase {
             else { 
                 Write-Verbose "The given folder path $BackupPath already exists"; 
             }
-            $BackupFileName = "{0}_{1}_{2}.{3}" -f $_,$fileType,$timeStamp,$fileExtension;
+            $BackupFileName = "{0}_{1}_{2}.{3}" -f ($DbName | Select-Object -First 1),$fileType,$timeStamp,$fileExtension;
             $params = @{
                 SqlInstance      = $SqlInstance
-                Database         = $_
+                Database         = $DbName
                 BackupDirectory  = $BackupPath
                 BackupFileName   = $BackupFileName
                 Type             = $fileType
@@ -183,7 +183,7 @@ function Invoke-BackupSQLDatabase {
                     EncryptionAlgorithm = $EncryptionAlgorithm
                     EncryptionCertificate = $EncryptionCertificate
                 }  
-                $Response = Backup-DbaDatabase @params @encrypt @WarningToDo -EnableException              
+                $Response = Backup-DbaDatabase @params @encrypt @WarningToDo -EnableException
             } 
             else {
                 $Response = Backup-DbaDatabase @params @WarningToDo -EnableException   

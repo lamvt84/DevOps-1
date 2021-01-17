@@ -48,10 +48,9 @@ $Cred = New-Object System.Management.Automation.PSCredential ($user, $password)
 $query = Get-Content "G:\DBA\getbkhistoryerr.sql" | Out-String
 
 $Result = @()
-$instance | ForEach-Object {
-    $db = Connect-DbaInstance -SqlInstance $_ -SqlCredential $Cred
+$instance | ForEach-Object {    
     $Dataset = Invoke-DbaQuery -Query $query -SqlCredential $Cred -SqlInstance $_ -Database $database -ErrorAction Stop | 
-                SELECT database_name, backup_type, backup_start_date, backup_finish_date, create_date
+                Select-Object database_name, backup_type, backup_start_date, backup_finish_date, create_date
     $Result += $Dataset
 }
 

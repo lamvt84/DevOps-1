@@ -6,7 +6,7 @@
         "sql_password" : "lamvt",    
         "cert_name" : "BackupCert",
         "cert_algorithm" : "AES256",
-        "databases" : ["DBATools1","ReplicationDB"]
+        "databases" : ["DBATools"]
     },
     "history_config" : {
         "sql_instance" : "CLUSTER-LAMVT\\SQL2019",
