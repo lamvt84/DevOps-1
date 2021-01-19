@@ -1,7 +1,11 @@
 {
   "ExpandedNodes": [
-    ""
+    "",
+    "\\Projects",
+    "\\Projects\\SQLServer",
+    "\\Projects\\SQLServer\\DeadLock",
+    "\\Projects\\SQLServer\\FullTextSearch",
+    "\\Projects\\SQLServer\\Parallelism"
   ],
-  "SelectedNode": "\\SSIS.sln (Dba\\SSIS\\SSIS.sln)",
   "PreviewInSolutionExplorer": false
 }
