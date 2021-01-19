@@ -35,7 +35,7 @@ $ReplaceInName = $false
 $FileCount = 1 # count of files
 
 # Create Credential
-$isCredential = $false
+$isCredential = $False
 try {
     $SecurePassword = ConvertTo-SecureString $backupConfig.sql_password -AsPlainText -Force
     $Credential = New-Object System.Management.Automation.PSCredential ($backupConfig.sql_login, $SecurePassword)
@@ -56,7 +56,7 @@ $backupConfig.databases | ForEach-Object {
 		DbName = $_
 		CompressBackup = $True
 		Checksum = $True
-		Encryption = $False
+		Encryption = $True
 		EncryptionAlgorithm = $backupConfig.cert_algorithm
 		EncryptionCertificate = $backupConfig.cert_name
 		ReplaceInName = $ReplaceInName
