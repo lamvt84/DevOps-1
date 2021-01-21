@@ -3,6 +3,9 @@ Param(
     [Parameter(Mandatory, HelpMessage = "Backup Type: F - Full, D - Differential, L - Log")]
     [ValidateSet("Full","Diff", "Log")]
 	[string]$Type
+	,
+	[Parameter()]
+	[string]$Database	
 )
 # ======================================== INITIALIZE ======================================== #
 $RootPath = $MyInvocation.MyCommand.Path | Split-Path | Split-Path
@@ -11,15 +14,25 @@ $PrivateKey = Get-Content -Path $PrivateKeyPath
 # ======================================== DATABASE CONFIG ======================================== #
 $Instance = $ENV:COMPUTERNAME
 $BackupPath = "G:\\Backup"
-$BackupDatabases = @("DBATools")
-$BackupCert = "BackupCertificate"
+$BackupCert = ""
 $BackupAlgorithm = "AES256"
-$FileCount = 1 # Backup split ??
+$FileCount = 1 # Backup split multi files
 
-$DBUser = ""
+$DBUser = "replicator"
 $DBPasswordHashPath = "{0}\Credentials\PasswordHash_DB.txt" -F $RootPath
 $DBPassword = Get-Content -Path $DBPasswordHashPath | ConvertTo-SecureString -Key $PrivateKey
 $DBCredential = New-Object System.Management.Automation.PSCredential($DBUser, $DBPassword)
+
+$Query_GetDatabase = ""
+# For test - $Query_GetDatabase = "SELECT Name FROM sys.databases WHERE name IN ('Monitoring', 'TestDB')"
+
+if ($null -eq $Database -or $Database -eq '') {
+	$BackupDatabases = Invoke-DbaQuery -SqlInstance $Instance -SqlCredential $DBCredential -Query $Query_GetDatabase -EA Stop
+}
+else { 
+	$BackupDatabases = '' | Select-Object Name
+	$BackupDatabases.Name = $Database
+}
 
 $HistoryQueryParams = @{
 	SqlInstance = $Instance
@@ -54,13 +67,14 @@ $FTPCredential = New-Object System.Management.Automation.PSCredential($FtpUser, 
 . ("{0}\Libs\Ftp.ps1" -F $RootPath)
 # ======================================== PROCESS ======================================== #
 $BackupDatabases | ForEach-Object {	
-	$StartTime = (Get-Date)
+	$Database = $_.Name
+	$StartTime = (Get-Date)	
 	$Response = "" | Select-Object Instance, Database, Error, Detail	
 	$Response.Instance = $Instance
-	$Response.Database = $_
+	$Response.Database = $Database
 	$Params = @{
 		SqlInstance      = $Instance
-		Database         = $_
+		Database         = $Database
 		Path  			 = $BackupPath
 		TimeStampFormat	 = "yyyyMMdd_HHmmss"
 		Type             = $Type
@@ -74,27 +88,25 @@ $BackupDatabases | ForEach-Object {
 	$Encryption = @{
 		EncryptionAlgorithm = $BackupAlgorithm
 		EncryptionCertificate = $BackupCert
-	}
+	}	
 	try {
 		$Result = Backup-DbaDatabase @Params @Encryption
 		
 		$Response.Error = 0
-		$Response.Detail = $Result  
-		$Result.BackupPath
+		$Response.Detail = $Result  		
 	}
 	catch {
 		$Response.Error = 1
 		$Response.Detail = $Error[0].Exception.Message
 		Write-Warning $Error[0].Exception.Message
-	}
-	$Response.Detail.BackupPath
+	}	
 	$EndTime = (Get-Date)
-	'{0} - Duration: {1:mm} min {1:ss} sec' -f $_, ($EndTime-$StartTime)
+	'{0} - Duration: {1:mm} min {1:ss} sec' -f $Database, ($EndTime-$StartTime)
 	
 	if ($Response.Error -ne 0) {
 		# Send error via Email
 		$Subject = "[ERROR] Database Backup"
-		$Body = "<h1>Database backup error<h1/>- Database: {0}<br /> - Message: {1}<br />" -F $_, $Response.Detail
+		$Body = "<h1>Database backup error<h1/>- Database: {0}<br /> - Message: {1}<br />" -F $Database, $Response.Detail
         $sendMailParams = @{
             From = $FROM
             To = $TO.Split(";")
@@ -116,7 +128,7 @@ $BackupDatabases | ForEach-Object {
 
 		# Logging to backup history (failed)
 		$QueryParameters = @{
-			database_name = $_
+			database_name = $Database
 			backup_type = $Type		
 			backup_start_date = $StartTime
 			backup_end_date = $Null
@@ -125,19 +137,20 @@ $BackupDatabases | ForEach-Object {
 		}
 		Invoke-DbaQuery @HistoryQueryParams -Query $HistoryInsertProc -SqlParameters $QueryParameters -EA Stop | Out-Null		
 	}
-	else {	
-		# Generate MD5 Hash	
-		$Response.Detail.BackupPath
+	else {			
+		# Get Timezone
+		$tz = Get-Timezone		
+		# Generate MD5 Hash			
 		$HashFile = (Get-FileHash $Response.Detail.BackupPath -Algorithm MD5).Hash
 		# Logging to backup history (sucessful)		
 		$QueryParameters = @{
-			database_name = $_
+			database_name = $Database
 			backup_type = $Type
 			backup_file_name = $Response.Detail.BackupFile
 			backup_file_path = $Response.Detail.BackupFolder
 			backup_file_hash = $HashFile
-			backup_start_date = $Response.Detail.Start
-			backup_end_date = $Response.Detail.End
+			backup_start_date = ([System.TimeZoneInfo]::ConvertTime($Response.Detail.Start, $tz)).AddHours(-$tz.BaseUtcOffset.TotalHours)
+			backup_end_date = ([System.TimeZoneInfo]::ConvertTime($Response.Detail.End, $tz)).AddHours(-$tz.BaseUtcOffset.TotalHours)
 			status = 0
 			error_message = $null		
 		}
@@ -171,14 +184,16 @@ $BackupDatabases | ForEach-Object {
 				try {
 					$verify_file_size = $True
 					Remove-Item $Response.Detail.BackupPath | Out-Null
+					Write-Host "$($Response.Detail.BackupPath) deleted"
 				}
 				catch {
-					Write-Verbose "Delete file error"
-					$verify_file_size = $False				
+					$verify_file_size = $False
+					Write-Warning "$($Response.Detail.BackupPath) - Delete file error - $($Error[0].Exception.Message)"
 				}
 			}
 			else {			
 				$verify_file_size = $False
+				Write-Warning "Upload file error - $($Response.Detail.BackupPath)"
 			}
 
 			$QueryParameters = $null
