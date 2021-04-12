@@ -1,11 +1,7 @@
 {
   "ExpandedNodes": [
-    "",
-    "\\Projects",
-    "\\Projects\\SQLServer",
-    "\\Projects\\SQLServer\\DeadLock",
-    "\\Projects\\SQLServer\\FullTextSearch",
-    "\\Projects\\SQLServer\\Parallelism"
+    ""
   ],
+  "SelectedNode": "\\DBA_Maintenance.sln",
   "PreviewInSolutionExplorer": false
 }
