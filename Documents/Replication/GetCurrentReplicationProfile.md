@@ -17,7 +17,7 @@ right(left(mda.name,LEN(mda.name)-(len(mda.id)+1)), LEN(left(mda.name,LEN(mda.na
 CONVERT(VARCHAR(25),mdh.[time]) [LastSynchronized],
 und.UndelivCmdsInDistDB [UndistCom], 
 mdh.comments [Comments], 
-'select * from distribution.dbo.msrepl_errors (nolock) where id = ' + CAST(mdh.error_id AS VARCHAR(8)) [Query More Info],
+'select * from [distribution].dbo.msrepl_errors (nolock) where id = ' + CAST(mdh.error_id AS VARCHAR(8)) [Query More Info],
 mdh.xact_seqno [SEQ_NO],
 (CASE  
     WHEN mda.subscription_type =  '0' THEN 'Push' 
@@ -28,17 +28,17 @@ END) [SUB Type],
 
 mda.publisher_db+' - '+CAST(mda.publisher_database_id as varchar) [Publisher DB],
 mda.name [Pub - DB - Publication - SUB - AgentID]
-FROM distribution.dbo.MSdistribution_agents mda 
-LEFT JOIN distribution.dbo.MSdistribution_history mdh ON mdh.agent_id = mda.id 
+FROM [distribution].dbo.MSdistribution_agents mda 
+LEFT JOIN [distribution].dbo.MSdistribution_history mdh ON mdh.agent_id = mda.id 
 JOIN 
     (SELECT s.agent_id, MaxAgentValue.[time], SUM(CASE WHEN xact_seqno > MaxAgentValue.maxseq THEN 1 ELSE 0 END) AS UndelivCmdsInDistDB 
-    FROM distribution.dbo.MSrepl_commands t (NOLOCK)  
-    JOIN distribution.dbo.MSsubscriptions AS s (NOLOCK) ON (t.article_id = s.article_id AND t.publisher_database_id=s.publisher_database_id ) 
+    FROM [distribution].dbo.MSrepl_commands t (NOLOCK)  
+    JOIN [distribution].dbo.MSsubscriptions AS s (NOLOCK) ON (t.article_id = s.article_id AND t.publisher_database_id=s.publisher_database_id ) 
     JOIN 
         (SELECT hist.agent_id, MAX(hist.[time]) AS [time], h.maxseq  
-        FROM distribution.dbo.MSdistribution_history hist (NOLOCK) 
+        FROM [distribution].dbo.MSdistribution_history hist (NOLOCK) 
         JOIN (SELECT agent_id,ISNULL(MAX(xact_seqno),0x0) AS maxseq 
-        FROM distribution.dbo.MSdistribution_history (NOLOCK)  
+        FROM [distribution].dbo.MSdistribution_history (NOLOCK)  
         GROUP BY agent_id) AS h  
         ON (hist.agent_id=h.agent_id AND h.maxseq=hist.xact_seqno) 
         GROUP BY hist.agent_id, h.maxseq 
