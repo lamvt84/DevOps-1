@@ -10,6 +10,17 @@
 :Setvar CertEncryptPass "Dba===1111AAA"
 :Setvar TrustedLogin "DBAMonitoringLogin"
 
+USE [master]
+GO
+sp_configure 'show advanced options', 1 ;  
+GO  
+RECONFIGURE ;  
+GO  
+sp_configure 'blocked process threshold', 20 ;  -- blocking in 20 seconds and more
+GO  
+RECONFIGURE ;  
+GO
+
 USE [$(DatabaseName)]
 GO
 ALTER DATABASE [$(DatabaseName)] SET ENABLE_BROKER WITH ROLLBACK IMMEDIATE
