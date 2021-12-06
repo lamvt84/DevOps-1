@@ -153,20 +153,17 @@ CREATE EVENT SESSION [EV_SlowQueryLog] ON SERVER
         ACTION ( sqlserver.client_app_name, sqlserver.client_hostname,
         sqlserver.database_id, sqlserver.database_name, sqlserver.plan_handle,
         sqlserver.sql_text, sqlserver.username )
-        WHERE [duration] > ( 5000000 )), --5s in microseconds
+        WHERE [duration] > ( 5000000 )),
     ADD EVENT sqlserver.sql_statement_completed (
         ACTION ( sqlserver.client_app_name, sqlserver.client_hostname,
         sqlserver.database_id, sqlserver.database_name, sqlserver.plan_handle,
         sqlserver.sql_text, sqlserver.username )
-        WHERE [duration] > ( 5000000 ))
-    --          ,
-    --ADD EVENT sqlserver.query_memory_grant_usage (
-    --    ACTION ( sqlserver.client_app_name, sqlserver.client_hostname,
-    --    sqlserver.database_id, sqlserver.database_name, sqlserver.plan_handle,
-    --    sqlserver.sql_text, sqlserver.username )
-    --    WHERE ( [granted_memory_kb] > ( 1000 ) --Mem granted in KB
-    --            AND [database_name] = N'KiotViet'
-    --          ) )
+        WHERE [duration] > ( 5000000 )),
+    ADD EVENT sqlserver.query_memory_grant_usage (
+        ACTION ( sqlserver.client_app_name, sqlserver.client_hostname,
+        sqlserver.database_id, sqlserver.database_name, sqlserver.plan_handle,
+        sqlserver.sql_text, sqlserver.username )
+        WHERE ( [granted_memory_kb] > ( 1000 ) ) )
     ADD TARGET package0.ring_buffer ( SET max_events_limit = ( 1500 ) ,
                                     max_memory = ( 50000 ) ) --Max 50MB
     WITH ( MAX_MEMORY = 4096 KB ,
